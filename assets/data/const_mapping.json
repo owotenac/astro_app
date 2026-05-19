@@ -1,0 +1,362 @@
+{
+  "And": {
+    "fr": "Andromède",
+    "latin": "Andromeda"
+  },
+  "Ant": {
+    "fr": "Machine Pneumatique",
+    "latin": "Antlia"
+  },
+  "Aps": {
+    "fr": "Oiseau de Paradis",
+    "latin": "Apus"
+  },
+  "Aqr": {
+    "fr": "Verseau",
+    "latin": "Aquarius"
+  },
+  "Aql": {
+    "fr": "Aigle",
+    "latin": "Aquila"
+  },
+  "Ara": {
+    "fr": "Autel",
+    "latin": "Ara"
+  },
+  "Ari": {
+    "fr": "Bélier",
+    "latin": "Aries"
+  },
+  "Aur": {
+    "fr": "Cocher",
+    "latin": "Auriga"
+  },
+  "Boo": {
+    "fr": "Bouvier",
+    "latin": "Boötes"
+  },
+  "Cae": {
+    "fr": "Burin",
+    "latin": "Caelum"
+  },
+  "Cam": {
+    "fr": "Girafe",
+    "latin": "Camelopardalis"
+  },
+  "Cnc": {
+    "fr": "Cancer",
+    "latin": "Cancer"
+  },
+  "CVn": {
+    "fr": "Chiens de Chasse",
+    "latin": "Canes Venatici"
+  },
+  "CMa": {
+    "fr": "Grand Chien",
+    "latin": "Canis Major"
+  },
+  "CMi": {
+    "fr": "Petit Chien",
+    "latin": "Canis Minor"
+  },
+  "Cap": {
+    "fr": "Capricorne",
+    "latin": "Capricornus"
+  },
+  "Car": {
+    "fr": "Carène",
+    "latin": "Carina"
+  },
+  "Cas": {
+    "fr": "Cassiopée",
+    "latin": "Cassiopeia"
+  },
+  "Cen": {
+    "fr": "Centaure",
+    "latin": "Centaurus"
+  },
+  "Cep": {
+    "fr": "Céphée",
+    "latin": "Cepheus"
+  },
+  "Cet": {
+    "fr": "Baleine",
+    "latin": "Cetus"
+  },
+  "Cha": {
+    "fr": "Caméléon",
+    "latin": "Chamaeleon"
+  },
+  "Cir": {
+    "fr": "Compas",
+    "latin": "Circinus"
+  },
+  "Col": {
+    "fr": "Colombe",
+    "latin": "Columba"
+  },
+  "Com": {
+    "fr": "Chevelure de Bérénice",
+    "latin": "Coma Berenices"
+  },
+  "CrA": {
+    "fr": "Couronne Australe",
+    "latin": "Corona Australis"
+  },
+  "CrB": {
+    "fr": "Couronne Boréale",
+    "latin": "Corona Borealis"
+  },
+  "Crv": {
+    "fr": "Corbeau",
+    "latin": "Corvus"
+  },
+  "Crt": {
+    "fr": "Coupe",
+    "latin": "Crater"
+  },
+  "Cru": {
+    "fr": "Croix du Sud",
+    "latin": "Crux"
+  },
+  "Cyg": {
+    "fr": "Cygne",
+    "latin": "Cygnus"
+  },
+  "Del": {
+    "fr": "Dauphin",
+    "latin": "Delphinus"
+  },
+  "Dor": {
+    "fr": "Dorade",
+    "latin": "Dorado"
+  },
+  "Dra": {
+    "fr": "Dragon",
+    "latin": "Draco"
+  },
+  "Equ": {
+    "fr": "Petit Cheval",
+    "latin": "Equuleus"
+  },
+  "Eri": {
+    "fr": "Éridan",
+    "latin": "Eridanus"
+  },
+  "For": {
+    "fr": "Fourneau",
+    "latin": "Fornax"
+  },
+  "Gem": {
+    "fr": "Gémeaux",
+    "latin": "Gemini"
+  },
+  "Gru": {
+    "fr": "Grue",
+    "latin": "Grus"
+  },
+  "Her": {
+    "fr": "Hercule",
+    "latin": "Hercules"
+  },
+  "Hor": {
+    "fr": "Horloge",
+    "latin": "Horologium"
+  },
+  "Hya": {
+    "fr": "Hydre Femelle",
+    "latin": "Hydra"
+  },
+  "Hyi": {
+    "fr": "Hydre Mâle",
+    "latin": "Hydrus"
+  },
+  "Ind": {
+    "fr": "Indien",
+    "latin": "Indus"
+  },
+  "Lac": {
+    "fr": "Lézard",
+    "latin": "Lacerta"
+  },
+  "Leo": {
+    "fr": "Lion",
+    "latin": "Leo"
+  },
+  "LMi": {
+    "fr": "Petit Lion",
+    "latin": "Leo Minor"
+  },
+  "Lep": {
+    "fr": "Lièvre",
+    "latin": "Lepus"
+  },
+  "Lib": {
+    "fr": "Balance",
+    "latin": "Libra"
+  },
+  "Lup": {
+    "fr": "Loup",
+    "latin": "Lupus"
+  },
+  "Lyn": {
+    "fr": "Lynx",
+    "latin": "Lynx"
+  },
+  "Lyr": {
+    "fr": "Lyre",
+    "latin": "Lyra"
+  },
+  "Men": {
+    "fr": "Table",
+    "latin": "Mensa"
+  },
+  "Mic": {
+    "fr": "Microscope",
+    "latin": "Microscopium"
+  },
+  "Mon": {
+    "fr": "Licorne",
+    "latin": "Monoceros"
+  },
+  "Mus": {
+    "fr": "Mouche",
+    "latin": "Musca"
+  },
+  "Nor": {
+    "fr": "Règle",
+    "latin": "Norma"
+  },
+  "Oct": {
+    "fr": "Octant",
+    "latin": "Octans"
+  },
+  "Oph": {
+    "fr": "Serpentaire (Ophiuchus)",
+    "latin": "Ophiuchus"
+  },
+  "Ori": {
+    "fr": "Orion",
+    "latin": "Orion"
+  },
+  "Pav": {
+    "fr": "Paon",
+    "latin": "Pavo"
+  },
+  "Peg": {
+    "fr": "Pégase",
+    "latin": "Pegasus"
+  },
+  "Per": {
+    "fr": "Persée",
+    "latin": "Perseus"
+  },
+  "Phe": {
+    "fr": "Phénix",
+    "latin": "Phoenix"
+  },
+  "Pic": {
+    "fr": "Peintre",
+    "latin": "Pictor"
+  },
+  "Psc": {
+    "fr": "Poissons",
+    "latin": "Pisces"
+  },
+  "PsA": {
+    "fr": "Poisson Austral",
+    "latin": "Piscis Austrinus"
+  },
+  "Pup": {
+    "fr": "Poupe",
+    "latin": "Puppis"
+  },
+  "Pyx": {
+    "fr": "Boussole",
+    "latin": "Pyxis"
+  },
+  "Ret": {
+    "fr": "Réticule",
+    "latin": "Reticulum"
+  },
+  "Sge": {
+    "fr": "Flèche",
+    "latin": "Sagitta"
+  },
+  "Sgr": {
+    "fr": "Sagittaire",
+    "latin": "Sagittarius"
+  },
+  "Sco": {
+    "fr": "Scorpion",
+    "latin": "Scorpius"
+  },
+  "Scl": {
+    "fr": "Sculpteur",
+    "latin": "Sculptor"
+  },
+  "Sct": {
+    "fr": "Écu de Sobieski",
+    "latin": "Scutum"
+  },
+  "Ser": {
+    "fr": "Serpent",
+    "latin": "Serpens"
+  },
+  "Se1": {
+    "fr": "Serpent (Tête)",
+    "latin": "Serpens Caput"
+  },
+  "Se2": {
+    "fr": "Serpent (Queue)",
+    "latin": "Serpens Cauda"
+  },
+  "Sex": {
+    "fr": "Sextant",
+    "latin": "Sextans"
+  },
+  "Tau": {
+    "fr": "Taureau",
+    "latin": "Taurus"
+  },
+  "Tel": {
+    "fr": "Télescope",
+    "latin": "Telescopium"
+  },
+  "Tri": {
+    "fr": "Triangle",
+    "latin": "Triangulum"
+  },
+  "TrA": {
+    "fr": "Triangle Austral",
+    "latin": "Triangulum Australe"
+  },
+  "Tuc": {
+    "fr": "Toucan",
+    "latin": "Tucana"
+  },
+  "UMa": {
+    "fr": "Grande Ourse",
+    "latin": "Ursa Major"
+  },
+  "UMi": {
+    "fr": "Petite Ourse",
+    "latin": "Ursa Minor"
+  },
+  "Vel": {
+    "fr": "Voiles",
+    "latin": "Vela"
+  },
+  "Vir": {
+    "fr": "Vierge",
+    "latin": "Virgo"
+  },
+  "Vol": {
+    "fr": "Poisson Volant",
+    "latin": "Volans"
+  },
+  "Vul": {
+    "fr": "Petit Renard",
+    "latin": "Vulpecula"
+  }
+}

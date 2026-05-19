@@ -1,0 +1,107 @@
+{
+  "*": {
+    "label": "Étoile",
+    "iconName": "star",
+    "color": "#FFD70070"
+  },
+  "**": {
+    "label": "Étoile double",
+    "iconName": "star-box-multiple",
+    "color": "#FFB30070"
+  },
+  "*Ass": {
+    "label": "Association d'étoiles",
+    "iconName": "google-circles-extended",
+    "color": "#FFA00070"
+  },
+  "OCl": {
+    "label": "Amas ouvert",
+    "iconName": "transition",
+    "color": "#29B6F670"
+  },
+  "GCl": {
+    "label": "Amas globulaire",
+    "iconName": "blur",
+    "color": "#0288D170"
+  },
+  "Cl+N": {
+    "label": "Amas avec nébuleuse",
+    "iconName": "cloud-tags",
+    "color": "#26A69A70"
+  },
+  "G": {
+    "label": "Galaxie",
+    "iconName": "orbit",
+    "color": "#AB47BC50"
+  },
+  "GPair": {
+    "label": "Paire de galaxies",
+    "iconName": "twinkle",
+    "color": "#8E24AA70"
+  },
+  "GTrpl": {
+    "label": "Triplet de galaxies",
+    "iconName": "star-three-points",
+    "color": "#7B1FA270"
+  },
+  "GGroup": {
+    "label": "Groupe de galaxies",
+    "iconName": "hubspot",
+    "color": "#4A148C70"
+  },
+  "PN": {
+    "label": "Nébuleuse planétaire",
+    "iconName": "record-circle-outline",
+    "color": "#EC407A70"
+  },
+  "HII": {
+    "label": "Région ionisée HII",
+    "iconName": "atom",
+    "color": "#FF525270"
+  },
+  "DrkN": {
+    "label": "Nébuleuse obscure",
+    "iconName": "cloud-alert",
+    "color": "#75757570"
+  },
+  "EmN": {
+    "label": "Nébuleuse en émission",
+    "iconName": "flare",
+    "color": "#FF2A6D70"
+  },
+  "Neb": {
+    "label": "Nébuleuse",
+    "iconName": "weather-partly-cloudy",
+    "color": "#26A69A70"
+  },
+  "RfN": {
+    "label": "Nébuleuse par réflexion",
+    "iconName": "brightness-6",
+    "color": "#00E5FF70"
+  },
+  "SNR": {
+    "label": "Rémanent de supernova",
+    "iconName": "waves",
+    "color": "#FF6D0070"
+  },
+  "Nova": {
+    "label": "Nouvelle étoile (Nova)",
+    "iconName": "new-box",
+    "color": "#FF005570"
+  },
+  "NonEx": {
+    "label": "Objet inexistant",
+    "iconName": "close-circle-outline",
+    "color": "#B0BEC5"
+  },
+  "Dup": {
+    "label": "Objet doublon",
+    "iconName": "content-copy",
+    "color": "#B0BEC5"
+  },
+  "Other": {
+    "label": "Autre classification",
+    "iconName": "help-circle-outline",
+    "color": "#9E9E9E"
+  }
+}
