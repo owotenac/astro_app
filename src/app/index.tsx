@@ -1,18 +1,18 @@
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import { Theme, globalStyles, GlobalColors } from "../global/theme";
 import { router } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { GlobalColors, globalStyles } from "../global/theme";
 
 export default function Index() {
   return (
     <View style={globalStyles.container}>
-      <Text style={Theme.fonts.title}>Astro App</Text>
+      <Text style={globalStyles.font_title}>Astro App</Text>
       <TouchableOpacity style={styles.button} onPress={() => router.push("/catalog")}>
         <Text style={styles.buttonText}>Catalogue</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => {}}>
+      <TouchableOpacity style={styles.button} onPress={() => { }}>
         <Text style={styles.buttonText}>AR Mode</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => {}}>
+      <TouchableOpacity style={styles.button} onPress={() => { }}>
         <Text style={styles.buttonText}>Planificateur</Text>
       </TouchableOpacity>
     </View>

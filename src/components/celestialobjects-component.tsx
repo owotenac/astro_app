@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { GlobalColors } from '@/global/theme'
 import { CelestialObject } from '@/model/celestialobject'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 import objectTypes from '../../assets/data/celestialtype.json'
 import { CelestialType } from '../model/celestialtype'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { GlobalColors } from '@/global/theme'
 
 import const_mapping from '../../assets/data/const_mapping.json'
 
@@ -22,8 +22,12 @@ const CelestialObjectComponent = ({ item }: { item: CelestialObject }) => {
 
     return (
         <View style={styles.item}>
-            <View style={[styles.icon, { backgroundColor: itemType.color }]}>
-                <MaterialCommunityIcons name={itemType.iconName as any} size={22} color="white" />
+            <View style={[styles.icon, { backgroundColor: itemType.color + '30' }]}>
+                <MaterialCommunityIcons
+                    name={itemType.iconName as any}
+                    size={18}
+                    color={itemType.color}
+                />
             </View>
             <View style={styles.content}>
                 <View style={styles.textBlock}>
@@ -45,8 +49,8 @@ const CelestialObjectComponent = ({ item }: { item: CelestialObject }) => {
                     </View>
 
                 </View>
-                <View style={styles.badgeWrapper}>
-                    <Text style={[styles.badge, { backgroundColor: itemType.color }]}>
+                <View style={[styles.badgeWrapper, { backgroundColor: itemType.color + '30' }]}>
+                    <Text style={styles.badge}>
                         {itemType.label}
                     </Text>
                 </View>
@@ -64,17 +68,18 @@ const styles = StyleSheet.create({
         paddingVertical: 11,
         //borderBottomWidth: 0.5,
         //borderBottomColor: GlobalColors.border,
-        backgroundColor: "#020c3bff",
-        margin: 5,
+        backgroundColor: "#1e2040",
+        margin: 1,
         borderRadius: 10
     },
     icon: {
-        width: 42,
-        height: 42,
-        borderRadius: 12,
+        width: 34,
+        height: 34,
+        borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
+        marginRight: 10,
     },
     content: {
         flex: 1,
@@ -99,15 +104,18 @@ const styles = StyleSheet.create({
     },
     badgeWrapper: {
         alignSelf: 'flex-start',
-    },
-    badge: {
-        fontSize: 10,
-        fontWeight: '500',
-        color: '#fff',
-        borderRadius: 3,
-        paddingVertical: 2,
+        borderRadius: 5,
+        paddingVertical: 3,
         paddingHorizontal: 7,
         overflow: 'hidden',
+        //borderWidth: 0.5,
+        //borderColor: "#000000"
+    },
+    badge: {
+        fontSize: 11,
+        fontWeight: '500',
+        color: '#fff',
+
     },
     magnitude: {
         fontSize: 12,

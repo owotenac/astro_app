@@ -1,12 +1,14 @@
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useState } from 'react'
-import { GlobalColors, globalStyles, Theme } from '../global/theme'
-import { CelestialObject } from '../model/celestialobject'
-import messier from '../../assets/data/messier.json'
-import ngc from '../../assets/data/ngc.json'
 import CelestialObjectComponent from '@/components/celestialobjects-component'
 import { CelestialType } from '@/model/celestialtype'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import { useEffect, useState } from 'react'
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import ngc from '../../assets/data/ngc.json'
+import { globalStyles } from '../global/theme'
+import { CelestialObject } from '../model/celestialobject'
 
+import { useFilterStore } from '@/hooks/useFilterStore'
 import objectTypesJson from '../../assets/data/celestialtype.json'
 const objectTypes = objectTypesJson as Record<string, CelestialType>
 
@@ -14,18 +16,33 @@ const objectTypes = objectTypesJson as Record<string, CelestialType>
 const catalog: CelestialObject[] = ngc as CelestialObject[];
 
 export default function Catalog() {
+    const { currentFilter } = useFilterStore();
     const [searchTxt, setSearchTxt] = useState("");
     const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>(catalog);
-    const onSearch = () => {
-        setFilteredCatalog(catalog.filter(item => (item.Name + item.Common_names + item.M).toLowerCase().includes(searchTxt.toLowerCase())));
+
+    const filter = () => {
+        let filterCatalogTemp = catalog;
+        if (currentFilter.types.length > 0) {
+            filterCatalogTemp = filterCatalogTemp.filter(item => currentFilter.types.includes(item.Type));
+        }
+
+        filterCatalogTemp = filterCatalogTemp.filter(item => item.magnitude >= currentFilter.magMin && item.magnitude <= currentFilter.magMax);
+
+        setFilteredCatalog(filterCatalogTemp.filter(item => (item.Name + item.Common_names + item.M).toLowerCase().includes(searchTxt.toLowerCase())));
     }
 
+    useEffect(() => {
+        filter();
+    }, [currentFilter]);
+
+    const onSearch = () => {
+        filter();
+    }
 
     return (
         <View style={globalStyles.container}>
-            <View style={[styles.header]}>
-                <Text style={Theme.fonts.title}>Catalogue</Text>
-                <Text style={styles.count}>{filteredCatalog.length} / {catalog.length} objets</Text>
+            <View style={styles.header}>
+                <Text style={globalStyles.font_title}>Catalogue</Text>
             </View>
             <View style={styles.search_view}>
                 <TextInput
@@ -38,14 +55,12 @@ export default function Catalog() {
                     autoCorrect={false}
                     onSubmitEditing={onSearch}
                 />
+                <TouchableOpacity onPress={() => router.push("/filter")}>
+                    <MaterialCommunityIcons name="tune-variant" size={22} color="#afa9ec" />
+                </TouchableOpacity>
             </View>
-            {/* <View style={styles.filter_bar}>
-                {Object.keys(objectTypes).map((key) => (
-                    <TouchableOpacity key={key}>
-                        <Text style={[styles.badge, { backgroundColor: objectTypes[key].color }]}>{objectTypes[key].label}</Text>
-                    </TouchableOpacity>
-                ))}
-            </View> */}
+            <Text style={styles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
+
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={filteredCatalog}
@@ -58,13 +73,17 @@ export default function Catalog() {
 
 const styles = StyleSheet.create({
     header: {
-        padding: 10
+        padding: 5,
+        gap: 10
     },
     search_view: {
         padding: 5,
         height: 60,
         flexDirection: 'row',
         width: '100%',
+        alignItems: 'center',
+        gap: 15,
+        marginBottom: 10
     },
     search_bar: {
         color: 'white',
@@ -76,12 +95,6 @@ const styles = StyleSheet.create({
         //fontFamily: "f-regular",
         flex: 1
 
-    },
-    count: {
-        fontSize: 15,
-        fontWeight: '500',
-        color: GlobalColors.foreground,
-        opacity: 0.5,
     },
     filter_bar: {
         padding: 5,
@@ -100,5 +113,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 7,
         overflow: 'hidden',
         marginRight: 5,
+    },
+    sectionCount: {
+        fontSize: 11,
+        color: '#afa9ec',
+        marginBottom: 10,
     },
 })

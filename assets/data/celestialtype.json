@@ -2,92 +2,92 @@
   "*": {
     "label": "Étoile",
     "iconName": "star",
-    "color": "#FFD70070"
+    "color": "#FFD700"
   },
   "**": {
     "label": "Étoile double",
     "iconName": "star-box-multiple",
-    "color": "#FFB30070"
+    "color": "#FFB300"
   },
   "*Ass": {
     "label": "Association d'étoiles",
     "iconName": "google-circles-extended",
-    "color": "#FFA00070"
+    "color": "#FFA000"
   },
   "OCl": {
     "label": "Amas ouvert",
     "iconName": "transition",
-    "color": "#29B6F670"
+    "color": "#29B6F6"
   },
   "GCl": {
     "label": "Amas globulaire",
     "iconName": "blur",
-    "color": "#0288D170"
+    "color": "#0288D1"
   },
   "Cl+N": {
     "label": "Amas avec nébuleuse",
     "iconName": "cloud-tags",
-    "color": "#26A69A70"
+    "color": "#26A69A"
   },
   "G": {
     "label": "Galaxie",
     "iconName": "orbit",
-    "color": "#AB47BC50"
+    "color": "#AB47BC"
   },
   "GPair": {
     "label": "Paire de galaxies",
     "iconName": "twinkle",
-    "color": "#8E24AA70"
+    "color": "#8E24AA"
   },
   "GTrpl": {
     "label": "Triplet de galaxies",
     "iconName": "star-three-points",
-    "color": "#7B1FA270"
+    "color": "#7B1FA2"
   },
   "GGroup": {
     "label": "Groupe de galaxies",
     "iconName": "hubspot",
-    "color": "#4A148C70"
+    "color": "#4A148C"
   },
   "PN": {
     "label": "Nébuleuse planétaire",
     "iconName": "record-circle-outline",
-    "color": "#EC407A70"
+    "color": "#EC407A"
   },
   "HII": {
     "label": "Région ionisée HII",
     "iconName": "atom",
-    "color": "#FF525270"
+    "color": "#FF5252"
   },
   "DrkN": {
     "label": "Nébuleuse obscure",
     "iconName": "cloud-alert",
-    "color": "#75757570"
+    "color": "#757575"
   },
   "EmN": {
     "label": "Nébuleuse en émission",
     "iconName": "flare",
-    "color": "#FF2A6D70"
+    "color": "#FF2A6D"
   },
   "Neb": {
     "label": "Nébuleuse",
     "iconName": "weather-partly-cloudy",
-    "color": "#26A69A70"
+    "color": "#26A69A"
   },
   "RfN": {
     "label": "Nébuleuse par réflexion",
     "iconName": "brightness-6",
-    "color": "#00E5FF70"
+    "color": "#00E5FF"
   },
   "SNR": {
     "label": "Rémanent de supernova",
     "iconName": "waves",
-    "color": "#FF6D0070"
+    "color": "#FF6D00"
   },
   "Nova": {
     "label": "Nouvelle étoile (Nova)",
     "iconName": "new-box",
-    "color": "#FF005570"
+    "color": "#FF0055"
   },
   "NonEx": {
     "label": "Objet inexistant",

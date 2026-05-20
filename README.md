@@ -1,56 +1,82 @@
-# Welcome to your Expo app 👋
+# Astro App 🌌
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Astro App is a modern, cross-platform mobile and web application built with **React Native** and **Expo**. Designed for astronomy enthusiasts, it provides a comprehensive catalog of celestial objects, complete with detailed information and beautifully integrated features to enhance your stargazing experience.
 
-## Get started
+## ✨ Features
 
-1. Install dependencies
+- **Extensive Catalog**: Explore hundreds of celestial objects from the Messier and NGC catalogs.
+- **Detailed Object Information**: View essential data such as:
+  - Common names and designations
+  - Magnitude (brightness)
+  - Constellation mapping
+  - Object type classifications (e.g., Galaxies, Nebulae, Star Clusters)
+- **Advanced Search**: Quickly find objects by their name, common name, or Messier/NGC designation.
+- **Upcoming Features**:
+  - **AR Mode**: Augmented Reality feature to locate objects directly in the night sky.
+  - **Planificateur (Observation Planner)**: Plan your future stargazing sessions.
 
+## 🚀 Tech Stack
+
+- **Framework**: [React Native](https://reactnative.dev/) & [Expo](https://expo.dev/)
+- **Navigation**: [Expo Router](https://docs.expo.dev/router/introduction/) (File-based routing) & React Navigation
+- **Language**: TypeScript
+- **Icons**: `@expo/vector-icons` (MaterialCommunityIcons)
+
+## 📦 Getting Started
+
+### Prerequisites
+
+Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/owotenac/astro_app.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd astro_app/client/astro_app
+   ```
+
+3. Install the dependencies:
    ```bash
    npm install
    ```
 
-2. Start the app
+### Running the App
 
-   ```bash
-   npx expo start
-   ```
+Astro App can be run on multiple platforms thanks to Expo.
 
-In the output, you'll find options to open the app in a
+- **Start the development server:**
+  ```bash
+  npx expo start
+  ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Run on Web:**
+  ```bash
+  npm run web
+  ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Run on Android:**
+  ```bash
+  npm run android
+  ```
 
-## Get a fresh project
+- **Run on iOS:**
+  ```bash
+  npm run ios
+  ```
 
-When you're ready, run:
+## 📂 Project Structure
 
-```bash
-npm run reset-project
-```
+- `assets/data/`: JSON files containing the data for celestial objects (Messier, NGC), constellation mappings, and object types.
+- `src/app/`: Expo Router screens representing the different pages of the application (e.g., Home, Catalog).
+- `src/components/`: Reusable React components (like the `CelestialObjectComponent`).
+- `src/global/`: Global styles and theme definitions.
+- `src/model/`: TypeScript interfaces and types for the application data.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🤝 Contributing
 
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Contributions, issues, and feature requests are welcome! Feel free to check out the [issues page](https://github.com/owotenac/astro_app/issues).
