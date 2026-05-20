@@ -1,5 +1,5 @@
 import objectTypesJson from '@/assets/data/celestialtype.json'
-import { globalStyles } from '@/global/theme'
+import { GlobalColors, globalStyles } from '@/global/theme'
 import { useFilterStore } from '@/hooks/useFilterStore'
 import { CelestialType } from '@/model/celestialtype'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -38,7 +38,7 @@ const Filter = () => {
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={applyFilter}>
-                    <MaterialCommunityIcons name="arrow-left" size={24} color="white" />
+                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.white} />
                 </TouchableOpacity>
                 <Text style={globalStyles.font_title}>Filtres</Text>
             </View>
@@ -62,9 +62,9 @@ const Filter = () => {
                     maximumValue={MAG_MAX}
                     step={0.5}
                     containerStyle={styles.slider}
-                    minimumTrackTintColor="#534ab7"
-                    maximumTrackTintColor="#1e2040"
-                    thumbTintColor="#afa9ec"
+                    minimumTrackTintColor={GlobalColors.primary}
+                    maximumTrackTintColor={GlobalColors.containerBackground}
+                    thumbTintColor={GlobalColors.accent}
                 />
             </View>
 
@@ -98,7 +98,7 @@ const Filter = () => {
                                 <Text style={styles.typeLabel}>{type.label}</Text>
                                 <View style={[styles.checkbox, isSelected && styles.checkboxOn]}>
                                     {isSelected && (
-                                        <MaterialCommunityIcons name="check" size={12} color="white" />
+                                        <MaterialCommunityIcons name="check" size={12} color={GlobalColors.white} />
                                     )}
                                 </View>
                             </TouchableOpacity>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     // Section labels
     sectionLabel: {
         fontSize: 11,
-        color: '#bbbbbbff',
+        color: GlobalColors.mutedText,
         letterSpacing: 0.08,
         textTransform: 'uppercase',
         marginBottom: 10,
@@ -140,13 +140,13 @@ const styles = StyleSheet.create({
     },
     sectionCount: {
         fontSize: 11,
-        color: '#afa9ec',
+        color: GlobalColors.accent,
         marginBottom: 10,
     },
 
     // Magnitude slider
     magContainer: {
-        backgroundColor: '#1e2040',
+        backgroundColor: GlobalColors.containerBackground,
         borderRadius: 12,
         padding: 14,
         marginBottom: 20,
@@ -160,13 +160,13 @@ const styles = StyleSheet.create({
     magValue: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#e4e4f4',
+        color: GlobalColors.textLight,
         fontVariant: ['tabular-nums'],
         minWidth: 32,
     },
     magHint: {
         fontSize: 10,
-        color: '#bbbbbbff',
+        color: GlobalColors.mutedText,
     },
     slider: {
         width: '100%',
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     // Type list
     typeList: {
         flex: 1,
-        backgroundColor: '#1e2040',
+        backgroundColor: GlobalColors.containerBackground,
         borderRadius: 12,
     },
     typeRow: {
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     },
     typeRowBorder: {
         borderBottomWidth: 0.5,
-        borderBottomColor: '#13152a',
+        borderBottomColor: GlobalColors.separator,
     },
     typeIcon: {
         width: 34,
@@ -199,20 +199,20 @@ const styles = StyleSheet.create({
     typeLabel: {
         flex: 1,
         fontSize: 13,
-        color: '#e4e4f4',
+        color: GlobalColors.textLight,
     },
     checkbox: {
         width: 20,
         height: 20,
         borderRadius: 10,
         borderWidth: 1.5,
-        borderColor: '#3a3c5e',
+        borderColor: GlobalColors.checkboxBorder,
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
     },
     checkboxOn: {
-        backgroundColor: '#534ab7',
-        borderColor: '#534ab7',
+        backgroundColor: GlobalColors.primary,
+        borderColor: GlobalColors.primary,
     },
 })

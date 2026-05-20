@@ -5,7 +5,7 @@ import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import ngc from '../../assets/data/ngc.json'
-import { globalStyles } from '../global/theme'
+import { GlobalColors, globalStyles } from '../global/theme'
 import { CelestialObject } from '../model/celestialobject'
 
 import { useFilterStore } from '@/hooks/useFilterStore'
@@ -50,13 +50,13 @@ export default function Catalog() {
                     onChangeText={setSearchTxt}
                     value={searchTxt}
                     placeholder='Rechercher'
-                    placeholderTextColor={'#7b7b7cff'}
+                    placeholderTextColor={GlobalColors.placeholder}
                     clearButtonMode='always'
                     autoCorrect={false}
                     onSubmitEditing={onSearch}
                 />
                 <TouchableOpacity onPress={() => router.push("/filter")}>
-                    <MaterialCommunityIcons name="tune-variant" size={22} color="#afa9ec" />
+                    <MaterialCommunityIcons name="tune-variant" size={22} color={GlobalColors.accent} />
                 </TouchableOpacity>
             </View>
             <Text style={styles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
@@ -86,11 +86,11 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     search_bar: {
-        color: 'white',
+        color: GlobalColors.white,
         borderWidth: 1,
         borderRadius: 10,
-        borderColor: "#33334d",
-        backgroundColor: "#222232",
+        borderColor: GlobalColors.searchBorder,
+        backgroundColor: GlobalColors.searchBackground,
         padding: 15,
         //fontFamily: "f-regular",
         flex: 1
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     badge: {
         fontSize: 13,
         fontWeight: '500',
-        color: '#fff',
+        color: GlobalColors.white,
         borderRadius: 6,
         paddingVertical: 2,
         paddingHorizontal: 7,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     },
     sectionCount: {
         fontSize: 11,
-        color: '#afa9ec',
+        color: GlobalColors.accent,
         marginBottom: 10,
     },
 })

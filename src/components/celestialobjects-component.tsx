@@ -38,13 +38,13 @@ const CelestialObjectComponent = ({ object }: { object: CelestialObject }) => {
                     <Text style={styles.subtitle} numberOfLines={1}>{subtitle}</Text>
                     <View style={{ flexDirection: 'row', gap: 10 }}>
                         <View style={styles.magnitudeWrapper}>
-                            <MaterialCommunityIcons name="weather-sunny" size={12} color="white" />
+                            <MaterialCommunityIcons name="weather-sunny" size={12} color={GlobalColors.white} />
                             {object.magnitude != null && (
                                 <Text style={styles.magnitude}>{object.magnitude.toFixed(2)}</Text>
                             )}
                         </View>
                         <View style={styles.magnitudeWrapper}>
-                            <MaterialCommunityIcons name="dots-circle" size={12} color="white" />
+                            <MaterialCommunityIcons name="dots-circle" size={12} color={GlobalColors.white} />
                             {object.Const != null && (
                                 <Text style={styles.magnitude}>{constellationName}</Text>
                             )}
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         paddingVertical: 11,
         //borderBottomWidth: 0.5,
         //borderBottomColor: GlobalColors.border,
-        backgroundColor: "#132233ff",
+        backgroundColor: GlobalColors.cardBackground,
         margin: 1,
         borderRadius: 10
     },
@@ -118,12 +118,12 @@ const styles = StyleSheet.create({
     badge: {
         fontSize: 11,
         fontWeight: '500',
-        color: '#fff',
+        color: GlobalColors.white,
 
     },
     magnitude: {
         fontSize: 12,
-        color: '#aaa'
+        color: GlobalColors.textSecondary
     },
     magnitudeWrapper: {
         flexDirection: 'row',

@@ -32,21 +32,27 @@ const ObjectDetails = () => {
                         <Text style={styles.subtitle} numberOfLines={1}>{subtitle}</Text>
                         <View style={{ flexDirection: 'row', gap: 10, marginTop: 10, justifyContent: 'center' }}>
                             <View style={styles.magnitudeWrapper}>
-                                <MaterialCommunityIcons name="weather-sunny" size={22} color="white" />
+                                <MaterialCommunityIcons name="weather-sunny" size={22} color={GlobalColors.white} />
                                 {object.magnitude != null && (
                                     <Text style={styles.magnitude}>{object.magnitude.toFixed(2)}</Text>
                                 )}
                             </View>
                             <View style={styles.magnitudeWrapper}>
-                                <MaterialCommunityIcons name="ruler" size={22} color="white" />
+                                <MaterialCommunityIcons name="ruler" size={22} color={GlobalColors.white} />
                                 {object.Min_Ax != null && object.Maj_Ax != null && (
                                     <Text style={styles.magnitude}>{object.Min_Ax.toFixed(2)} x {object.Maj_Ax.toFixed(2)}</Text>
                                 )}
                             </View>
                             <View style={styles.magnitudeWrapper}>
-                                <MaterialCommunityIcons name="dots-circle" size={22} color="white" />
+                                <MaterialCommunityIcons name="dots-circle" size={22} color={GlobalColors.white} />
                                 {object.Const != null && (
                                     <Text style={styles.magnitude}>{constellationName}</Text>
+                                )}
+                            </View>
+                            <View style={styles.magnitudeWrapper}>
+                                <MaterialCommunityIcons name="ev-plug-type2" size={22} color={GlobalColors.white} />
+                                {object.Hubble != null && (
+                                    <Text style={styles.magnitude}>{object.Hubble}</Text>
                                 )}
                             </View>
                         </View>
@@ -84,7 +90,7 @@ const styles = StyleSheet.create({
         gap: 12,
         paddingHorizontal: 16,
         paddingVertical: 11,
-        backgroundColor: "#132233ff",
+        backgroundColor: GlobalColors.cardBackground,
         margin: 1,
         borderRadius: 10
     },
@@ -92,7 +98,7 @@ const styles = StyleSheet.create({
         gap: 12,
         paddingHorizontal: 16,
         paddingVertical: 11,
-        backgroundColor: "#132233ff",
+        backgroundColor: GlobalColors.cardBackground,
         margin: 1,
         borderRadius: 10
     },
@@ -139,12 +145,12 @@ const styles = StyleSheet.create({
     badge: {
         fontSize: 11,
         fontWeight: '500',
-        color: '#fff',
+        color: GlobalColors.white,
 
     },
     magnitude: {
         fontSize: 15,
-        color: '#aaa'
+        color: GlobalColors.textSecondary
     },
     magnitudeWrapper: {
         alignItems: 'center',

@@ -4,7 +4,22 @@ export const GlobalColors = {
     background: "#040a14",
     foreground: "#ffffff",
     nightMode: "#e00",
-    border: "#555"
+    border: "#555",
+
+    // Couleurs refactorisées
+    white: "#ffffff",
+    cardBackground: "#132233",
+    textSecondary: "#aaaaaa",
+    placeholder: "#7b7b7c",
+    accent: "#afa9ec",
+    searchBorder: "#33334d",
+    searchBackground: "#222232",
+    mutedText: "#bbbbbb",
+    textLight: "#e4e4f4",
+    primary: "#534ab7",
+    containerBackground: "#1e2040",
+    separator: "#13152a",
+    checkboxBorder: "#3a3c5e"
 }
 
 export const globalStyles = StyleSheet.create({
