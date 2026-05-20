@@ -1,32 +1,35 @@
 import { GlobalColors } from '@/global/theme'
 import { CelestialObject } from '@/model/celestialobject'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { router } from 'expo-router'
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import objectTypes from '../../assets/data/celestialtype.json'
+import const_mapping from '../../assets/data/const_mapping.json'
 import { CelestialType } from '../model/celestialtype'
 
-import const_mapping from '../../assets/data/const_mapping.json'
-
-const CelestialObjectComponent = ({ item }: { item: CelestialObject }) => {
-    let itemType = objectTypes[item.Type as keyof typeof objectTypes] as CelestialType;
-    if (!itemType) {
-        itemType = { label: item.Type, iconName: "help-circle-outline", color: GlobalColors.nightMode };
+const CelestialObjectComponent = ({ object }: { object: CelestialObject }) => {
+    let objectType = objectTypes[object.Type as keyof typeof objectTypes] as CelestialType;
+    if (!objectType) {
+        objectType = { label: object.Type, iconName: "help-circle-outline", color: GlobalColors.nightMode };
     }
 
-    const title = item.Common_names ?? item.M ?? item.Name
-    const subtitle = item.Common_names || item.M ? item.Name : null
+    const title = object.Common_names ?? object.M ?? object.Name
+    const subtitle = object.Common_names || object.M ? object.Name : null
 
-    const constKey = item.Const as keyof typeof const_mapping;
-    const constellationName = const_mapping[constKey]?.fr || item.Const;
+    const constKey = object.Const as keyof typeof const_mapping;
+    const constellationName = const_mapping[constKey]?.fr || object.Const;
 
     return (
-        <View style={styles.item}>
-            <View style={[styles.icon, { backgroundColor: itemType.color + '30' }]}>
+        <TouchableOpacity style={styles.object} onPress={() => router.push({
+            pathname: '/object-details',
+            params: { object: JSON.stringify(object) }
+        })}>
+            <View style={[styles.icon, { backgroundColor: objectType.color + '30' }]}>
                 <MaterialCommunityIcons
-                    name={itemType.iconName as any}
+                    name={objectType.iconName as any}
                     size={18}
-                    color={itemType.color}
+                    color={objectType.color}
                 />
             </View>
             <View style={styles.content}>
@@ -36,31 +39,31 @@ const CelestialObjectComponent = ({ item }: { item: CelestialObject }) => {
                     <View style={{ flexDirection: 'row', gap: 10 }}>
                         <View style={styles.magnitudeWrapper}>
                             <MaterialCommunityIcons name="weather-sunny" size={12} color="white" />
-                            {item.magnitude != null && (
-                                <Text style={styles.magnitude}>{item.magnitude.toFixed(2)}</Text>
+                            {object.magnitude != null && (
+                                <Text style={styles.magnitude}>{object.magnitude.toFixed(2)}</Text>
                             )}
                         </View>
                         <View style={styles.magnitudeWrapper}>
                             <MaterialCommunityIcons name="dots-circle" size={12} color="white" />
-                            {item.Const != null && (
+                            {object.Const != null && (
                                 <Text style={styles.magnitude}>{constellationName}</Text>
                             )}
                         </View>
                     </View>
 
                 </View>
-                <View style={[styles.badgeWrapper, { backgroundColor: itemType.color + '30' }]}>
+                <View style={[styles.badgeWrapper, { backgroundColor: objectType.color + '30' }]}>
                     <Text style={styles.badge}>
-                        {itemType.label}
+                        {objectType.label}
                     </Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
-    item: {
+    object: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 12,
@@ -68,7 +71,7 @@ const styles = StyleSheet.create({
         paddingVertical: 11,
         //borderBottomWidth: 0.5,
         //borderBottomColor: GlobalColors.border,
-        backgroundColor: "#1e2040",
+        backgroundColor: "#132233ff",
         margin: 1,
         borderRadius: 10
     },
@@ -93,7 +96,8 @@ const styles = StyleSheet.create({
         gap: 3,
     },
     title: {
-        fontSize: 15,
+        fontFamily: "astro_font_regular",
+        fontSize: 18,
         fontWeight: '500',
         color: GlobalColors.foreground,
     },

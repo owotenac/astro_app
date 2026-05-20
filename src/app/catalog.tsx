@@ -64,7 +64,7 @@ export default function Catalog() {
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={filteredCatalog}
-                renderItem={({ item }) => <CelestialObjectComponent item={item} />}
+                renderItem={({ item }) => <CelestialObjectComponent object={item} />}
                 keyExtractor={item => item.Name}
             />
         </View>
