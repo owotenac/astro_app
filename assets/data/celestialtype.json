@@ -36,7 +36,7 @@
   },
   "GPair": {
     "label": "Paire de galaxies",
-    "iconName": "twinkle",
+    "iconName": "circle-double",
     "color": "#8E24AA"
   },
   "GTrpl": {
