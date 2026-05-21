@@ -23,18 +23,31 @@ export const formatToDMS = (decimalDegrees: number): string => {
     return `${sign}${degrees}° ${strMinutes}' ${strSeconds}"`;
 };
 
+/**
+ * Singleton Observer : instancié une seule fois au chargement du module.
+ * N'est recréé que si les coordonnées GPS changent via updateObserver().
+ */
+let _observer = new Observer(43.607592, 3.490681, 30);
 
-export const computeAzAlt = (item: CelestialObject) => {
-    // Latitude, Longitude, Altitude en mètres (0 par défaut)
-    const observer = new Observer(43.607592, 3.490681, 30);
+/**
+ * Met à jour les coordonnées GPS de l'observateur.
+ * À appeler uniquement quand la position GPS change.
+ */
+export const updateObserver = (latitude: number, longitude: number, height: number = 0) => {
+    _observer = new Observer(latitude, longitude, height);
+};
 
-    // Prendre l'heure actuelle du téléphone
-    const date = new Date();
-
-    const raHours = item.ra_deg / 15; // Attention, astronomy-engine attend la RA en HEURES (0-24)
+/**
+ * Calcule l'azimut et l'altitude d'un objet céleste.
+ *
+ * @param item   L'objet céleste (contient ra_deg et dec_deg en J2000).
+ * @param date   La date d'observation. Si non fournie, utilise l'heure courante.
+ *               - Dans le catalogue : passer une Date créée une seule fois avant la boucle de filtre.
+ *               - Dans le tick temps réel : passer new Date() à chaque intervalle.
+ */
+export const computeAzAlt = (item: CelestialObject, date: Date = new Date()) => {
+    const raHours = item.ra_deg / 15; // astronomy-engine attend la RA en HEURES (0-24)
     const decDegrees = item.dec_deg;  // La déclinaison reste en degrés
 
-    // Calcul de la position en temps réel
-    const horizontalCoords = Horizon(date, observer, raHours, decDegrees, 'normal');
-    return horizontalCoords;
-}
+    return Horizon(date, _observer, raHours, decDegrees, 'normal');
+};

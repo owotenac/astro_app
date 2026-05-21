@@ -30,8 +30,9 @@ export default function Catalog() {
         //filter on magnitude
         filterCatalogTemp = filterCatalogTemp.filter(item => item.magnitude >= currentFilter.magMin && item.magnitude <= currentFilter.magMax);
         //filter on altitude
+        const now = new Date();
         filterCatalogTemp = filterCatalogTemp.filter(item => {
-            const azAlt = computeAzAlt(item);
+            const azAlt = computeAzAlt(item, now);
             return azAlt.altitude >= currentFilter.altMin && azAlt.altitude <= currentFilter.altMax;
         });
         //filter on name
