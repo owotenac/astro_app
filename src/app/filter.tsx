@@ -13,11 +13,14 @@ const objectTypes = objectTypesJson as Record<string, CelestialType>
 const MAG_MIN = 0
 const MAG_MAX = 15
 
+const ALT_MIN = 0
+const ALT_MAX = 90
 
 const Filter = () => {
     const { currentFilter, setFilter } = useFilterStore();
     const [selectedTypes, setSelectedTypes] = useState<string[]>(currentFilter.types)
     const [magRange, setMagRange] = useState<[number, number]>([currentFilter.magMin, currentFilter.magMax])
+    const [altRange, setAltRange] = useState<[number, number]>([currentFilter.altMin, currentFilter.altMax])
 
     const toggleType = useCallback((type: string) => {
         setSelectedTypes(prev =>
@@ -28,9 +31,9 @@ const Filter = () => {
     }, [])
 
     const applyFilter = useCallback(() => {
-        setFilter({ magMin: magRange[0], magMax: magRange[1], types: selectedTypes })
+        setFilter({ magMin: magRange[0], magMax: magRange[1], altMin: altRange[0], altMax: altRange[1], types: selectedTypes })
         router.back();
-    }, [magRange, selectedTypes])
+    }, [magRange, altRange, selectedTypes])
 
     return (
         <View style={globalStyles.container}>
@@ -61,6 +64,31 @@ const Filter = () => {
                     minimumValue={MAG_MIN}
                     maximumValue={MAG_MAX}
                     step={0.5}
+                    containerStyle={styles.slider}
+                    minimumTrackTintColor={GlobalColors.primary}
+                    maximumTrackTintColor={GlobalColors.containerBackground}
+                    thumbTintColor={GlobalColors.accent}
+                />
+            </View>
+
+            {/* Visibility */}
+            <Text style={styles.sectionLabel}>Visibilité</Text>
+            <View style={styles.magContainer}>
+                <View style={styles.magLabels}>
+                    <Text style={styles.magValue}>{altRange[0].toFixed(1)}°</Text>
+                    <Text style={styles.magHint}>Altitude Minimale</Text>
+                    <Text style={styles.magValue}>{altRange[1].toFixed(1)}°</Text>
+                </View>
+                <Slider
+                    value={altRange}
+                    onValueChange={(val) => {
+                        if (Array.isArray(val)) {
+                            setAltRange([val[0], val[1]])
+                        }
+                    }}
+                    minimumValue={ALT_MIN}
+                    maximumValue={ALT_MAX}
+                    step={2}
                     containerStyle={styles.slider}
                     minimumTrackTintColor={GlobalColors.primary}
                     maximumTrackTintColor={GlobalColors.containerBackground}

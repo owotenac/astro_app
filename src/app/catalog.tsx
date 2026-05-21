@@ -1,15 +1,15 @@
 import CelestialObjectComponent from '@/components/celestialobjects-component'
+import { useFilterStore } from '@/hooks/useFilterStore'
 import { CelestialType } from '@/model/celestialtype'
+import { computeAzAlt } from '@/utils/compute'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import objectTypesJson from '../../assets/data/celestialtype.json'
 import ngc from '../../assets/data/ngc.json'
 import { GlobalColors, globalStyles } from '../global/theme'
 import { CelestialObject } from '../model/celestialobject'
-
-import { useFilterStore } from '@/hooks/useFilterStore'
-import objectTypesJson from '../../assets/data/celestialtype.json'
 const objectTypes = objectTypesJson as Record<string, CelestialType>
 
 //const catalog: CelestialObject[] = messier as CelestialObject[];
@@ -22,12 +22,19 @@ export default function Catalog() {
 
     const filter = () => {
         let filterCatalogTemp = catalog;
+
+        //filter on types
         if (currentFilter.types.length > 0) {
             filterCatalogTemp = filterCatalogTemp.filter(item => currentFilter.types.includes(item.Type));
         }
-
+        //filter on magnitude
         filterCatalogTemp = filterCatalogTemp.filter(item => item.magnitude >= currentFilter.magMin && item.magnitude <= currentFilter.magMax);
-
+        //filter on altitude
+        filterCatalogTemp = filterCatalogTemp.filter(item => {
+            const azAlt = computeAzAlt(item);
+            return azAlt.altitude >= currentFilter.altMin && azAlt.altitude <= currentFilter.altMax;
+        });
+        //filter on name
         setFilteredCatalog(filterCatalogTemp.filter(item => (item.Name + item.Common_names + item.M).toLowerCase().includes(searchTxt.toLowerCase())));
     }
 
