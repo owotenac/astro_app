@@ -32,7 +32,7 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: GlobalColors.background,
     },
     font_title: {
-        fontSize: 32,
+        fontSize: 40,
         fontFamily: "astro_font_regular",
         color: GlobalColors.foreground,
         fontWeight: "bold",

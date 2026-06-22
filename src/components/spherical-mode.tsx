@@ -279,9 +279,6 @@ export default function SphericalPlanetariumScreen() {
                             color={GlobalColors.accent}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => router.push('/filter')}>
-                        <MaterialCommunityIcons name="tune-variant" size={26} color={GlobalColors.foreground} />
-                    </TouchableOpacity>
                 </View>
 
                 {/* Vue du ciel */}

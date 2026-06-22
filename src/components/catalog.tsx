@@ -2,10 +2,8 @@ import CelestialObjectComponent from '@/components/celestialobjects-component'
 import { useFilterStore } from '@/hooks/useFilterStore'
 import { CelestialType } from '@/model/celestialtype'
 import { filterCatalog } from '@/utils/filter'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import objectTypesJson from '../../assets/data/celestialtype.json'
 import ngc from '../../assets/data/ngc.json'
@@ -33,7 +31,7 @@ export default function Catalog() {
         <SafeAreaProvider>
             <SafeAreaView style={globalStyles.container}>
                 <View style={styles.header}>
-                    <Text style={globalStyles.font_title}>Catalogue</Text>
+                    <Text style={globalStyles.font_subtitle}>Catalogue</Text>
                 </View>
                 <View style={styles.search_view}>
                     <TextInput
@@ -46,9 +44,7 @@ export default function Catalog() {
                         autoCorrect={false}
                         onSubmitEditing={onSearch}
                     />
-                    <TouchableOpacity onPress={() => router.push("/filter")}>
-                        <MaterialCommunityIcons name="tune-variant" size={22} color={GlobalColors.accent} />
-                    </TouchableOpacity>
+
                 </View>
                 <Text style={styles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
 
