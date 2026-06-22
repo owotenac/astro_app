@@ -1,0 +1,1922 @@
+[
+    {
+        "catalog_id":"HD 124897",
+        "main_id":"* alf Boo",
+        "ra":213.9153002949,
+        "dec":19.1824091615,
+        "v_mag":-0.05,
+        "common_name":"Arcturus"
+    },
+    {
+        "catalog_id":"HD 172167",
+        "main_id":"* alf Lyr",
+        "ra":279.234734787,
+        "dec":38.7836889562,
+        "v_mag":0.03,
+        "common_name":"Vega"
+    },
+    {
+        "catalog_id":"HD   5394",
+        "main_id":"* gam Cas",
+        "ra":14.1772128937,
+        "dec":60.7167400247,
+        "v_mag":2.39,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 135722",
+        "main_id":"* del Boo",
+        "ra":228.8756784169,
+        "dec":33.3148312422,
+        "v_mag":3.49,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 156283",
+        "main_id":"* pi. Her",
+        "ra":258.7618093599,
+        "dec":36.809161549,
+        "v_mag":3.18,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 139006",
+        "main_id":"* alf CrB",
+        "ra":233.671952034,
+        "dec":26.714685,
+        "v_mag":2.24,
+        "common_name":"Alphecca"
+    },
+    {
+        "catalog_id":"HD 150680",
+        "main_id":"* zet Her",
+        "ra":250.3215043315,
+        "dec":31.6027187038,
+        "v_mag":2.8,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 159561",
+        "main_id":"* alf Oph",
+        "ra":263.7336227203,
+        "dec":12.5600373917,
+        "v_mag":2.07,
+        "common_name":"Rasalhague"
+    },
+    {
+        "catalog_id":"HD 144217",
+        "main_id":"* bet01 Sco",
+        "ra":241.3592999275,
+        "dec":-19.8054527828,
+        "v_mag":2.62,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 175191",
+        "main_id":"* sig Sgr",
+        "ra":283.8163604065,
+        "dec":-26.2967241148,
+        "v_mag":2.067,
+        "common_name":"Nunki"
+    },
+    {
+        "catalog_id":"HD 173300",
+        "main_id":"* phi Sgr",
+        "ra":281.4141230941,
+        "dec":-26.9907826451,
+        "v_mag":3.14,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 167618",
+        "main_id":"* eta Sgr",
+        "ra":274.4068216623,
+        "dec":-36.7616901646,
+        "v_mag":3.11,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 160578",
+        "main_id":"* kap Sco",
+        "ra":265.6219800004,
+        "dec":-39.0299830764,
+        "v_mag":2.386,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 123123",
+        "main_id":"* pi. Hya",
+        "ra":211.592908348,
+        "dec":-26.6823615767,
+        "v_mag":3.28,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 113226",
+        "main_id":"* eps Vir",
+        "ra":195.5441542302,
+        "dec":10.9591487217,
+        "v_mag":2.79,
+        "common_name":"Vindemiatrix"
+    },
+    {
+        "catalog_id":"HD 112300",
+        "main_id":"* del Vir",
+        "ra":193.900869267,
+        "dec":3.3974689038,
+        "v_mag":3.38,
+        "common_name":"Minelauva"
+    },
+    {
+        "catalog_id":"HD 112413",
+        "main_id":"* alf02 CVn",
+        "ra":194.0069399538,
+        "dec":38.3183764363,
+        "v_mag":2.88,
+        "common_name":"Cor Caroli"
+    },
+    {
+        "catalog_id":"HD 109379",
+        "main_id":"* bet Crv",
+        "ra":188.5968121768,
+        "dec":-23.3967602162,
+        "v_mag":2.64,
+        "common_name":"Kraz"
+    },
+    {
+        "catalog_id":"HD 105707",
+        "main_id":"* eps Crv",
+        "ra":182.5311690938,
+        "dec":-22.6197672175,
+        "v_mag":2.98,
+        "common_name":"Minkar"
+    },
+    {
+        "catalog_id":"HD 102647",
+        "main_id":"* bet Leo",
+        "ra":177.2649097559,
+        "dec":14.5720580648,
+        "v_mag":2.13,
+        "common_name":"Denebola"
+    },
+    {
+        "catalog_id":"HD  97603",
+        "main_id":"* del Leo",
+        "ra":168.5270892659,
+        "dec":20.523718139,
+        "v_mag":2.53,
+        "common_name":"Zosma"
+    },
+    {
+        "catalog_id":"HD  97633",
+        "main_id":"* tet Leo",
+        "ra":168.5600236272,
+        "dec":15.4295710864,
+        "v_mag":3.35,
+        "common_name":"Chertan"
+    },
+    {
+        "catalog_id":"HD  89758",
+        "main_id":"* mu. UMa",
+        "ra":155.5821986522,
+        "dec":41.4995382626,
+        "v_mag":3.05,
+        "common_name":"Tania Australis"
+    },
+    {
+        "catalog_id":"HD  87901",
+        "main_id":"* alf Leo",
+        "ra":152.0929624383,
+        "dec":11.9672087761,
+        "v_mag":1.4,
+        "common_name":"Regulus"
+    },
+    {
+        "catalog_id":"HD  13161",
+        "main_id":"* bet Tri",
+        "ra":32.385946342,
+        "dec":34.9872970647,
+        "v_mag":3.0,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD   6860",
+        "main_id":"* bet And",
+        "ra":17.4330161729,
+        "dec":35.6205576505,
+        "v_mag":2.05,
+        "common_name":"Mirach"
+    },
+    {
+        "catalog_id":"HD    358",
+        "main_id":"* alf And",
+        "ra":2.0969161857,
+        "dec":29.0904311181,
+        "v_mag":2.06,
+        "common_name":"Alpheratz"
+    },
+    {
+        "catalog_id":"HD    358",
+        "main_id":"* alf And",
+        "ra":2.0969161857,
+        "dec":29.0904311181,
+        "v_mag":2.06,
+        "common_name":"Sirrah"
+    },
+    {
+        "catalog_id":"HD    886",
+        "main_id":"* gam Peg",
+        "ra":3.3089681209,
+        "dec":15.1835984296,
+        "v_mag":2.84,
+        "common_name":"Algenib"
+    },
+    {
+        "catalog_id":"HD   6805",
+        "main_id":"* eta Cet",
+        "ra":17.1474638852,
+        "dec":-10.1822644267,
+        "v_mag":3.45,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD   4128",
+        "main_id":"* bet Cet",
+        "ra":10.897378736,
+        "dec":-17.9866063159,
+        "v_mag":2.01,
+        "common_name":"Diphda"
+    },
+    {
+        "catalog_id":"HD  76294",
+        "main_id":"* zet Hya",
+        "ra":133.8484424894,
+        "dec":5.9455652104,
+        "v_mag":3.1,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  63700",
+        "main_id":"* ksi Pup",
+        "ra":117.323556466,
+        "dec":-24.8597838796,
+        "v_mag":3.3,
+        "common_name":"Asmidiske"
+    },
+    {
+        "catalog_id":"HD  63700",
+        "main_id":"* ksi Pup",
+        "ra":117.323556466,
+        "dec":-24.8597838796,
+        "v_mag":3.3,
+        "common_name":"Azmidiske"
+    },
+    {
+        "catalog_id":"HD  58350",
+        "main_id":"* eta CMa",
+        "ra":111.023759501,
+        "dec":-29.3031055085,
+        "v_mag":2.45,
+        "common_name":"Aludra"
+    },
+    {
+        "catalog_id":"HD  53138",
+        "main_id":"* omi02 CMa",
+        "ra":105.756130589,
+        "dec":-23.8332939742,
+        "v_mag":3.02,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  52089",
+        "main_id":"* eps CMa",
+        "ra":104.6564531515,
+        "dec":-28.9720861574,
+        "v_mag":1.5,
+        "common_name":"Adhara"
+    },
+    {
+        "catalog_id":"HD  52877",
+        "main_id":"* sig CMa",
+        "ra":105.4297835019,
+        "dec":-27.9348303404,
+        "v_mag":3.47,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  44478",
+        "main_id":"* mu. Gem",
+        "ra":95.7401119262,
+        "dec":22.5135827459,
+        "v_mag":2.87,
+        "common_name":"Tejat"
+    },
+    {
+        "catalog_id":"HD  42995",
+        "main_id":"* eta Gem",
+        "ra":93.7193553606,
+        "dec":22.5067873272,
+        "v_mag":3.28,
+        "common_name":"Propus"
+    },
+    {
+        "catalog_id":"HD  42995A",
+        "main_id":"* eta Gem",
+        "ra":93.7193553606,
+        "dec":22.5067873272,
+        "v_mag":3.28,
+        "common_name":"Propus"
+    },
+    {
+        "catalog_id":"HD  37795",
+        "main_id":"* alf Col",
+        "ra":84.9122542996,
+        "dec":-34.0741097197,
+        "v_mag":2.65,
+        "common_name":"Phact"
+    },
+    {
+        "catalog_id":"HD  37202",
+        "main_id":"* zet Tau",
+        "ra":84.4111892629,
+        "dec":21.1425441122,
+        "v_mag":3.03,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  36079",
+        "main_id":"* bet Lep",
+        "ra":82.0613453668,
+        "dec":-20.7594438857,
+        "v_mag":2.84,
+        "common_name":"Nihal"
+    },
+    {
+        "catalog_id":"HD  36486",
+        "main_id":"* del Ori",
+        "ra":83.0016670556,
+        "dec":-0.2990951071,
+        "v_mag":2.41,
+        "common_name":"Mintaka"
+    },
+    {
+        "catalog_id":"HD  35497",
+        "main_id":"* bet Tau",
+        "ra":81.5729713318,
+        "dec":28.607451725,
+        "v_mag":1.65,
+        "common_name":"Elnath"
+    },
+    {
+        "catalog_id":"HD  25025",
+        "main_id":"* gam Eri",
+        "ra":59.5073575888,
+        "dec":-13.508514806,
+        "v_mag":2.94,
+        "common_name":"Zaurak"
+    },
+    {
+        "catalog_id":"HD  18884",
+        "main_id":"* alf Cet",
+        "ra":45.5698878033,
+        "dec":4.0897387718,
+        "v_mag":2.53,
+        "common_name":"Menkar"
+    },
+    {
+        "catalog_id":"HD  71369",
+        "main_id":"* omi UMa",
+        "ra":127.5661256527,
+        "dec":60.7181682239,
+        "v_mag":3.42,
+        "common_name":"Muscida"
+    },
+    {
+        "catalog_id":"HD 131873",
+        "main_id":"* bet UMi",
+        "ra":222.676357498,
+        "dec":74.1555039368,
+        "v_mag":2.08,
+        "common_name":"Kochab"
+    },
+    {
+        "catalog_id":"HD 137422",
+        "main_id":"* gam UMi",
+        "ra":230.1820980485,
+        "dec":71.8340254549,
+        "v_mag":3.002,
+        "common_name":"Pherkad"
+    },
+    {
+        "catalog_id":"HD 159181",
+        "main_id":"* bet Dra",
+        "ra":262.6081737329,
+        "dec":52.3013887086,
+        "v_mag":2.81,
+        "common_name":"Rastaban"
+    },
+    {
+        "catalog_id":"HD   8538",
+        "main_id":"* del Cas",
+        "ra":21.4539644621,
+        "dec":60.2352840297,
+        "v_mag":2.68,
+        "common_name":"Ruchbah"
+    },
+    {
+        "catalog_id":"HD 194093",
+        "main_id":"* gam Cyg",
+        "ra":305.5570909821,
+        "dec":40.2566791564,
+        "v_mag":2.23,
+        "common_name":"Sadr"
+    },
+    {
+        "catalog_id":"HD 110380",
+        "main_id":"* gam Vir B",
+        "ra":190.4147607687,
+        "dec":-1.4494021269,
+        "v_mag":3.49,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD   3969",
+        "main_id":"M  31",
+        "ra":10.6847083333,
+        "dec":41.26875,
+        "v_mag":3.44,
+        "common_name":"Andromeda"
+    },
+    {
+        "catalog_id":"HD   3969",
+        "main_id":"M  31",
+        "ra":10.6847083333,
+        "dec":41.26875,
+        "v_mag":3.44,
+        "common_name":"Andromeda Galaxy"
+    },
+    {
+        "catalog_id":"HD   3969",
+        "main_id":"M  31",
+        "ra":10.6847083333,
+        "dec":41.26875,
+        "v_mag":3.44,
+        "common_name":"And Nebula"
+    },
+    {
+        "catalog_id":"HD   3969",
+        "main_id":"M  31",
+        "ra":10.6847083333,
+        "dec":41.26875,
+        "v_mag":3.44,
+        "common_name":"Andromeda Nebula"
+    },
+    {
+        "catalog_id":"HD  39801",
+        "main_id":"* alf Ori",
+        "ra":88.7929389908,
+        "dec":7.4070639953,
+        "v_mag":0.42,
+        "common_name":"Betelgeuse"
+    },
+    {
+        "catalog_id":"HD  44743",
+        "main_id":"* bet CMa",
+        "ra":95.6749389696,
+        "dec":-17.9559187089,
+        "v_mag":1.97,
+        "common_name":"Mirzam"
+    },
+    {
+        "catalog_id":"HD 164058",
+        "main_id":"* gam Dra",
+        "ra":269.1515411786,
+        "dec":51.4888956176,
+        "v_mag":2.23,
+        "common_name":"Eltanin"
+    },
+    {
+        "catalog_id":"HD  28319",
+        "main_id":"* tet02 Tau",
+        "ra":67.1655900464,
+        "dec":15.8708746496,
+        "v_mag":3.41,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  30652",
+        "main_id":"* pi.03 Ori",
+        "ra":72.4600466881,
+        "dec":6.9612779506,
+        "v_mag":3.19,
+        "common_name":"Tabit"
+    },
+    {
+        "catalog_id":"HD 198149",
+        "main_id":"* eta Cep",
+        "ra":311.3223965313,
+        "dec":61.8387817311,
+        "v_mag":3.41,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 103287",
+        "main_id":"* gam UMa",
+        "ra":178.4576971525,
+        "dec":53.6947597292,
+        "v_mag":2.44,
+        "common_name":"Phecda"
+    },
+    {
+        "catalog_id":"HD 106591",
+        "main_id":"* del UMa",
+        "ra":183.8564993613,
+        "dec":57.0326169777,
+        "v_mag":3.32,
+        "common_name":"Megrez"
+    },
+    {
+        "catalog_id":"HD 140573",
+        "main_id":"* alf Ser",
+        "ra":236.0669754566,
+        "dec":6.4256302202,
+        "v_mag":2.63,
+        "common_name":"Unukalhai"
+    },
+    {
+        "catalog_id":"HD 121370",
+        "main_id":"* eta Boo",
+        "ra":208.671162168,
+        "dec":18.3977207172,
+        "v_mag":2.68,
+        "common_name":"Muphrid"
+    },
+    {
+        "catalog_id":"HD 161096",
+        "main_id":"* bet Oph",
+        "ra":265.8681329574,
+        "dec":4.5673036685,
+        "v_mag":2.75,
+        "common_name":"Cebalrai"
+    },
+    {
+        "catalog_id":"HD 176437",
+        "main_id":"* gam Lyr",
+        "ra":284.7359273444,
+        "dec":32.6895557407,
+        "v_mag":3.25,
+        "common_name":"Sulafat"
+    },
+    {
+        "catalog_id":"HD 197989",
+        "main_id":"* eps Cyg",
+        "ra":311.5528011535,
+        "dec":33.9703283436,
+        "v_mag":2.48,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 203280",
+        "main_id":"* alf Cep",
+        "ra":319.6448846972,
+        "dec":62.5855744637,
+        "v_mag":2.46,
+        "common_name":"Alderamin"
+    },
+    {
+        "catalog_id":"HD 214923",
+        "main_id":"*  42 Peg",
+        "ra":340.36550299,
+        "dec":10.8313633103,
+        "v_mag":3.41,
+        "common_name":"Homam"
+    },
+    {
+        "catalog_id":"HD  34029",
+        "main_id":"* alf Aur",
+        "ra":79.1723279443,
+        "dec":45.9979914698,
+        "v_mag":0.08,
+        "common_name":"Capella"
+    },
+    {
+        "catalog_id":"HD  48915A",
+        "main_id":"* alf CMa",
+        "ra":101.2871553333,
+        "dec":-16.7161158611,
+        "v_mag":-1.46,
+        "common_name":"Sirius A"
+    },
+    {
+        "catalog_id":"HD  48915A",
+        "main_id":"* alf CMa",
+        "ra":101.2871553333,
+        "dec":-16.7161158611,
+        "v_mag":-1.46,
+        "common_name":"Sirius"
+    },
+    {
+        "catalog_id":"HD  48915",
+        "main_id":"* alf CMa",
+        "ra":101.2871553333,
+        "dec":-16.7161158611,
+        "v_mag":-1.46,
+        "common_name":"Sirius A"
+    },
+    {
+        "catalog_id":"HD  48915",
+        "main_id":"* alf CMa",
+        "ra":101.2871553333,
+        "dec":-16.7161158611,
+        "v_mag":-1.46,
+        "common_name":"Sirius"
+    },
+    {
+        "catalog_id":"HD   8890",
+        "main_id":"* alf UMi",
+        "ra":37.9545606702,
+        "dec":89.2641089699,
+        "v_mag":2.02,
+        "common_name":"Lodestar"
+    },
+    {
+        "catalog_id":"HD   8890",
+        "main_id":"* alf UMi",
+        "ra":37.9545606702,
+        "dec":89.2641089699,
+        "v_mag":2.02,
+        "common_name":"Polaris"
+    },
+    {
+        "catalog_id":"HD   8890",
+        "main_id":"* alf UMi",
+        "ra":37.9545606702,
+        "dec":89.2641089699,
+        "v_mag":2.02,
+        "common_name":"North Star"
+    },
+    {
+        "catalog_id":"HD   3712",
+        "main_id":"* alf Cas",
+        "ra":10.1268460077,
+        "dec":56.537329217,
+        "v_mag":2.23,
+        "common_name":"Schedar"
+    },
+    {
+        "catalog_id":"HD  11636",
+        "main_id":"* bet Ari",
+        "ra":28.6600457888,
+        "dec":20.8080314719,
+        "v_mag":2.65,
+        "common_name":"Sheratan"
+    },
+    {
+        "catalog_id":"HD  10700",
+        "main_id":"* tau Cet",
+        "ra":26.0170130716,
+        "dec":-15.937479891,
+        "v_mag":3.5,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD   3627",
+        "main_id":"* del And",
+        "ra":9.8316796384,
+        "dec":30.860983576,
+        "v_mag":3.28,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  19356",
+        "main_id":"* bet Per",
+        "ra":47.0422185562,
+        "dec":40.9556466703,
+        "v_mag":2.12,
+        "common_name":"Algol"
+    },
+    {
+        "catalog_id":"HD  19356",
+        "main_id":"* bet Per",
+        "ra":47.0422185562,
+        "dec":40.9556466703,
+        "v_mag":2.12,
+        "common_name":"Algol B"
+    },
+    {
+        "catalog_id":"HD  19356",
+        "main_id":"* bet Per",
+        "ra":47.0422185562,
+        "dec":40.9556466703,
+        "v_mag":2.12,
+        "common_name":"Algol C"
+    },
+    {
+        "catalog_id":"HD  19356",
+        "main_id":"* bet Per",
+        "ra":47.0422185562,
+        "dec":40.9556466703,
+        "v_mag":2.12,
+        "common_name":"Algol A"
+    },
+    {
+        "catalog_id":"HD    432",
+        "main_id":"* bet Cas",
+        "ra":2.2945215778,
+        "dec":59.149781098,
+        "v_mag":2.27,
+        "common_name":"Caph"
+    },
+    {
+        "catalog_id":"HD   4614",
+        "main_id":"* eta Cas",
+        "ra":12.2762274762,
+        "dec":57.8151772888,
+        "v_mag":3.44,
+        "common_name":"Achird"
+    },
+    {
+        "catalog_id":"HD   4614A",
+        "main_id":"* eta Cas",
+        "ra":12.2762274762,
+        "dec":57.8151772888,
+        "v_mag":3.44,
+        "common_name":"Achird"
+    },
+    {
+        "catalog_id":"HD  22928",
+        "main_id":"* del Per",
+        "ra":55.7312200196,
+        "dec":47.7874967382,
+        "v_mag":3.01,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  32630",
+        "main_id":"* eta Aur",
+        "ra":76.6287255889,
+        "dec":41.2344757417,
+        "v_mag":3.18,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  23630",
+        "main_id":"* eta Tau",
+        "ra":56.8711523038,
+        "dec":24.1051356519,
+        "v_mag":2.87,
+        "common_name":"Alcyone"
+    },
+    {
+        "catalog_id":"HD  18925",
+        "main_id":"* gam Per",
+        "ra":46.1992504637,
+        "dec":53.506461835,
+        "v_mag":2.93,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  18926",
+        "main_id":"* gam Per",
+        "ra":46.1992504637,
+        "dec":53.506461835,
+        "v_mag":2.93,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  16970",
+        "main_id":"* gam Cet",
+        "ra":40.8251628981,
+        "dec":3.2358163765,
+        "v_mag":3.47,
+        "common_name":"Kaffaljidhma"
+    },
+    {
+        "catalog_id":"HD  11415",
+        "main_id":"* eps Cas",
+        "ra":28.5988920257,
+        "dec":63.6701000663,
+        "v_mag":3.37,
+        "common_name":"Segin"
+    },
+    {
+        "catalog_id":"HD  12929",
+        "main_id":"* alf Ari",
+        "ra":31.7933570996,
+        "dec":23.4624175502,
+        "v_mag":2.01,
+        "common_name":"Hamal"
+    },
+    {
+        "catalog_id":"HD  29139",
+        "main_id":"* alf Tau",
+        "ra":68.98016279,
+        "dec":16.5093023508,
+        "v_mag":0.86,
+        "common_name":"Aldebaran"
+    },
+    {
+        "catalog_id":"HD  19058",
+        "main_id":"* rho Per",
+        "ra":46.294141061,
+        "dec":38.8402761903,
+        "v_mag":3.39,
+        "common_name":"Gorgonea Tertia"
+    },
+    {
+        "catalog_id":"HD  24760",
+        "main_id":"* eps Per",
+        "ra":59.4634974242,
+        "dec":40.0101997816,
+        "v_mag":2.89,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  11443",
+        "main_id":"* alf Tri",
+        "ra":28.2704392446,
+        "dec":29.5788186697,
+        "v_mag":3.42,
+        "common_name":"Mothallah"
+    },
+    {
+        "catalog_id":"HD  20902",
+        "main_id":"* alf Per",
+        "ra":51.0807087183,
+        "dec":49.8611792931,
+        "v_mag":1.79,
+        "common_name":"Mirfak"
+    },
+    {
+        "catalog_id":"HD  24398",
+        "main_id":"* zet Per",
+        "ra":58.5330103129,
+        "dec":31.8836336839,
+        "v_mag":2.85,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  25204",
+        "main_id":"* lam Tau",
+        "ra":60.170069891,
+        "dec":12.490344441,
+        "v_mag":3.41,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  31964",
+        "main_id":"* eps Aur",
+        "ra":75.4922265361,
+        "dec":43.8233103098,
+        "v_mag":2.99,
+        "common_name":"Almaaz"
+    },
+    {
+        "catalog_id":"HD  32887",
+        "main_id":"* eps Lep",
+        "ra":76.3652683635,
+        "dec":-22.371034487,
+        "v_mag":3.18,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  36861",
+        "main_id":"* lam Ori A",
+        "ra":83.7844836696,
+        "dec":9.9341642573,
+        "v_mag":3.47,
+        "common_name":"lambda Ori X-3"
+    },
+    {
+        "catalog_id":"HD  39425",
+        "main_id":"* bet Col",
+        "ra":87.7399678529,
+        "dec":-35.7683096212,
+        "v_mag":3.12,
+        "common_name":"Wazn"
+    },
+    {
+        "catalog_id":"HD  33904",
+        "main_id":"* mu. Lep",
+        "ra":78.2329290171,
+        "dec":-16.2054634998,
+        "v_mag":3.29,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  35468",
+        "main_id":"* gam Ori",
+        "ra":81.2827635565,
+        "dec":6.3497032644,
+        "v_mag":1.64,
+        "common_name":"Bellatrix"
+    },
+    {
+        "catalog_id":"HD  48329",
+        "main_id":"* eps Gem",
+        "ra":100.9830297966,
+        "dec":25.1311271924,
+        "v_mag":2.98,
+        "common_name":"Mebsuta"
+    },
+    {
+        "catalog_id":"HD  31398",
+        "main_id":"* iot Aur",
+        "ra":74.2484167602,
+        "dec":33.1660937721,
+        "v_mag":2.69,
+        "common_name":"Hassaleh"
+    },
+    {
+        "catalog_id":"HD  33111",
+        "main_id":"* bet Eri",
+        "ra":76.9623953546,
+        "dec":-5.086496984,
+        "v_mag":2.79,
+        "common_name":"Cursa"
+    },
+    {
+        "catalog_id":"HD  58715",
+        "main_id":"* bet CMi",
+        "ra":111.7876739054,
+        "dec":8.2893157625,
+        "v_mag":2.89,
+        "common_name":"Gomeisa"
+    },
+    {
+        "catalog_id":"HD  40183",
+        "main_id":"* bet Aur",
+        "ra":89.8821788683,
+        "dec":44.9474325719,
+        "v_mag":1.9,
+        "common_name":"Menkalinan"
+    },
+    {
+        "catalog_id":"HD  89021",
+        "main_id":"* lam UMa",
+        "ra":154.2740802357,
+        "dec":42.9144138052,
+        "v_mag":3.45,
+        "common_name":"Tania Borealis"
+    },
+    {
+        "catalog_id":"HD  38771",
+        "main_id":"* kap Ori",
+        "ra":86.9391201683,
+        "dec":-9.6696049186,
+        "v_mag":2.06,
+        "common_name":"Saiph"
+    },
+    {
+        "catalog_id":"HD  34085",
+        "main_id":"* bet Ori",
+        "ra":78.6344670669,
+        "dec":-8.2016383647,
+        "v_mag":0.13,
+        "common_name":"Rigel"
+    },
+    {
+        "catalog_id":"HD  40312",
+        "main_id":"* tet Aur",
+        "ra":89.9302921761,
+        "dec":37.2125846292,
+        "v_mag":2.62,
+        "common_name":"Mahasim"
+    },
+    {
+        "catalog_id":"HD  37043",
+        "main_id":"* iot Ori",
+        "ra":83.858275805,
+        "dec":-5.9098885235,
+        "v_mag":2.77,
+        "common_name":"Hatysa"
+    },
+    {
+        "catalog_id":"HD  37128",
+        "main_id":"* eps Ori",
+        "ra":84.0533889408,
+        "dec":-1.2019191358,
+        "v_mag":1.69,
+        "common_name":"Alnilam"
+    },
+    {
+        "catalog_id":"HD  35411",
+        "main_id":"* eta Ori",
+        "ra":81.1192363428,
+        "dec":-2.3971475397,
+        "v_mag":3.35,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  48737",
+        "main_id":"* ksi Gem",
+        "ra":101.3223520227,
+        "dec":12.8955949598,
+        "v_mag":3.36,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  36673",
+        "main_id":"* alf Lep",
+        "ra":83.1825671617,
+        "dec":-17.8222892722,
+        "v_mag":2.57,
+        "common_name":"Arneb"
+    },
+    {
+        "catalog_id":"HD  36673A",
+        "main_id":"* alf Lep",
+        "ra":83.1825671617,
+        "dec":-17.8222892722,
+        "v_mag":2.57,
+        "common_name":"Arneb"
+    },
+    {
+        "catalog_id":"HD  56855",
+        "main_id":"* pi. Pup",
+        "ra":109.2856586586,
+        "dec":-37.0974734635,
+        "v_mag":2.7,
+        "common_name":"Ahadi"
+    },
+    {
+        "catalog_id":"HD  82328",
+        "main_id":"* tet UMa",
+        "ra":143.2142955575,
+        "dec":51.6773148085,
+        "v_mag":3.18,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  84441",
+        "main_id":"* eps Leo",
+        "ra":146.4628067369,
+        "dec":23.7742537771,
+        "v_mag":2.98,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  74874",
+        "main_id":"* eps Hya",
+        "ra":131.6938009685,
+        "dec":6.4188015228,
+        "v_mag":3.38,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  87737",
+        "main_id":"* eta Leo",
+        "ra":151.8331349647,
+        "dec":16.7626633246,
+        "v_mag":3.41,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  54605",
+        "main_id":"* del CMa",
+        "ra":107.0978502142,
+        "dec":-26.3931995789,
+        "v_mag":1.84,
+        "common_name":"Wezen"
+    },
+    {
+        "catalog_id":"HD  62509",
+        "main_id":"* bet Gem",
+        "ra":116.3289577744,
+        "dec":28.0261988901,
+        "v_mag":1.14,
+        "common_name":"Pollux"
+    },
+    {
+        "catalog_id":"HD  98262",
+        "main_id":"* nu. UMa",
+        "ra":169.6197383593,
+        "dec":33.0943060702,
+        "v_mag":3.49,
+        "common_name":"Alula Borealis"
+    },
+    {
+        "catalog_id":"HD  47105",
+        "main_id":"* gam Gem",
+        "ra":99.4279604294,
+        "dec":16.3992804267,
+        "v_mag":1.92,
+        "common_name":"Alhena"
+    },
+    {
+        "catalog_id":"HD  81797",
+        "main_id":"* alf Hya",
+        "ra":141.8968445959,
+        "dec":-8.6585995317,
+        "v_mag":1.97,
+        "common_name":"Alphard"
+    },
+    {
+        "catalog_id":"HD  67523",
+        "main_id":"* rho Pup",
+        "ra":121.8860367646,
+        "dec":-24.3043244294,
+        "v_mag":2.81,
+        "common_name":"Tureis"
+    },
+    {
+        "catalog_id":"HD  61421",
+        "main_id":"* alf CMi",
+        "ra":114.825497908,
+        "dec":5.2249875571,
+        "v_mag":0.37,
+        "common_name":"Procyon"
+    },
+    {
+        "catalog_id":"HD  61421",
+        "main_id":"* alf CMi",
+        "ra":114.825497908,
+        "dec":5.2249875571,
+        "v_mag":0.37,
+        "common_name":"Procyon A"
+    },
+    {
+        "catalog_id":"HD  89025",
+        "main_id":"* zet Leo",
+        "ra":154.1725631843,
+        "dec":23.417316989,
+        "v_mag":3.41,
+        "common_name":"Adhafera"
+    },
+    {
+        "catalog_id":"HD  76644",
+        "main_id":"* iot UMa",
+        "ra":134.8018900724,
+        "dec":48.0418261445,
+        "v_mag":3.14,
+        "common_name":"Talitha"
+    },
+    {
+        "catalog_id":"HD 106625",
+        "main_id":"* gam Crv",
+        "ra":183.9515450374,
+        "dec":-17.5419304576,
+        "v_mag":2.58,
+        "common_name":"Gienah"
+    },
+    {
+        "catalog_id":"HD 116658",
+        "main_id":"* alf Vir",
+        "ra":201.2982473616,
+        "dec":-11.1613194851,
+        "v_mag":0.97,
+        "common_name":"Spica"
+    },
+    {
+        "catalog_id":"HD  80493",
+        "main_id":"* alf Lyn",
+        "ra":140.263750877,
+        "dec":34.3925592893,
+        "v_mag":3.14,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  95418",
+        "main_id":"* bet UMa",
+        "ra":165.460332298,
+        "dec":56.3824336495,
+        "v_mag":2.37,
+        "common_name":"Merak"
+    },
+    {
+        "catalog_id":"HD 112185",
+        "main_id":"* eps UMa",
+        "ra":193.5072899675,
+        "dec":55.9598229569,
+        "v_mag":1.77,
+        "common_name":"Alioth"
+    },
+    {
+        "catalog_id":"HD 123139",
+        "main_id":"* tet Cen",
+        "ra":211.6706146823,
+        "dec":-36.3699547425,
+        "v_mag":2.05,
+        "common_name":"Menkent"
+    },
+    {
+        "catalog_id":"HD 108767",
+        "main_id":"* del Crv",
+        "ra":187.4660631842,
+        "dec":-16.5154312617,
+        "v_mag":2.94,
+        "common_name":"Algorab"
+    },
+    {
+        "catalog_id":"HD 115659",
+        "main_id":"* gam Hya",
+        "ra":199.7304070383,
+        "dec":-23.1715140069,
+        "v_mag":3.0,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  93813",
+        "main_id":"* nu. Hya",
+        "ra":162.4062010556,
+        "dec":-16.1936470604,
+        "v_mag":3.11,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 120315",
+        "main_id":"* eta UMa",
+        "ra":206.8851573421,
+        "dec":49.3132667294,
+        "v_mag":1.86,
+        "common_name":"Alkaid"
+    },
+    {
+        "catalog_id":"HD 120315",
+        "main_id":"* eta UMa",
+        "ra":206.8851573421,
+        "dec":49.3132667294,
+        "v_mag":1.86,
+        "common_name":"Alcaid"
+    },
+    {
+        "catalog_id":"HD 130841",
+        "main_id":"* alf02 Lib",
+        "ra":222.7196378916,
+        "dec":-16.0417765198,
+        "v_mag":2.75,
+        "common_name":"Zubenelgenubi"
+    },
+    {
+        "catalog_id":"HD  95689",
+        "main_id":"* alf UMa",
+        "ra":165.9319646738,
+        "dec":61.7510346878,
+        "v_mag":1.79,
+        "common_name":"Dubhe"
+    },
+    {
+        "catalog_id":"HD  96833",
+        "main_id":"* psi UMa",
+        "ra":167.4158678993,
+        "dec":44.4984877547,
+        "v_mag":3.01,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 143118",
+        "main_id":"* eta Lup",
+        "ra":240.0305329835,
+        "dec":-38.3967050625,
+        "v_mag":3.41,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 115892",
+        "main_id":"* iot Cen",
+        "ra":200.149220065,
+        "dec":-36.7123045812,
+        "v_mag":2.73,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 161797",
+        "main_id":"* mu.01 Her",
+        "ra":266.6147804003,
+        "dec":27.720711383,
+        "v_mag":3.42,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 161797A",
+        "main_id":"* mu.01 Her",
+        "ra":266.6147804003,
+        "dec":27.720711383,
+        "v_mag":3.42,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 147165",
+        "main_id":"* sig Sco",
+        "ra":245.2971488058,
+        "dec":-25.5927920767,
+        "v_mag":2.89,
+        "common_name":"Alniyat"
+    },
+    {
+        "catalog_id":"HD 149757",
+        "main_id":"* zet Oph",
+        "ra":249.2897502449,
+        "dec":-10.5670860396,
+        "v_mag":2.56,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 155763",
+        "main_id":"* zet Dra",
+        "ra":257.1966155399,
+        "dec":65.714645327,
+        "v_mag":3.17,
+        "common_name":"Aldhibah"
+    },
+    {
+        "catalog_id":"HD 118098",
+        "main_id":"* zet Vir",
+        "ra":203.673297328,
+        "dec":-0.5958164161,
+        "v_mag":3.38,
+        "common_name":"Heze"
+    },
+    {
+        "catalog_id":"HD 127762",
+        "main_id":"* gam Boo",
+        "ra":218.0194653313,
+        "dec":38.30824808,
+        "v_mag":3.02,
+        "common_name":"Seginus"
+    },
+    {
+        "catalog_id":"HD 148478",
+        "main_id":"* alf Sco",
+        "ra":247.3519154198,
+        "dec":-26.432002612,
+        "v_mag":0.91,
+        "common_name":"Antares"
+    },
+    {
+        "catalog_id":"HD 153210",
+        "main_id":"* kap Oph",
+        "ra":254.4170729284,
+        "dec":9.3750290201,
+        "v_mag":3.2,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 146051",
+        "main_id":"* del Oph",
+        "ra":243.5864125911,
+        "dec":-3.6943257851,
+        "v_mag":2.75,
+        "common_name":"Yed Prior"
+    },
+    {
+        "catalog_id":"HD 148387",
+        "main_id":"* eta Dra",
+        "ra":245.997859702,
+        "dec":61.5142097609,
+        "v_mag":2.74,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 137759",
+        "main_id":"* iot Dra",
+        "ra":231.2323908512,
+        "dec":58.9660658644,
+        "v_mag":3.29,
+        "common_name":"Edasich"
+    },
+    {
+        "catalog_id":"HD 143275",
+        "main_id":"* del Sco",
+        "ra":240.0833553457,
+        "dec":-22.621706426,
+        "v_mag":2.32,
+        "common_name":"Dschubba"
+    },
+    {
+        "catalog_id":"HD 151680",
+        "main_id":"* eps Sco",
+        "ra":252.5408783863,
+        "dec":-34.2932315931,
+        "v_mag":2.29,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 133216",
+        "main_id":"* sig Lib",
+        "ra":226.0175617057,
+        "dec":-25.2819695796,
+        "v_mag":3.21,
+        "common_name":"Brachium"
+    },
+    {
+        "catalog_id":"HD 155125",
+        "main_id":"* eta Oph",
+        "ra":257.5945287106,
+        "dec":-15.7249066417,
+        "v_mag":2.42,
+        "common_name":"Sabik"
+    },
+    {
+        "catalog_id":"HD 135742",
+        "main_id":"* bet Lib",
+        "ra":229.2517242491,
+        "dec":-9.3829144103,
+        "v_mag":2.62,
+        "common_name":"Zubeneschamali"
+    },
+    {
+        "catalog_id":"HD 163917",
+        "main_id":"* nu. Oph",
+        "ra":269.7566342236,
+        "dec":-9.7736336047,
+        "v_mag":3.34,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 149438",
+        "main_id":"* tau Sco",
+        "ra":248.9706368875,
+        "dec":-28.2160170875,
+        "v_mag":2.81,
+        "common_name":"Paikauhale"
+    },
+    {
+        "catalog_id":"HD 161892",
+        "main_id":"* G Sco",
+        "ra":267.4645037404,
+        "dec":-37.0432763783,
+        "v_mag":3.21,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 148856",
+        "main_id":"* bet Her",
+        "ra":247.5550013404,
+        "dec":21.4896107456,
+        "v_mag":2.77,
+        "common_name":"Kornephoros"
+    },
+    {
+        "catalog_id":"HD 143018",
+        "main_id":"* pi. Sco",
+        "ra":239.7129718242,
+        "dec":-26.114107945,
+        "v_mag":2.91,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 189319",
+        "main_id":"* gam Sge",
+        "ra":299.6892842932,
+        "dec":19.4921461305,
+        "v_mag":3.47,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 177756",
+        "main_id":"* lam Aql",
+        "ra":286.5622443926,
+        "dec":-4.8825627459,
+        "v_mag":3.43,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 146791",
+        "main_id":"* eps Oph",
+        "ra":244.5803759356,
+        "dec":-4.6925131527,
+        "v_mag":3.23,
+        "common_name":"Yed Posterior"
+    },
+    {
+        "catalog_id":"HD 150997",
+        "main_id":"* eta Her",
+        "ra":250.7240206061,
+        "dec":38.9222549196,
+        "v_mag":3.5,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 169916",
+        "main_id":"* lam Sgr",
+        "ra":276.9926696604,
+        "dec":-25.4216984969,
+        "v_mag":2.81,
+        "common_name":"Kaus Borealis"
+    },
+    {
+        "catalog_id":"HD 157056",
+        "main_id":"* tet Oph",
+        "ra":260.502413945,
+        "dec":-24.9995463817,
+        "v_mag":3.26,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 156164",
+        "main_id":"* del Her",
+        "ra":258.757960743,
+        "dec":24.8392069667,
+        "v_mag":3.13,
+        "common_name":"Sarin"
+    },
+    {
+        "catalog_id":"HD 156164A",
+        "main_id":"* del Her",
+        "ra":258.757960743,
+        "dec":24.8392069667,
+        "v_mag":3.13,
+        "common_name":"Sarin"
+    },
+    {
+        "catalog_id":"HD 202109",
+        "main_id":"* zet Cyg",
+        "ra":318.2341082895,
+        "dec":30.2268986806,
+        "v_mag":3.21,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 177724",
+        "main_id":"* zet Aql",
+        "ra":286.3525333979,
+        "dec":13.8634772811,
+        "v_mag":2.99,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 180711",
+        "main_id":"* del Dra",
+        "ra":288.1387557204,
+        "dec":67.6615386571,
+        "v_mag":3.07,
+        "common_name":"Altais"
+    },
+    {
+        "catalog_id":"HD 182640",
+        "main_id":"* del Aql",
+        "ra":291.3745891389,
+        "dec":3.114779475,
+        "v_mag":3.36,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 186882",
+        "main_id":"* del Cyg",
+        "ra":296.2436538443,
+        "dec":45.1308146314,
+        "v_mag":2.87,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 165135",
+        "main_id":"* gam02 Sgr",
+        "ra":271.452033745,
+        "dec":-30.4240898494,
+        "v_mag":2.99,
+        "common_name":"Alnasl"
+    },
+    {
+        "catalog_id":"HD 178524",
+        "main_id":"* pi. Sgr",
+        "ra":287.440970525,
+        "dec":-21.0236139819,
+        "v_mag":2.88,
+        "common_name":"Albaldah"
+    },
+    {
+        "catalog_id":"HD 174638",
+        "main_id":"* bet Lyr",
+        "ra":282.5199797676,
+        "dec":33.3626667698,
+        "v_mag":3.42,
+        "common_name":"Sheliak"
+    },
+    {
+        "catalog_id":"HD 204867",
+        "main_id":"* bet Aqr",
+        "ra":322.8897169835,
+        "dec":-5.5711748281,
+        "v_mag":2.89,
+        "common_name":"Sadalsuud"
+    },
+    {
+        "catalog_id":"HD 216131",
+        "main_id":"* mu. Peg",
+        "ra":342.5008044784,
+        "dec":24.6015812835,
+        "v_mag":3.48,
+        "common_name":"Sadalbari"
+    },
+    {
+        "catalog_id":"HD 177716",
+        "main_id":"* tau Sgr",
+        "ra":286.7350129713,
+        "dec":-27.6704156372,
+        "v_mag":3.31,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 168723",
+        "main_id":"* eta Ser",
+        "ra":275.3275020516,
+        "dec":-2.8988279699,
+        "v_mag":3.25,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 207098",
+        "main_id":"* del Cap",
+        "ra":326.7601843313,
+        "dec":-16.1272870853,
+        "v_mag":2.83,
+        "common_name":"Deneb Algedi"
+    },
+    {
+        "catalog_id":"HD 205021",
+        "main_id":"* bet Cep",
+        "ra":322.1649868804,
+        "dec":70.5607151892,
+        "v_mag":3.23,
+        "common_name":"Alfirk"
+    },
+    {
+        "catalog_id":"HD 186791",
+        "main_id":"* gam Aql",
+        "ra":296.5649123093,
+        "dec":10.6132587226,
+        "v_mag":2.72,
+        "common_name":"Tarazed"
+    },
+    {
+        "catalog_id":"HD 187642",
+        "main_id":"* alf Aql",
+        "ra":297.6958272964,
+        "dec":8.8683211964,
+        "v_mag":0.76,
+        "common_name":"Altair"
+    },
+    {
+        "catalog_id":"HD 193496",
+        "main_id":"* bet01 Cap",
+        "ra":305.2527774924,
+        "dec":-14.7814076021,
+        "v_mag":3.08,
+        "common_name":"Dabih"
+    },
+    {
+        "catalog_id":"HD 193496",
+        "main_id":"* bet01 Cap",
+        "ra":305.2527774924,
+        "dec":-14.7814076021,
+        "v_mag":3.08,
+        "common_name":"Dabih Major"
+    },
+    {
+        "catalog_id":"HD 193495",
+        "main_id":"* bet01 Cap",
+        "ra":305.2527774924,
+        "dec":-14.7814076021,
+        "v_mag":3.08,
+        "common_name":"Dabih"
+    },
+    {
+        "catalog_id":"HD 193495",
+        "main_id":"* bet01 Cap",
+        "ra":305.2527774924,
+        "dec":-14.7814076021,
+        "v_mag":3.08,
+        "common_name":"Dabih Major"
+    },
+    {
+        "catalog_id":"HD 206778",
+        "main_id":"* eps Peg",
+        "ra":326.0464839142,
+        "dec":9.8750086533,
+        "v_mag":2.39,
+        "common_name":"Enif"
+    },
+    {
+        "catalog_id":"HD 217906",
+        "main_id":"* bet Peg",
+        "ra":345.9435727452,
+        "dec":28.0827871246,
+        "v_mag":2.42,
+        "common_name":"Scheat"
+    },
+    {
+        "catalog_id":"HD 191692",
+        "main_id":"* tet Aql",
+        "ra":302.8261945488,
+        "dec":-0.8214635937,
+        "v_mag":3.22,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 209750",
+        "main_id":"* alf Aqr",
+        "ra":331.4459814409,
+        "dec":-0.3198509554,
+        "v_mag":2.94,
+        "common_name":"Sadalmelik"
+    },
+    {
+        "catalog_id":"HD 218045",
+        "main_id":"* alf Peg",
+        "ra":346.1902226914,
+        "dec":15.2052671479,
+        "v_mag":2.48,
+        "common_name":"Markab"
+    },
+    {
+        "catalog_id":"HD 197345",
+        "main_id":"* alf Cyg",
+        "ra":310.3579797531,
+        "dec":45.2803388065,
+        "v_mag":1.25,
+        "common_name":"Deneb"
+    },
+    {
+        "catalog_id":"HD 207971",
+        "main_id":"* gam Gru",
+        "ra":328.4821512526,
+        "dec":-37.364872217,
+        "v_mag":3.01,
+        "common_name":"Aldhanab"
+    },
+    {
+        "catalog_id":"HD 215182",
+        "main_id":"* eta Peg",
+        "ra":340.7505368539,
+        "dec":30.2212147137,
+        "v_mag":2.95,
+        "common_name":"Matar"
+    },
+    {
+        "catalog_id":"HD 216956",
+        "main_id":"* alf PsA",
+        "ra":344.4126927212,
+        "dec":-29.6222370334,
+        "v_mag":1.16,
+        "common_name":"Fomalhaut"
+    },
+    {
+        "catalog_id":"HD 210745",
+        "main_id":"* zet Cep",
+        "ra":332.7136571065,
+        "dec":58.2012618341,
+        "v_mag":3.35,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 216627",
+        "main_id":"* del Aqr",
+        "ra":343.6625260741,
+        "dec":-15.8208195652,
+        "v_mag":3.28,
+        "common_name":"Skat"
+    },
+    {
+        "catalog_id":"HD  95689A",
+        "main_id":"* alf UMa A",
+        "ra":165.9319526333,
+        "dec":61.7510333417,
+        "v_mag":1.87,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 168454",
+        "main_id":"* del Sgr",
+        "ra":275.2485120569,
+        "dec":-29.8281022626,
+        "v_mag":2.668,
+        "common_name":"Kaus Media"
+    },
+    {
+        "catalog_id":"HD 158408",
+        "main_id":"* ups Sco",
+        "ra":262.6909880117,
+        "dec":-37.2958134753,
+        "v_mag":2.65,
+        "common_name":"Lesath"
+    },
+    {
+        "catalog_id":"HD 158926",
+        "main_id":"* lam Sco",
+        "ra":263.4021671844,
+        "dec":-37.1038235511,
+        "v_mag":1.63,
+        "common_name":"Shaula"
+    },
+    {
+        "catalog_id":"HD 151890",
+        "main_id":"* mu.01 Sco",
+        "ra":252.9676181453,
+        "dec":-38.047399464,
+        "v_mag":2.98,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 183912",
+        "main_id":"* bet01 Cyg A",
+        "ra":292.6803506958,
+        "dec":27.9596927972,
+        "v_mag":3.2,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 129989",
+        "main_id":"* eps Boo",
+        "ra":221.2467398258,
+        "dec":27.0742223197,
+        "v_mag":2.45,
+        "common_name":"Izar"
+    },
+    {
+        "catalog_id":"HD 156014",
+        "main_id":"* alf Her A",
+        "ra":258.6618864208,
+        "dec":14.3903710472,
+        "v_mag":3.33,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD  37742",
+        "main_id":"* zet Ori A",
+        "ra":85.1896964292,
+        "dec":-1.9425723222,
+        "v_mag":1.9,
+        "common_name":null
+    },
+    {
+        "catalog_id":"HD 116656",
+        "main_id":"* zet01 UMa",
+        "ra":200.9814261688,
+        "dec":54.9253598833,
+        "v_mag":2.22,
+        "common_name":"Mizar A"
+    },
+    {
+        "catalog_id":"HD 169022",
+        "main_id":"* eps Sgr",
+        "ra":276.0429933506,
+        "dec":-34.3846164859,
+        "v_mag":1.81,
+        "common_name":"Kaus Australis"
+    },
+    {
+        "catalog_id":"HD 176687",
+        "main_id":"* zet Sgr",
+        "ra":285.6530426563,
+        "dec":-29.880063301,
+        "v_mag":2.59,
+        "common_name":"Ascella"
+    },
+    {
+        "catalog_id":"HD  44402",
+        "main_id":"* zet CMa",
+        "ra":95.0783001658,
+        "dec":-30.0633667339,
+        "v_mag":2.99,
+        "common_name":"Furud"
+    },
+    {
+        "catalog_id":"HD  12533",
+        "main_id":"* gam01 And",
+        "ra":30.9748012065,
+        "dec":42.3297284235,
+        "v_mag":2.1,
+        "common_name":"Almach"
+    },
+    {
+        "catalog_id":"HD  60178",
+        "main_id":"* alf Gem B",
+        "ra":113.65041855,
+        "dec":31.8884919917,
+        "v_mag":3.0,
+        "common_name":"Castor B"
+    },
+    {
+        "catalog_id":"HD  60179",
+        "main_id":"* alf Gem A",
+        "ra":113.64942845,
+        "dec":31.8882761917,
+        "v_mag":1.9,
+        "common_name":"Castor A"
+    },
+    {
+        "catalog_id":"HD 110379J",
+        "main_id":"* gam Vir",
+        "ra":190.4151176201,
+        "dec":-1.4494039525,
+        "v_mag":2.74,
+        "common_name":"Porrima"
+    },
+    {
+        "catalog_id":"HD 110379",
+        "main_id":"* gam Vir",
+        "ra":190.4151176201,
+        "dec":-1.4494039525,
+        "v_mag":2.74,
+        "common_name":"Porrima"
+    },
+    {
+        "catalog_id":"HD  89484",
+        "main_id":"* gam01 Leo",
+        "ra":154.9931435917,
+        "dec":19.8414886667,
+        "v_mag":2.23,
+        "common_name":null
+    }
+]

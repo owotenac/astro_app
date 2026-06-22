@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type CurrentFilter = {
+export type CurrentFilter = {
     magMin: number;
     magMax: number;
     altMin: number;
@@ -23,3 +23,5 @@ export const useFilterStore = create<FilterStore>((set) => ({
     },
     setFilter: (filter: CurrentFilter) => set({ currentFilter: filter }),
 }))
+
+

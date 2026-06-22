@@ -1,4 +1,5 @@
 import { GlobalColors } from "@/global/theme";
+import { useSettings } from "@/hooks/useSettings";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -13,8 +14,11 @@ export default function RootLayout() {
     'astro_font_regular': require("@/assets/fonts/Blinker-Regular.ttf")
   });
 
+  const { loadSettings } = useSettings();
+
   useEffect(() => {
     if (loaded || error) {
+      loadSettings()
       SplashScreen.hideAsync();
     }
   }, [loaded, error]);

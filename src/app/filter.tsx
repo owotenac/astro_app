@@ -1,12 +1,14 @@
 import objectTypesJson from '@/assets/data/celestialtype.json'
 import { GlobalColors, globalStyles } from '@/global/theme'
 import { useFilterStore } from '@/hooks/useFilterStore'
+import { useSettings } from '@/hooks/useSettings'
 import { CelestialType } from '@/model/celestialtype'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Slider } from '@miblanchard/react-native-slider'
 import { router } from 'expo-router'
 import { useCallback, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
 const objectTypes = objectTypesJson as Record<string, CelestialType>
 
@@ -18,6 +20,7 @@ const ALT_MAX = 90
 
 const Filter = () => {
     const { currentFilter, setFilter } = useFilterStore();
+    const { applySettings } = useSettings();
     const [selectedTypes, setSelectedTypes] = useState<string[]>(currentFilter.types)
     const [magRange, setMagRange] = useState<[number, number]>([currentFilter.magMin, currentFilter.magMax])
     const [altRange, setAltRange] = useState<[number, number]>([currentFilter.altMin, currentFilter.altMax])
@@ -31,111 +34,115 @@ const Filter = () => {
     }, [])
 
     const applyFilter = useCallback(() => {
-        setFilter({ magMin: magRange[0], magMax: magRange[1], altMin: altRange[0], altMax: altRange[1], types: selectedTypes })
+        const filter = { magMin: magRange[0], magMax: magRange[1], altMin: altRange[0], altMax: altRange[1], types: selectedTypes }
+        setFilter(filter)
+        applySettings(filter)
         router.back();
     }, [magRange, altRange, selectedTypes])
 
     return (
-        <View style={globalStyles.container}>
+        <SafeAreaProvider>
+            <SafeAreaView style={globalStyles.container}>
 
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={applyFilter}>
-                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.white} />
-                </TouchableOpacity>
-                <Text style={globalStyles.font_title}>Filtres</Text>
-            </View>
-
-            {/* Magnitude */}
-            <Text style={styles.sectionLabel}>Magnitude</Text>
-            <View style={styles.magContainer}>
-                <View style={styles.magLabels}>
-                    <Text style={styles.magValue}>{magRange[0].toFixed(1)}</Text>
-                    <Text style={styles.magHint}>Plus brillant → Plus faible</Text>
-                    <Text style={styles.magValue}>{magRange[1].toFixed(1)}</Text>
+                {/* Header */}
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={applyFilter}>
+                        <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.white} />
+                    </TouchableOpacity>
+                    <Text style={globalStyles.font_title}>Filtres</Text>
                 </View>
-                <Slider
-                    value={magRange}
-                    onValueChange={(val) => {
-                        if (Array.isArray(val)) {
-                            setMagRange([val[0], val[1]])
-                        }
-                    }}
-                    minimumValue={MAG_MIN}
-                    maximumValue={MAG_MAX}
-                    step={0.5}
-                    containerStyle={styles.slider}
-                    minimumTrackTintColor={GlobalColors.primary}
-                    maximumTrackTintColor={GlobalColors.containerBackground}
-                    thumbTintColor={GlobalColors.accent}
-                />
-            </View>
 
-            {/* Visibility */}
-            <Text style={styles.sectionLabel}>Visibilité</Text>
-            <View style={styles.magContainer}>
-                <View style={styles.magLabels}>
-                    <Text style={styles.magValue}>{altRange[0].toFixed(1)}°</Text>
-                    <Text style={styles.magHint}>Altitude Minimale</Text>
-                    <Text style={styles.magValue}>{altRange[1].toFixed(1)}°</Text>
+                {/* Magnitude */}
+                <Text style={styles.sectionLabel}>Magnitude</Text>
+                <View style={styles.magContainer}>
+                    <View style={styles.magLabels}>
+                        <Text style={styles.magValue}>{magRange[0].toFixed(1)}</Text>
+                        <Text style={styles.magHint}>Plus brillant → Plus faible</Text>
+                        <Text style={styles.magValue}>{magRange[1].toFixed(1)}</Text>
+                    </View>
+                    <Slider
+                        value={magRange}
+                        onValueChange={(val) => {
+                            if (Array.isArray(val)) {
+                                setMagRange([val[0], val[1]])
+                            }
+                        }}
+                        minimumValue={MAG_MIN}
+                        maximumValue={MAG_MAX}
+                        step={0.5}
+                        containerStyle={styles.slider}
+                        minimumTrackTintColor={GlobalColors.primary}
+                        maximumTrackTintColor={GlobalColors.containerBackground}
+                        thumbTintColor={GlobalColors.accent}
+                    />
                 </View>
-                <Slider
-                    value={altRange}
-                    onValueChange={(val) => {
-                        if (Array.isArray(val)) {
-                            setAltRange([val[0], val[1]])
-                        }
-                    }}
-                    minimumValue={ALT_MIN}
-                    maximumValue={ALT_MAX}
-                    step={2}
-                    containerStyle={styles.slider}
-                    minimumTrackTintColor={GlobalColors.primary}
-                    maximumTrackTintColor={GlobalColors.containerBackground}
-                    thumbTintColor={GlobalColors.accent}
-                />
-            </View>
 
-            {/* Types */}
-            <View style={styles.sectionRow}>
-                <Text style={styles.sectionLabel}>Type d'objet</Text>
-                {selectedTypes.length > 0 && (
-                    <Text style={styles.sectionCount}>{selectedTypes.length} sélectionné(s)</Text>
-                )}
-            </View>
+                {/* Visibility */}
+                <Text style={styles.sectionLabel}>Visibilité</Text>
+                <View style={styles.magContainer}>
+                    <View style={styles.magLabels}>
+                        <Text style={styles.magValue}>{altRange[0].toFixed(1)}°</Text>
+                        <Text style={styles.magHint}>Altitude Minimale</Text>
+                        <Text style={styles.magValue}>{altRange[1].toFixed(1)}°</Text>
+                    </View>
+                    <Slider
+                        value={altRange}
+                        onValueChange={(val) => {
+                            if (Array.isArray(val)) {
+                                setAltRange([val[0], val[1]])
+                            }
+                        }}
+                        minimumValue={ALT_MIN}
+                        maximumValue={ALT_MAX}
+                        step={2}
+                        containerStyle={styles.slider}
+                        minimumTrackTintColor={GlobalColors.primary}
+                        maximumTrackTintColor={GlobalColors.containerBackground}
+                        thumbTintColor={GlobalColors.accent}
+                    />
+                </View>
 
-            <View style={styles.typeList}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    {Object.entries(objectTypes).map(([key, type], index, arr) => {
-                        const isSelected = selectedTypes.includes(key)
-                        const isLast = index === arr.length - 1
-                        return (
-                            <TouchableOpacity
-                                key={key}
-                                style={[styles.typeRow, !isLast && styles.typeRowBorder]}
-                                onPress={() => toggleType(key)}
-                                activeOpacity={0.7}
-                            >
-                                <View style={[styles.typeIcon, { backgroundColor: type.color + '30' }]}>
-                                    <MaterialCommunityIcons
-                                        name={type.iconName as any}
-                                        size={18}
-                                        color={type.color}
-                                    />
-                                </View>
-                                <Text style={styles.typeLabel}>{type.label}</Text>
-                                <View style={[styles.checkbox, isSelected && styles.checkboxOn]}>
-                                    {isSelected && (
-                                        <MaterialCommunityIcons name="check" size={12} color={GlobalColors.white} />
-                                    )}
-                                </View>
-                            </TouchableOpacity>
-                        )
-                    })}
-                </ScrollView>
-            </View>
+                {/* Types */}
+                <View style={styles.sectionRow}>
+                    <Text style={styles.sectionLabel}>Type d'objet</Text>
+                    {selectedTypes.length > 0 && (
+                        <Text style={styles.sectionCount}>{selectedTypes.length} sélectionné(s)</Text>
+                    )}
+                </View>
 
-        </View>
+                <View style={styles.typeList}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        {Object.entries(objectTypes).map(([key, type], index, arr) => {
+                            const isSelected = selectedTypes.includes(key)
+                            const isLast = index === arr.length - 1
+                            return (
+                                <TouchableOpacity
+                                    key={key}
+                                    style={[styles.typeRow, !isLast && styles.typeRowBorder]}
+                                    onPress={() => toggleType(key)}
+                                    activeOpacity={0.7}
+                                >
+                                    <View style={[styles.typeIcon, { backgroundColor: type.color + '30' }]}>
+                                        <MaterialCommunityIcons
+                                            name={type.iconName as any}
+                                            size={18}
+                                            color={type.color}
+                                        />
+                                    </View>
+                                    <Text style={styles.typeLabel}>{type.label}</Text>
+                                    <View style={[styles.checkbox, isSelected && styles.checkboxOn]}>
+                                        {isSelected && (
+                                            <MaterialCommunityIcons name="check" size={12} color={GlobalColors.white} />
+                                        )}
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </ScrollView>
+                </View>
+
+            </SafeAreaView>
+        </SafeAreaProvider>
 
     )
 }

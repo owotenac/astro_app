@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import objectTypes from '../../assets/data/celestialtype.json';
 import const_mapping from '../../assets/data/const_mapping.json';
 
@@ -96,131 +97,133 @@ const ObjectDetails = () => {
     };
 
     return (
-        <View style={globalStyles.container}>
-            {/* En-tête fixe avec bouton retour */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.white} />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>{title}</Text>
-            </View>
+        <SafeAreaProvider>
+            <SafeAreaView style={globalStyles.container}>
+                {/* En-tête fixe avec bouton retour */}
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                        <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.white} />
+                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>{title}</Text>
+                </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-                {/* Carte principale de l'objet */}
-                <View style={styles.object}>
-                    {/* Ligne supérieure: Titres et Badge de Type */}
-                    <View style={styles.topRow}>
-                        <View style={styles.textBlock}>
-                            <Text style={styles.title} numberOfLines={1}>{title}</Text>
-                            <Text style={styles.subtitle} numberOfLines={1}>{subtitle}</Text>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+                    {/* Carte principale de l'objet */}
+                    <View style={styles.object}>
+                        {/* Ligne supérieure: Titres et Badge de Type */}
+                        <View style={styles.topRow}>
+                            <View style={styles.textBlock}>
+                                <Text style={styles.title} numberOfLines={1}>{title}</Text>
+                                <Text style={styles.subtitle} numberOfLines={1}>{subtitle}</Text>
+                            </View>
+                            <View style={[styles.badgeWrapper, { backgroundColor: objectType.color + '30' }]}>
+                                <Text style={styles.badge}>
+                                    {objectType.label}
+                                </Text>
+                            </View>
                         </View>
-                        <View style={[styles.badgeWrapper, { backgroundColor: objectType.color + '30' }]}>
-                            <Text style={styles.badge}>
-                                {objectType.label}
+
+                        <View style={styles.indicatorsRow}>
+                            <View style={[styles.magnitudeWrapper, { borderLeftWidth: 0 }]}>
+                                <MaterialCommunityIcons name="weather-sunny" size={22} color={GlobalColors.white} />
+                                {object.magnitude != null && (
+                                    <Text style={styles.magnitude}>{object.magnitude.toFixed(2)}</Text>
+                                )}
+                            </View>
+                            <View style={styles.magnitudeWrapper}>
+                                <MaterialCommunityIcons name="ruler" size={22} color={GlobalColors.white} />
+                                {object.Min_Ax != null && object.Maj_Ax != null && (
+                                    <Text style={styles.magnitude}>{object.Min_Ax.toFixed(2)} x {object.Maj_Ax.toFixed(2)}</Text>
+                                )}
+                                {object.Min_Ax == null && object.Maj_Ax != null && (
+                                    <Text style={styles.magnitude}>{object.Maj_Ax.toFixed(2)}</Text>
+                                )}
+                            </View>
+                            <View style={styles.magnitudeWrapper}>
+                                <MaterialCommunityIcons name="dots-circle" size={22} color={GlobalColors.white} />
+                                {object.Const != null && (
+                                    <Text style={styles.magnitude}>{constellationName}</Text>
+                                )}
+                            </View>
+                            <View style={styles.magnitudeWrapper}>
+                                <MaterialCommunityIcons name="ev-plug-type2" size={22} color={GlobalColors.white} />
+                                {object.Hubble != null ? (
+                                    <Text style={styles.magnitude}>{getHubbleDescription(object.Hubble)}</Text>
+                                ) : (
+                                    <Text style={styles.magnitude}>--</Text>
+                                )}
+                            </View>
+                        </View>
+                    </View>
+
+                    {/* Section Informations Coordonnées et Physiques */}
+                    <View style={styles.sectionCard}>
+                        <Text style={styles.sectionTitle}>Informations Générales</Text>
+
+                        <View style={styles.row}>
+                            <Text style={styles.rowLabel}>Ascension droite :</Text>
+                            <Text style={styles.rowValue}>{object.RA}</Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.rowLabel}>Déclinaison :</Text>
+                            <Text style={styles.rowValue}>{object.Dec}</Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.rowLabel}>Coordonnées décimales :</Text>
+                            <Text style={styles.rowValue}>
+                                {object.ra_deg.toFixed(5)}° / {object.dec_deg.toFixed(5)}°
                             </Text>
                         </View>
+                        <View style={styles.row}>
+                            <Text style={styles.rowLabel}>Azimut / Altitude:</Text>
+                            <Text style={styles.rowValue}>
+                                {formatToDMS(azAlt.azimuth)} / {formatToDMS(azAlt.altitude)}
+                            </Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.rowLabel}>Constellation (code) :</Text>
+                            <Text style={styles.rowValue}>{object.Const}</Text>
+                        </View>
+                        {object.Hubble && (
+                            <View style={styles.row}>
+                                <Text style={styles.rowLabel}>Classification de Hubble :</Text>
+                                <Text style={styles.rowValue}>{object.Hubble}</Text>
+                            </View>
+                        )}
+                        {object.M && (
+                            <View style={styles.row}>
+                                <Text style={styles.rowLabel}>Désignation Messier :</Text>
+                                <Text style={styles.rowValue}>{object.M}</Text>
+                            </View>
+                        )}
+                        {object.NGC && (
+                            <View style={styles.row}>
+                                <Text style={styles.rowLabel}>Numéro NGC :</Text>
+                                <Text style={styles.rowValue}>{object.NGC}</Text>
+                            </View>
+                        )}
+                        {object.IC && (
+                            <View style={styles.row}>
+                                <Text style={styles.rowLabel}>Numéro IC :</Text>
+                                <Text style={styles.rowValue}>{object.IC}</Text>
+                            </View>
+                        )}
+                        {object.Cstar_Names && (
+                            <View style={styles.row}>
+                                <Text style={styles.rowLabel}>Étoile centrale :</Text>
+                                <Text style={styles.rowValue}>{object.Cstar_Names}</Text>
+                            </View>
+                        )}
                     </View>
 
-                    <View style={styles.indicatorsRow}>
-                        <View style={[styles.magnitudeWrapper, { borderLeftWidth: 0 }]}>
-                            <MaterialCommunityIcons name="weather-sunny" size={22} color={GlobalColors.white} />
-                            {object.magnitude != null && (
-                                <Text style={styles.magnitude}>{object.magnitude.toFixed(2)}</Text>
-                            )}
-                        </View>
-                        <View style={styles.magnitudeWrapper}>
-                            <MaterialCommunityIcons name="ruler" size={22} color={GlobalColors.white} />
-                            {object.Min_Ax != null && object.Maj_Ax != null && (
-                                <Text style={styles.magnitude}>{object.Min_Ax.toFixed(2)} x {object.Maj_Ax.toFixed(2)}</Text>
-                            )}
-                            {object.Min_Ax == null && object.Maj_Ax != null && (
-                                <Text style={styles.magnitude}>{object.Maj_Ax.toFixed(2)}</Text>
-                            )}
-                        </View>
-                        <View style={styles.magnitudeWrapper}>
-                            <MaterialCommunityIcons name="dots-circle" size={22} color={GlobalColors.white} />
-                            {object.Const != null && (
-                                <Text style={styles.magnitude}>{constellationName}</Text>
-                            )}
-                        </View>
-                        <View style={styles.magnitudeWrapper}>
-                            <MaterialCommunityIcons name="ev-plug-type2" size={22} color={GlobalColors.white} />
-                            {object.Hubble != null ? (
-                                <Text style={styles.magnitude}>{getHubbleDescription(object.Hubble)}</Text>
-                            ) : (
-                                <Text style={styles.magnitude}>--</Text>
-                            )}
-                        </View>
-                    </View>
-                </View>
+                    {/* Section Photométrie */}
+                    {renderPhotometry()}
 
-                {/* Section Informations Coordonnées et Physiques */}
-                <View style={styles.sectionCard}>
-                    <Text style={styles.sectionTitle}>Informations Générales</Text>
-
-                    <View style={styles.row}>
-                        <Text style={styles.rowLabel}>Ascension droite :</Text>
-                        <Text style={styles.rowValue}>{object.RA}</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.rowLabel}>Déclinaison :</Text>
-                        <Text style={styles.rowValue}>{object.Dec}</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.rowLabel}>Coordonnées décimales :</Text>
-                        <Text style={styles.rowValue}>
-                            {object.ra_deg.toFixed(5)}° / {object.dec_deg.toFixed(5)}°
-                        </Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.rowLabel}>Azimut / Altitude:</Text>
-                        <Text style={styles.rowValue}>
-                            {formatToDMS(azAlt.azimuth)} / {formatToDMS(azAlt.altitude)}
-                        </Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.rowLabel}>Constellation (code) :</Text>
-                        <Text style={styles.rowValue}>{object.Const}</Text>
-                    </View>
-                    {object.Hubble && (
-                        <View style={styles.row}>
-                            <Text style={styles.rowLabel}>Classification de Hubble :</Text>
-                            <Text style={styles.rowValue}>{object.Hubble}</Text>
-                        </View>
-                    )}
-                    {object.M && (
-                        <View style={styles.row}>
-                            <Text style={styles.rowLabel}>Désignation Messier :</Text>
-                            <Text style={styles.rowValue}>{object.M}</Text>
-                        </View>
-                    )}
-                    {object.NGC && (
-                        <View style={styles.row}>
-                            <Text style={styles.rowLabel}>Numéro NGC :</Text>
-                            <Text style={styles.rowValue}>{object.NGC}</Text>
-                        </View>
-                    )}
-                    {object.IC && (
-                        <View style={styles.row}>
-                            <Text style={styles.rowLabel}>Numéro IC :</Text>
-                            <Text style={styles.rowValue}>{object.IC}</Text>
-                        </View>
-                    )}
-                    {object.Cstar_Names && (
-                        <View style={styles.row}>
-                            <Text style={styles.rowLabel}>Étoile centrale :</Text>
-                            <Text style={styles.rowValue}>{object.Cstar_Names}</Text>
-                        </View>
-                    )}
-                </View>
-
-                {/* Section Photométrie */}
-                {renderPhotometry()}
-
-                {/* Section Identifiants Alternatifs */}
-                {renderIdentifiers()}
-            </ScrollView>
-        </View>
+                    {/* Section Identifiants Alternatifs */}
+                    {renderIdentifiers()}
+                </ScrollView>
+            </SafeAreaView>
+        </SafeAreaProvider>
     )
 }
 

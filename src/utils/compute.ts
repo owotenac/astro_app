@@ -45,9 +45,23 @@ export const updateObserver = (latitude: number, longitude: number, height: numb
  *               - Dans le catalogue : passer une Date créée une seule fois avant la boucle de filtre.
  *               - Dans le tick temps réel : passer new Date() à chaque intervalle.
  */
-export const computeAzAlt = (item: CelestialObject, date: Date = new Date()) => {
+export function computeAzAlt(item: CelestialObject, date: Date = new Date()) {
     const raHours = item.ra_deg / 15; // astronomy-engine attend la RA en HEURES (0-24)
     const decDegrees = item.dec_deg;  // La déclinaison reste en degrés
 
     return Horizon(date, _observer, raHours, decDegrees, 'normal');
-};
+}
+
+
+/**
+ * Filtre EMA (Exponential Moving Average) wrap-safe pour l'azimut.
+ * Gère correctement le passage 359° → 0° pour éviter que la moyenne
+ * parte dans le mauvais sens lors du franchissement du Nord.
+ */
+export function emaAzimuth(prev: number, raw: number, alpha: number): number {
+    let delta = raw - prev;
+    // Correction du wrap-around boussole
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+    return (prev + alpha * delta + 360) % 360;
+}

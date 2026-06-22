@@ -1,11 +1,12 @@
 import CelestialObjectComponent from '@/components/celestialobjects-component'
 import { useFilterStore } from '@/hooks/useFilterStore'
 import { CelestialType } from '@/model/celestialtype'
-import { computeAzAlt } from '@/utils/compute'
+import { filterCatalog } from '@/utils/filter'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import objectTypesJson from '../../assets/data/celestialtype.json'
 import ngc from '../../assets/data/ngc.json'
 import { GlobalColors, globalStyles } from '../global/theme'
@@ -16,66 +17,49 @@ const objectTypes = objectTypesJson as Record<string, CelestialType>
 const catalog: CelestialObject[] = ngc as CelestialObject[];
 
 export default function Catalog() {
-    const { currentFilter } = useFilterStore();
+    const currentFilter = useFilterStore(state => state.currentFilter);
     const [searchTxt, setSearchTxt] = useState("");
     const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>(catalog);
 
-    const filter = () => {
-        let filterCatalogTemp = catalog;
-
-        //filter on types
-        if (currentFilter.types.length > 0) {
-            filterCatalogTemp = filterCatalogTemp.filter(item => currentFilter.types.includes(item.Type));
-        }
-        //filter on magnitude
-        filterCatalogTemp = filterCatalogTemp.filter(item => item.magnitude >= currentFilter.magMin && item.magnitude <= currentFilter.magMax);
-        //filter on altitude
-        const now = new Date();
-        filterCatalogTemp = filterCatalogTemp.filter(item => {
-            const azAlt = computeAzAlt(item, now);
-            return azAlt.altitude >= currentFilter.altMin && azAlt.altitude <= currentFilter.altMax;
-        });
-        //filter on name
-        setFilteredCatalog(filterCatalogTemp.filter(item => (item.Name + item.Common_names + item.M).toLowerCase().includes(searchTxt.toLowerCase())));
-    }
-
     useEffect(() => {
-        filter();
+        setFilteredCatalog(filterCatalog(currentFilter, searchTxt));
     }, [currentFilter]);
 
     const onSearch = () => {
-        filter();
+        setFilteredCatalog(filterCatalog(currentFilter, searchTxt));
     }
 
     return (
-        <View style={globalStyles.container}>
-            <View style={styles.header}>
-                <Text style={globalStyles.font_title}>Catalogue</Text>
-            </View>
-            <View style={styles.search_view}>
-                <TextInput
-                    style={styles.search_bar}
-                    onChangeText={setSearchTxt}
-                    value={searchTxt}
-                    placeholder='Rechercher'
-                    placeholderTextColor={GlobalColors.placeholder}
-                    clearButtonMode='always'
-                    autoCorrect={false}
-                    onSubmitEditing={onSearch}
-                />
-                <TouchableOpacity onPress={() => router.push("/filter")}>
-                    <MaterialCommunityIcons name="tune-variant" size={22} color={GlobalColors.accent} />
-                </TouchableOpacity>
-            </View>
-            <Text style={styles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
+        <SafeAreaProvider>
+            <SafeAreaView style={globalStyles.container}>
+                <View style={styles.header}>
+                    <Text style={globalStyles.font_title}>Catalogue</Text>
+                </View>
+                <View style={styles.search_view}>
+                    <TextInput
+                        style={styles.search_bar}
+                        onChangeText={setSearchTxt}
+                        value={searchTxt}
+                        placeholder='Rechercher'
+                        placeholderTextColor={GlobalColors.placeholder}
+                        clearButtonMode='always'
+                        autoCorrect={false}
+                        onSubmitEditing={onSearch}
+                    />
+                    <TouchableOpacity onPress={() => router.push("/filter")}>
+                        <MaterialCommunityIcons name="tune-variant" size={22} color={GlobalColors.accent} />
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
 
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                data={filteredCatalog}
-                renderItem={({ item }) => <CelestialObjectComponent object={item} />}
-                keyExtractor={item => item.Name}
-            />
-        </View>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={filteredCatalog}
+                    renderItem={({ item }) => <CelestialObjectComponent object={item} />}
+                    keyExtractor={item => item.Name}
+                />
+            </SafeAreaView>
+        </SafeAreaProvider>
     )
 }
 
