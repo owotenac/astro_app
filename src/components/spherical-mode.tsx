@@ -2,6 +2,7 @@ import typesMapping from '@/assets/data/celestialtype.json';
 import { GlobalColors, globalStyles } from '@/global/theme';
 import { useFilterStore } from '@/hooks/useFilterStore';
 import { useLocation } from '@/hooks/useLocation';
+import { useMountStore } from '@/hooks/useMountStore';
 import { useObservationStore } from '@/hooks/useObservationStore';
 import { CelestialObject } from '@/model/celestialobject';
 import { computeAzAlt } from '@/utils/compute';
@@ -103,6 +104,7 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
     const currentFilter = useFilterStore(state => state.currentFilter);
     const location = useLocation();
     const setTargetDate = useObservationStore(state => state.setTargetDate);
+    const mountPosition = useMountStore(state => state.mountPosition);
 
     const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>([]);
     const [visibleObjects, setVisibleObjects] = useState<RenderedObject[]>([]);
@@ -261,6 +263,17 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
         });
     }, []);
 
+    // ── Position de la monture projetée ─────────────────────────────────────────
+    const projectedMountPosition = useMemo(() => {
+        if (!mountPosition || gridMode !== 'azimuthal') return null;
+        const projected = azimuthalEquidistantProject(mountPosition.az, mountPosition.alt, SKY_RADIUS, -5);
+        if (!projected.visible) return null;
+        return {
+            x: projected.x + SKY_RADIUS,
+            y: projected.y + SKY_RADIUS,
+        };
+    }, [mountPosition, gridMode]);
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     const observationTime = (): string => {
@@ -343,8 +356,8 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                                 ))}
 
                                 {/* Lignes azimutales */}
-                                {CARDINALS.filter(c => c.az % 90 === 0).map(c => {
-                                    const rotation = c.az - 90;
+                                {CARDINALS.filter(c => c.az % 45 === 0).map(c => {
+                                    const rotation = c.az - 45;
                                     return (
                                         <View
                                             key={c.az}
@@ -496,6 +509,16 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                                 </Text>
                             </TouchableOpacity>
                         ))}
+
+                        {/* Mount Position Marker */}
+                        {projectedMountPosition && (
+                            <View style={[styles.mountMarker, {
+                                left: projectedMountPosition.x - 16,
+                                top: projectedMountPosition.y - 16,
+                            }]}>
+                                <MaterialCommunityIcons name="crosshairs-gps" size={32} color="#ff6b6b" />
+                            </View>
+                        )}
                     </View>
                 </View>
 
@@ -519,11 +542,6 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                         maximumTrackTintColor="#1f2833"
                         thumbTintColor={GlobalColors.accent}
                     />
-                    <View style={styles.legendRow}>
-                        <Text style={styles.legendText}>
-                            {visibleStars.length} étoiles · {visibleObjects.length} objets
-                        </Text>
-                    </View>
                 </View>
 
             </SafeAreaView>
@@ -603,7 +621,7 @@ const styles = StyleSheet.create({
     gridLine: {
         position: 'absolute',
         height: 1,
-        backgroundColor: 'rgba(100, 120, 140, 0.15)',
+        backgroundColor: 'rgba(100, 120, 140, 0.25)',
     },
     gridLineEquatorial: {
         backgroundColor: 'rgba(100, 140, 200, 0.2)',
@@ -636,8 +654,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: '50%',
         top: '50%',
-        marginLeft: -14,
-        marginTop: -12,
+        marginLeft: -4,
+        marginTop: -2,
         alignItems: 'center',
     },
     centerDot: {
@@ -700,6 +718,13 @@ const styles = StyleSheet.create({
         textShadowColor: 'rgba(0,0,0,0.9)',
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 3,
+    },
+
+    // Mount position marker
+    mountMarker: {
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     // Footer

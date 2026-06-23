@@ -5,7 +5,6 @@ import { CelestialType } from '@/model/celestialtype'
 import { filterCatalog } from '@/utils/filter'
 import { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import objectTypesJson from '../../assets/data/celestialtype.json'
 import ngc from '../../assets/data/ngc.json'
 import { GlobalColors, globalStyles } from '../global/theme'
@@ -34,39 +33,37 @@ export default function Catalog({ onSelectObject }: CatalogProps) {
     }
 
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={globalStyles.container}>
-                <View style={styles.header}>
-                    <Text style={globalStyles.font_subtitle}>Catalogue</Text>
-                </View>
-                <View style={styles.search_view}>
-                    <TextInput
-                        style={styles.search_bar}
-                        onChangeText={setSearchTxt}
-                        value={searchTxt}
-                        placeholder='Rechercher'
-                        placeholderTextColor={GlobalColors.placeholder}
-                        clearButtonMode='always'
-                        autoCorrect={false}
-                        onSubmitEditing={onSearch}
-                    />
-
-                </View>
-                <Text style={styles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
-
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    data={filteredCatalog}
-                    renderItem={({ item }) => (
-                        <CelestialObjectComponent
-                            object={item}
-                            onPress={onSelectObject ? () => onSelectObject(item) : undefined}
-                        />
-                    )}
-                    keyExtractor={item => item.Name}
+        <View style={globalStyles.container}>
+            <View style={styles.header}>
+                <Text style={globalStyles.font_subtitle}>Catalogue</Text>
+            </View>
+            <View style={styles.search_view}>
+                <TextInput
+                    style={styles.search_bar}
+                    onChangeText={setSearchTxt}
+                    value={searchTxt}
+                    placeholder='Rechercher'
+                    placeholderTextColor={GlobalColors.placeholder}
+                    clearButtonMode='always'
+                    autoCorrect={false}
+                    onSubmitEditing={onSearch}
                 />
-            </SafeAreaView>
-        </SafeAreaProvider>
+
+            </View>
+            <Text style={styles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
+
+            <FlatList
+                showsVerticalScrollIndicator={false}
+                data={filteredCatalog}
+                renderItem={({ item }) => (
+                    <CelestialObjectComponent
+                        object={item}
+                        onPress={onSelectObject ? () => onSelectObject(item) : undefined}
+                    />
+                )}
+                keyExtractor={item => item.Name}
+            />
+        </View>
     )
 }
 

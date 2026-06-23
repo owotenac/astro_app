@@ -1,4 +1,5 @@
 import Filter from '@/components/filter';
+import Mount from '@/components/mount';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -12,6 +13,7 @@ import { CelestialObject } from "../model/celestialobject";
 export default function Index() {
   const [selectedObject, setSelectedObject] = useState<CelestialObject | null>(null);
   const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [showMount, setShowMount] = useState<boolean>(false);
 
   const handleObjectSelect = (object: CelestialObject) => {
     setSelectedObject(object);
@@ -25,6 +27,10 @@ export default function Index() {
     setShowFilter(!showFilter);
   }
 
+  const openMount = () => {
+    setShowMount(!showMount);
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={globalStyles.container}>
@@ -33,9 +39,14 @@ export default function Index() {
           <View style={{ width: "30%" }}>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
               <Text style={globalStyles.font_title}>Astro App</Text>
-              <TouchableOpacity onPress={openFilter}>
-                <MaterialCommunityIcons name="tune-variant" size={30} color={GlobalColors.accent} />
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-around", gap: 10 }}>
+                <TouchableOpacity onPress={openFilter}>
+                  <MaterialCommunityIcons name="tune-variant" size={30} color={GlobalColors.accent} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={openMount}>
+                  <MaterialCommunityIcons name="telescope" size={30} color={GlobalColors.accent} />
+                </TouchableOpacity>
+              </View>
             </View>
 
             {/* Afficher soit le Catalogue soit les Détails soit les settings*/}
@@ -48,7 +59,11 @@ export default function Index() {
               showFilter ? (
                 <Filter onClose={openFilter} />
               ) : (
-                <Catalog onSelectObject={handleObjectSelect} />
+                showMount ? (
+                  <Mount onClose={openMount} />
+                ) : (
+                  <Catalog onSelectObject={handleObjectSelect} />
+                )
               )
             )}
           </View>
