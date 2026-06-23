@@ -1,14 +1,18 @@
 import { GlobalColors } from '@/global/theme'
 import { CelestialObject } from '@/model/celestialobject'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { router } from 'expo-router'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import objectTypes from '../../assets/data/celestialtype.json'
 import const_mapping from '../../assets/data/const_mapping.json'
 import { CelestialType } from '../model/celestialtype'
 
-const CelestialObjectComponent = ({ object }: { object: CelestialObject }) => {
+interface CelestialObjectComponentProps {
+    object: CelestialObject;
+    onPress?: () => void;
+}
+
+const CelestialObjectComponent = ({ object, onPress }: CelestialObjectComponentProps) => {
     let objectType = objectTypes[object.Type as keyof typeof objectTypes] as CelestialType;
     if (!objectType) {
         objectType = { label: object.Type, iconName: "help-circle-outline", color: GlobalColors.nightMode };
@@ -20,11 +24,14 @@ const CelestialObjectComponent = ({ object }: { object: CelestialObject }) => {
     const constKey = object.Const as keyof typeof const_mapping;
     const constellationName = const_mapping[constKey]?.fr || object.Const;
 
+    const handlePress = () => {
+        if (onPress) {
+            onPress();
+        }
+    };
+
     return (
-        <TouchableOpacity style={styles.object} onPress={() => router.push({
-            pathname: '/object-details',
-            params: { object: JSON.stringify(object) }
-        })}>
+        <TouchableOpacity style={styles.object} onPress={() => handlePress()}>
             <View style={[styles.icon, { backgroundColor: objectType.color + '30' }]}>
                 <MaterialCommunityIcons
                     name={objectType.iconName as any}

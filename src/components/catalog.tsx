@@ -14,7 +14,11 @@ const objectTypes = objectTypesJson as Record<string, CelestialType>
 //const catalog: CelestialObject[] = messier as CelestialObject[];
 const catalog: CelestialObject[] = ngc as CelestialObject[];
 
-export default function Catalog() {
+interface CatalogProps {
+    onSelectObject?: (object: CelestialObject) => void;
+}
+
+export default function Catalog({ onSelectObject }: CatalogProps) {
     const currentFilter = useFilterStore(state => state.currentFilter);
     const [searchTxt, setSearchTxt] = useState("");
     const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>(catalog);
@@ -51,7 +55,12 @@ export default function Catalog() {
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     data={filteredCatalog}
-                    renderItem={({ item }) => <CelestialObjectComponent object={item} />}
+                    renderItem={({ item }) => (
+                        <CelestialObjectComponent
+                            object={item}
+                            onPress={onSelectObject ? () => onSelectObject(item) : undefined}
+                        />
+                    )}
                     keyExtractor={item => item.Name}
                 />
             </SafeAreaView>

@@ -13,7 +13,6 @@ import {
 } from '@/utils/projection';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Slider } from '@miblanchard/react-native-slider';
-import { router } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Dimensions,
@@ -91,9 +90,15 @@ const magToOpacity = (mag: number): number => {
     return Math.max(0.3, Math.min(1, 1.2 - mag * 0.15));
 };
 
+// ─── Types props ──────────────────────────────────────────────────────────────
+
+interface SphericalPlanetariumProps {
+    onSelectObject?: (object: CelestialObject) => void;
+}
+
 // ─── Écran principal ──────────────────────────────────────────────────────────
 
-export default function SphericalPlanetariumScreen() {
+export default function SphericalPlanetariumScreen({ onSelectObject }: SphericalPlanetariumProps) {
     const currentFilter = useFilterStore(state => state.currentFilter);
     const location = useLocation();
 
@@ -414,7 +419,7 @@ export default function SphericalPlanetariumScreen() {
 
                         {/* Étoiles (fond) */}
                         {visibleStars.map((s, i) => (
-                            <TouchableOpacity onPress={() => starDetails(s.star)} key={`star-${i}`}>
+                            <TouchableOpacity onPress={() => starDetails(s.star)} key={`star-${i}`} disabled={s.star.common_name === null}>
                                 {/* Point de l'étoile */}
                                 <View
                                     style={[styles.starDot, {
@@ -426,7 +431,7 @@ export default function SphericalPlanetariumScreen() {
                                         opacity: s.opacity,
                                     }]}
                                 />
-                                {/* Nom de l'étoile (séparé pour éviter le clipping) */}
+                                {/* Nom de l'étoile */}
                                 {s.star.common_name && (
                                     <Text
                                         style={[styles.starName, {
@@ -449,10 +454,11 @@ export default function SphericalPlanetariumScreen() {
                                     top: obj.y - 16,
                                     opacity: obj.alt < 0 ? 0.25 : 1,
                                 }]}
-                                onPress={() => router.push({
-                                    pathname: '/object-details',
-                                    params: { object: JSON.stringify(obj.object) }
-                                })}
+                                onPress={() => {
+                                    if (onSelectObject) {
+                                        onSelectObject(obj.object);
+                                    } 
+                                }}
                             >
                                 <View style={[styles.objectDot, { borderColor: obj.color }]}>
                                     <View style={[styles.objectDotInner, { backgroundColor: obj.color }]} />
