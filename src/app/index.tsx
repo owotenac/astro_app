@@ -38,7 +38,7 @@ export default function Index() {
               </TouchableOpacity>
             </View>
 
-            {/* Afficher soit le Catalogue soit les Détails */}
+            {/* Afficher soit le Catalogue soit les Détails soit les settings*/}
             {selectedObject ? (
               <ObjectDetailsComponent
                 object={selectedObject}

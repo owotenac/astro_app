@@ -5,7 +5,7 @@ import { computeAzAlt } from "./compute";
 
 const catalog: CelestialObject[] = catalogJson as CelestialObject[];
 
-export const filterCatalog = (currentFilter: CurrentFilter, searchTxt: string = ''): CelestialObject[] => {
+export const filterCatalog = (currentFilter: CurrentFilter, searchTxt: string = '', observationDate: Date = new Date()): CelestialObject[] => {
     let filterCatalogTemp = catalog;
 
     //filter on types
@@ -15,14 +15,13 @@ export const filterCatalog = (currentFilter: CurrentFilter, searchTxt: string = 
     //filter on magnitude
     filterCatalogTemp = filterCatalogTemp.filter(item => item.magnitude >= currentFilter.magMin && item.magnitude <= currentFilter.magMax);
     //filter on altitude
-    const now = new Date();
     filterCatalogTemp = filterCatalogTemp.filter(item => {
-        const azAlt = computeAzAlt(item, now);
+        const azAlt = computeAzAlt(item, observationDate);
         return azAlt.altitude >= currentFilter.altMin && azAlt.altitude <= currentFilter.altMax;
     });
     //filter on name
     if (searchTxt.length > 0) {
-        filterCatalogTemp = filterCatalogTemp.filter(item => (item.Name + item.Common_names + item.M).toLowerCase().includes(searchTxt.toLowerCase()));
+        filterCatalogTemp = filterCatalogTemp.filter(item => item.Name.toLowerCase().includes(searchTxt.toLowerCase()) || item.Common_names?.toLowerCase().includes(searchTxt.toLowerCase()) || item.M?.toLowerCase().includes(searchTxt.toLowerCase()));
     }
 
     return filterCatalogTemp;

@@ -2,6 +2,7 @@ import typesMapping from '@/assets/data/celestialtype.json';
 import { GlobalColors, globalStyles } from '@/global/theme';
 import { useFilterStore } from '@/hooks/useFilterStore';
 import { useLocation } from '@/hooks/useLocation';
+import { useObservationStore } from '@/hooks/useObservationStore';
 import { CelestialObject } from '@/model/celestialobject';
 import { computeAzAlt } from '@/utils/compute';
 import { filterCatalog } from '@/utils/filter';
@@ -101,17 +102,13 @@ interface SphericalPlanetariumProps {
 export default function SphericalPlanetariumScreen({ onSelectObject }: SphericalPlanetariumProps) {
     const currentFilter = useFilterStore(state => state.currentFilter);
     const location = useLocation();
+    const setTargetDate = useObservationStore(state => state.setTargetDate);
 
     const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>([]);
     const [visibleObjects, setVisibleObjects] = useState<RenderedObject[]>([]);
     const [visibleStars, setVisibleStars] = useState<RenderedStar[]>([]);
     const [timeOffset, setTimeOffset] = useState(0);
     const [gridMode, setGridMode] = useState<GridMode>('azimuthal');
-
-    // ── Catalogue filtré ──────────────────────────────────────────────────────
-    useEffect(() => {
-        setFilteredCatalog(filterCatalog(currentFilter));
-    }, [currentFilter]);
 
     // ── Date/heure cible ──────────────────────────────────────────────────────
     const targetDate = useMemo(() => {
@@ -120,11 +117,30 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
         return d;
     }, [timeOffset]);
 
+    // ── Catalogue filtré ──────────────────────────────────────────────────────
+    useEffect(() => {
+        setFilteredCatalog(filterCatalog(currentFilter, '', targetDate));
+    }, [currentFilter, targetDate]);
+
+    // Sync target date to global store
+    useEffect(() => {
+        setTargetDate(targetDate);
+    }, [targetDate, setTargetDate]);
+
     // ── Temps sidéral local (pour grille équatoriale) ─────────────────────────
     const lst = useMemo(() => {
         if (!location.ready) return 0;
         return computeLST(targetDate, location.longitude);
     }, [targetDate, location.ready, location.longitude]);
+
+    useEffect(() => {
+        const tick = () => {
+            setTimeOffset(t => t + 0.0005)
+        }
+        tick();
+        const intervalId = setInterval(tick, 5000);
+        return () => clearInterval(intervalId);
+    }, []);
 
     // ── Moteur de projection ──────────────────────────────────────────────────
     useEffect(() => {
@@ -145,7 +161,14 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                 projected = equatorialPolarProject(obj.ra_deg, obj.dec_deg, SKY_RADIUS, -10, lst);
             }
 
-            if (!projected.visible) continue;
+            if (!projected.visible) {
+                if (obj.M === 'M25') {
+                    console.log('Object not visible:', obj);
+                    console.log('azimuth:', azimuth);
+                    console.log('altitude:', altitude);
+                }
+                continue;
+            }
 
             const typeInfo = typesMapping[obj.Type as keyof typeof typesMapping]
                 ?? { label: obj.Type, color: '#9E9E9E' };
@@ -161,6 +184,7 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                 ra: obj.ra_deg,
                 dec: obj.dec_deg,
             });
+
         }
 
         setVisibleObjects(nextObjects);
@@ -187,7 +211,7 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
 
             if (!projected.visible) continue;
 
-            if (star.v_mag > 2.5) 
+            if (star.v_mag > 2.5)
                 star.common_name = null; // N'affiche les noms que pour les étoiles brillantes
 
             nextStars.push({
@@ -240,7 +264,11 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     const observationTime = (): string => {
-        return `${targetDate.getHours()}h${targetDate.getMinutes().toString().padStart(2, '0')}`;
+        return `${targetDate.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        })} - ${targetDate.getHours()}h${targetDate.getMinutes().toString().padStart(2, '0')}m${targetDate.getSeconds().toString().padStart(2, '0')}s`;
     };
 
     const lstDisplay = (): string => {
@@ -457,7 +485,7 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                                 onPress={() => {
                                     if (onSelectObject) {
                                         onSelectObject(obj.object);
-                                    } 
+                                    }
                                 }}
                             >
                                 <View style={[styles.objectDot, { borderColor: obj.color }]}>
@@ -473,6 +501,10 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
 
                 {/* Footer */}
                 <View style={styles.footer}>
+                    <View style={styles.footerRow}>
+                        <Text style={styles.footerLabel}>Location:</Text>
+                        <Text style={styles.footerLabel}>{location.latitude.toFixed(2)}°, {location.longitude.toFixed(2)}°</Text>
+                    </View>
                     <View style={styles.footerRow}>
                         <Text style={styles.footerLabel}>Heure d'observation</Text>
                         <Text style={styles.footerValue}>{observationTime()}</Text>
@@ -679,9 +711,9 @@ const styles = StyleSheet.create({
     },
     footerRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 6,
+        gap: 10
     },
     footerLabel: {
         color: '#c5c6c7',

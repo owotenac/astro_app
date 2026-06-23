@@ -1,4 +1,5 @@
 import { GlobalColors, globalStyles } from '@/global/theme';
+import { useObservationStore } from '@/hooks/useObservationStore';
 import { CelestialObject } from '@/model/celestialobject';
 import { CelestialType } from '@/model/celestialtype';
 import { computeAzAlt, formatToDMS } from '@/utils/compute';
@@ -36,15 +37,23 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
     const constKey = object.Const as keyof typeof const_mapping;
     const constellationName = const_mapping[constKey]?.fr || object.Const;
     const [azAlt, setAzAlt] = useState({ azimuth: 0, altitude: 0 });
+    const [targetAzAlt, setTargetAzAlt] = useState({ azimuth: 0, altitude: 0 });
+    const targetDate = useObservationStore(state => state.targetDate);
 
+    // Update current Az/Alt in real-time
     useEffect(() => {
         const tick = () => {
-            setAzAlt(computeAzAlt(object))
+            setAzAlt(computeAzAlt(object));
         }
         tick();
         const intervalId = setInterval(tick, 1000);
         return () => clearInterval(intervalId);
     }, [object]);
+
+    // Update targeted Az/Alt when targetDate changes
+    useEffect(() => {
+        setTargetAzAlt(computeAzAlt(object, targetDate));
+    }, [object, targetDate]);
 
     const renderPhotometry = () => {
         const bands = [
@@ -152,11 +161,18 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
                         <Text style={styles.rowValue}>{object.RA} / {object.Dec}</Text>
                     </View>
                     <View style={styles.row}>
-                        <Text style={styles.rowLabel}>Az / Alt :</Text>
+                        <Text style={styles.rowLabel}>Current Az / Alt :</Text>
                         <Text style={styles.rowValue}>
                             {formatToDMS(azAlt.azimuth)} / {formatToDMS(azAlt.altitude)}
                         </Text>
                     </View>
+                    <View style={styles.row}>
+                        <Text style={styles.rowLabel}>Targeted Az / Alt :</Text>
+                        <Text style={styles.rowValue}>
+                            {formatToDMS(targetAzAlt.azimuth)} / {formatToDMS(targetAzAlt.altitude)}
+                        </Text>
+                    </View>
+
                     {object.Hubble && (
                         <View style={styles.row}>
                             <Text style={styles.rowLabel}>Hubble :</Text>

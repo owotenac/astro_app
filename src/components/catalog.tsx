@@ -1,5 +1,6 @@
 import CelestialObjectComponent from '@/components/celestialobjects-component'
 import { useFilterStore } from '@/hooks/useFilterStore'
+import { useObservationStore } from '@/hooks/useObservationStore'
 import { CelestialType } from '@/model/celestialtype'
 import { filterCatalog } from '@/utils/filter'
 import { useEffect, useState } from 'react'
@@ -20,15 +21,16 @@ interface CatalogProps {
 
 export default function Catalog({ onSelectObject }: CatalogProps) {
     const currentFilter = useFilterStore(state => state.currentFilter);
+    const targetDate = useObservationStore(state => state.targetDate);
     const [searchTxt, setSearchTxt] = useState("");
     const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>(catalog);
 
     useEffect(() => {
-        setFilteredCatalog(filterCatalog(currentFilter, searchTxt));
-    }, [currentFilter]);
+        setFilteredCatalog(filterCatalog(currentFilter, searchTxt, targetDate));
+    }, [currentFilter, searchTxt, targetDate]);
 
     const onSearch = () => {
-        setFilteredCatalog(filterCatalog(currentFilter, searchTxt));
+        setFilteredCatalog(filterCatalog(currentFilter, searchTxt, targetDate));
     }
 
     return (
