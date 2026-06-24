@@ -1,24 +1,18 @@
 import CelestialObjectComponent from '@/components/celestialobjects-component'
 import { useFilterStore } from '@/hooks/useFilterStore'
+import { useMountStore } from '@/hooks/useMountStore'
 import { useObservationStore } from '@/hooks/useObservationStore'
-import { CelestialType } from '@/model/celestialtype'
 import { filterCatalog } from '@/utils/filter'
 import { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
-import objectTypesJson from '../../assets/data/celestialtype.json'
 import ngc from '../../assets/data/ngc.json'
 import { GlobalColors, globalStyles } from '../global/theme'
 import { CelestialObject } from '../model/celestialobject'
-const objectTypes = objectTypesJson as Record<string, CelestialType>
 
-//const catalog: CelestialObject[] = messier as CelestialObject[];
 const catalog: CelestialObject[] = ngc as CelestialObject[];
 
-interface CatalogProps {
-    onSelectObject?: (object: CelestialObject) => void;
-}
-
-export default function Catalog({ onSelectObject }: CatalogProps) {
+export default function Catalog() {
+    const setSelectedObject = useMountStore(state => state.setSelectedObject);
     const currentFilter = useFilterStore(state => state.currentFilter);
     const targetDate = useObservationStore(state => state.targetDate);
     const [searchTxt, setSearchTxt] = useState("");
@@ -58,7 +52,7 @@ export default function Catalog({ onSelectObject }: CatalogProps) {
                 renderItem={({ item }) => (
                     <CelestialObjectComponent
                         object={item}
-                        onPress={onSelectObject ? () => onSelectObject(item) : undefined}
+                        onPress={() => setSelectedObject(item)}
                     />
                 )}
                 keyExtractor={item => item.Name}

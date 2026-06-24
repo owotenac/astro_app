@@ -51,17 +51,3 @@ export function computeAzAlt(item: CelestialObject, date: Date = new Date()) {
 
     return Horizon(date, _observer, raHours, decDegrees, 'normal');
 }
-
-
-/**
- * Filtre EMA (Exponential Moving Average) wrap-safe pour l'azimut.
- * Gère correctement le passage 359° → 0° pour éviter que la moyenne
- * parte dans le mauvais sens lors du franchissement du Nord.
- */
-export function emaAzimuth(prev: number, raw: number, alpha: number): number {
-    let delta = raw - prev;
-    // Correction du wrap-around boussole
-    if (delta > 180) delta -= 360;
-    if (delta < -180) delta += 360;
-    return (prev + alpha * delta + 360) % 360;
-}

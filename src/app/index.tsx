@@ -1,5 +1,6 @@
 import Filter from '@/components/filter';
 import Mount from '@/components/mount';
+import { useMountStore } from '@/hooks/useMountStore';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -8,20 +9,12 @@ import Catalog from "../components/catalog";
 import ObjectDetailsComponent from "../components/object-details";
 import SphericalPlanetariumScreen from "../components/spherical-mode";
 import { GlobalColors, globalStyles } from "../global/theme";
-import { CelestialObject } from "../model/celestialobject";
 
 export default function Index() {
-  const [selectedObject, setSelectedObject] = useState<CelestialObject | null>(null);
+  const selectedObject = useMountStore(state => state.selectedObject);
+  const setSelectedObject = useMountStore(state => state.setSelectedObject);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [showMount, setShowMount] = useState<boolean>(false);
-
-  const handleObjectSelect = (object: CelestialObject) => {
-    setSelectedObject(object);
-  };
-
-  const handleCloseDetails = () => {
-    setSelectedObject(null);
-  };
 
   const openFilter = () => {
     setShowFilter(!showFilter);
@@ -53,7 +46,7 @@ export default function Index() {
             {selectedObject ? (
               <ObjectDetailsComponent
                 object={selectedObject}
-                onClose={handleCloseDetails}
+                onClose={() => setSelectedObject(null)}
               />
             ) : (
               showFilter ? (
@@ -62,12 +55,12 @@ export default function Index() {
                 showMount ? (
                   <Mount onClose={openMount} />
                 ) : (
-                  <Catalog onSelectObject={handleObjectSelect} />
+                  <Catalog />
                 )
               )
             )}
           </View>
-          <SphericalPlanetariumScreen onSelectObject={handleObjectSelect} />
+          <SphericalPlanetariumScreen />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

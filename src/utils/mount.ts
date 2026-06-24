@@ -45,7 +45,7 @@ export class ASCOM_Telescope {
         return response.data;
     }
 
-    async slew(ra: number, dec: number): Promise<void> {
-        await api.post('/api/v1/mount/slew', { ra, dec });
+    async slew(az: number, alt: number): Promise<void> {
+        await api.post('/api/v1/mount/slew', { "az": az, "alt": alt });
     }
 }

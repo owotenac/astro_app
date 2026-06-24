@@ -92,19 +92,17 @@ const magToOpacity = (mag: number): number => {
     return Math.max(0.3, Math.min(1, 1.2 - mag * 0.15));
 };
 
-// ─── Types props ──────────────────────────────────────────────────────────────
-
-interface SphericalPlanetariumProps {
-    onSelectObject?: (object: CelestialObject) => void;
-}
-
 // ─── Écran principal ──────────────────────────────────────────────────────────
 
-export default function SphericalPlanetariumScreen({ onSelectObject }: SphericalPlanetariumProps) {
+export default function SphericalPlanetariumScreen() {
     const currentFilter = useFilterStore(state => state.currentFilter);
     const location = useLocation();
     const setTargetDate = useObservationStore(state => state.setTargetDate);
     const mountPosition = useMountStore(state => state.mountPosition);
+    const slewMode = useMountStore(state => state.slewMode);
+    const setTargetPosition = useMountStore(state => state.setTargetPosition);
+    const selectedObject = useMountStore(state => state.selectedObject);
+    const setSelectedObject = useMountStore(state => state.setSelectedObject);
 
     const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>([]);
     const [visibleObjects, setVisibleObjects] = useState<RenderedObject[]>([]);
@@ -137,10 +135,10 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
 
     useEffect(() => {
         const tick = () => {
-            setTimeOffset(t => t + 0.0005)
+            setTimeOffset(t => t + 0.0001)
         }
         tick();
-        const intervalId = setInterval(tick, 5000);
+        const intervalId = setInterval(tick, 1000);
         return () => clearInterval(intervalId);
     }, []);
 
@@ -163,14 +161,7 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                 projected = equatorialPolarProject(obj.ra_deg, obj.dec_deg, SKY_RADIUS, -10, lst);
             }
 
-            if (!projected.visible) {
-                if (obj.M === 'M25') {
-                    console.log('Object not visible:', obj);
-                    console.log('azimuth:', azimuth);
-                    console.log('altitude:', altitude);
-                }
-                continue;
-            }
+            if (!projected.visible) continue;
 
             const typeInfo = typesMapping[obj.Type as keyof typeof typesMapping]
                 ?? { label: obj.Type, color: '#9E9E9E' };
@@ -274,6 +265,12 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
         };
     }, [mountPosition, gridMode]);
 
+    // ── Position de l'objet sélectionné ─────────────────────────────────────────
+    const projectedSelectedObject = useMemo(() => {
+        if (!selectedObject) return null;
+        return visibleObjects.find(obj => obj.object.Name === selectedObject.Name);
+    }, [selectedObject, visibleObjects]);
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     const observationTime = (): string => {
@@ -326,6 +323,14 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                         />
                     </TouchableOpacity>
                 </View>
+
+                {/* Slew Mode Banner */}
+                {slewMode && (
+                    <View style={styles.slewModeBanner}>
+                        <MaterialCommunityIcons name="target" size={18} color={GlobalColors.background} />
+                        <Text style={styles.slewModeBannerText}>Mode pointage actif — touchez un objet</Text>
+                    </View>
+                )}
 
                 {/* Vue du ciel */}
                 <View style={styles.skyContainer}>
@@ -496,8 +501,11 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                                     opacity: obj.alt < 0 ? 0.25 : 1,
                                 }]}
                                 onPress={() => {
-                                    if (onSelectObject) {
-                                        onSelectObject(obj.object);
+                                    if (slewMode) {
+                                        const name = obj.object.Common_names || obj.object.M || obj.object.Name;
+                                        setTargetPosition({ az: obj.az, alt: obj.alt, name });
+                                    } else {
+                                        setSelectedObject(obj.object);
                                     }
                                 }}
                             >
@@ -517,6 +525,16 @@ export default function SphericalPlanetariumScreen({ onSelectObject }: Spherical
                                 top: projectedMountPosition.y - 16,
                             }]}>
                                 <MaterialCommunityIcons name="crosshairs-gps" size={32} color="#ff6b6b" />
+                            </View>
+                        )}
+
+                        {/* Selected Object Marker */}
+                        {projectedSelectedObject && (
+                            <View style={[styles.selectedMarker, {
+                                left: projectedSelectedObject.x - 20,
+                                top: projectedSelectedObject.y - 27,
+                            }]}>
+                                <MaterialCommunityIcons name="crosshairs" size={40} color={GlobalColors.accent} />
                             </View>
                         )}
                     </View>
@@ -694,6 +712,7 @@ const styles = StyleSheet.create({
     // Objets
     objectMarker: {
         position: 'absolute',
+        width: 32,
         alignItems: 'center',
         gap: 3,
     },
@@ -725,6 +744,29 @@ const styles = StyleSheet.create({
         position: 'absolute',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+
+    // Selected object marker
+    selectedMarker: {
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    // Slew mode banner
+    slewModeBanner: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        backgroundColor: GlobalColors.accent,
+    },
+    slewModeBannerText: {
+        color: GlobalColors.background,
+        fontSize: 14,
+        fontWeight: '600',
     },
 
     // Footer

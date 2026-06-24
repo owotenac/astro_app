@@ -10,13 +10,11 @@ type ConnectionState = 'unknown' | 'disconnected' | 'connecting' | 'connected' |
 
 type Props = {
     onClose: () => void
-    targetAz?: number
-    targetAlt?: number
 }
 
 const telescope = new ASCOM_Telescope()
 
-const Mount = ({ onClose, targetAz, targetAlt }: Props) => {
+const Mount = ({ onClose }: Props) => {
     const [connectionState, setConnectionState] = useState<ConnectionState>('unknown')
     const [error, setError] = useState<string | null>(null)
     const [isSlewing, setIsSlewing] = useState(false)
@@ -25,6 +23,10 @@ const Mount = ({ onClose, targetAz, targetAlt }: Props) => {
     const [actualAlt, setActualAlt] = useState<number | undefined>(undefined)
 
     const setMountPosition = useMountStore(state => state.setMountPosition)
+    const slewMode = useMountStore(state => state.slewMode)
+    const setSlewMode = useMountStore(state => state.setSlewMode)
+    const targetPosition = useMountStore(state => state.targetPosition)
+    const clearTargetPosition = useMountStore(state => state.clearTargetPosition)
 
     const isConnected = connectionState === 'connected'
     const isLoading = connectionState === 'connecting' || connectionState === 'disconnecting' || connectionState === 'unknown'
@@ -82,15 +84,23 @@ const Mount = ({ onClose, targetAz, targetAlt }: Props) => {
     }
 
     const handleSlew = async () => {
-        if (targetAz === undefined || targetAlt === undefined) return
+        if (!targetPosition) return
         setError(null)
         setIsSlewing(true)
         try {
-            await telescope.slew(targetAz, targetAlt)
+            await telescope.slew(targetPosition.az, targetPosition.alt)
+            clearTargetPosition()
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Erreur de pointage')
         } finally {
             setIsSlewing(false)
+        }
+    }
+
+    const toggleSlewMode = () => {
+        setSlewMode(!slewMode)
+        if (slewMode) {
+            clearTargetPosition()
         }
     }
 
@@ -201,38 +211,70 @@ const Mount = ({ onClose, targetAz, targetAlt }: Props) => {
             </View>
 
             {/* Slew Section */}
-            <View style={styles.slewSection}>
-                <Text style={styles.sectionTitle}>Pointage</Text>
-
-                <View style={styles.coordsContainer}>
-                    <View style={styles.coordRow}>
-                        <Text style={styles.coordLabel}>Azimut</Text>
-                        <Text style={styles.coordValue}>{targetAz !== undefined ? formatToDMS(targetAz) : '--'}</Text>
-                    </View>
-                    <View style={styles.coordRow}>
-                        <Text style={styles.coordLabel}>Altitude</Text>
-                        <Text style={styles.coordValue}>{targetAlt !== undefined ? formatToDMS(targetAlt) : '--'}</Text>
-                    </View>
+            <View style={[styles.slewSection, slewMode && styles.slewSectionActive]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Text style={styles.sectionTitle}>Pointage</Text>
+                    <TouchableOpacity
+                        style={[styles.modeToggle, slewMode && styles.modeToggleActive]}
+                        onPress={toggleSlewMode}
+                    >
+                        <MaterialCommunityIcons
+                            name={slewMode ? 'target' : 'target'}
+                            size={18}
+                            color={slewMode ? GlobalColors.background : GlobalColors.accent}
+                        />
+                        <Text style={[styles.modeToggleText, slewMode && styles.modeToggleTextActive]}>
+                            {slewMode ? 'Mode actif' : 'Sélectionner'}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                    style={[
-                        styles.button,
-                        styles.slewButton,
-                        (!isConnected || targetAz === undefined || targetAlt === undefined) && styles.buttonDisabled
-                    ]}
-                    onPress={handleSlew}
-                    disabled={!isConnected || isSlewing || targetAz === undefined || targetAlt === undefined}
-                >
-                    {isSlewing ? (
-                        <ActivityIndicator color={GlobalColors.white} size="small" />
-                    ) : (
-                        <>
-                            <MaterialCommunityIcons name="telescope" size={20} color={GlobalColors.white} />
-                            <Text style={styles.buttonText}>Pointer</Text>
-                        </>
-                    )}
-                </TouchableOpacity>
+                {slewMode && !targetPosition && (
+                    <View style={styles.instructionContainer}>
+                        <MaterialCommunityIcons name="gesture-tap" size={20} color={GlobalColors.accent} />
+                        <Text style={styles.instructionText}>
+                            Touchez un objet sur la carte du ciel
+                        </Text>
+                    </View>
+                )}
+
+                {targetPosition && (
+                    <>
+                        <View style={styles.targetNameContainer}>
+                            <MaterialCommunityIcons name="star-four-points" size={16} color={GlobalColors.accent} />
+                            <Text style={styles.targetName}>{targetPosition.name}</Text>
+                        </View>
+                        <View style={styles.coordsContainer}>
+                            <View style={styles.coordRow}>
+                                <Text style={styles.coordLabel}>Azimut</Text>
+                                <Text style={styles.coordValue}>{formatToDMS(targetPosition.az)}</Text>
+                            </View>
+                            <View style={styles.coordRow}>
+                                <Text style={styles.coordLabel}>Altitude</Text>
+                                <Text style={styles.coordValue}>{formatToDMS(targetPosition.alt)}</Text>
+                            </View>
+                        </View>
+
+                        <TouchableOpacity
+                            style={[
+                                styles.button,
+                                styles.slewButton,
+                                !isConnected && styles.buttonDisabled
+                            ]}
+                            onPress={handleSlew}
+                            disabled={!isConnected || isSlewing}
+                        >
+                            {isSlewing ? (
+                                <ActivityIndicator color={GlobalColors.white} size="small" />
+                            ) : (
+                                <>
+                                    <MaterialCommunityIcons name="telescope" size={20} color={GlobalColors.white} />
+                                    <Text style={styles.buttonText}>Pointer</Text>
+                                </>
+                            )}
+                        </TouchableOpacity>
+                    </>
+                )}
             </View>
         </View>
     )
@@ -351,5 +393,55 @@ const styles = StyleSheet.create({
         flex: 0,
         marginTop: 10,
         backgroundColor: GlobalColors.accent,
+    },
+    slewSectionActive: {
+        borderWidth: 2,
+        borderColor: GlobalColors.accent,
+    },
+    modeToggle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: GlobalColors.accent,
+    },
+    modeToggleActive: {
+        backgroundColor: GlobalColors.accent,
+    },
+    modeToggleText: {
+        color: GlobalColors.accent,
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    modeToggleTextActive: {
+        color: GlobalColors.background,
+    },
+    instructionContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        padding: 12,
+        backgroundColor: 'rgba(175, 169, 236, 0.1)',
+        borderRadius: 8,
+        marginBottom: 10,
+    },
+    instructionText: {
+        color: GlobalColors.accent,
+        fontSize: 14,
+        flex: 1,
+    },
+    targetNameContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 12,
+    },
+    targetName: {
+        color: GlobalColors.white,
+        fontSize: 18,
+        fontWeight: '600',
     },
 })
