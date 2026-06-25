@@ -7,7 +7,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Catalog from "../components/catalog";
 import ObjectDetailsComponent from "../components/object-details";
-import SphericalPlanetariumScreen from "../components/spherical-mode";
+// import SphericalPlanetariumScreen from "../components/spherical-mode";
+import SvgSphericalPlanetarium from "../components/spherical-mode-svg";
 import { GlobalColors, globalStyles } from "../global/theme";
 
 export default function Index() {
@@ -60,7 +61,8 @@ export default function Index() {
               )
             )}
           </View>
-          <SphericalPlanetariumScreen />
+          {/* <SphericalPlanetariumScreen /> */}
+          <SvgSphericalPlanetarium />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

@@ -1,4 +1,5 @@
 export type StarObject = {
+    hip: number;
     catalog_id: string;
     main_id: string;
     ra: number;

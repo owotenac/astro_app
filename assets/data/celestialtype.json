@@ -1,19 +1,4 @@
 {
-  "*": {
-    "label": "Étoile",
-    "iconName": "star",
-    "color": "#FFD700"
-  },
-  "**": {
-    "label": "Étoile double",
-    "iconName": "star-box-multiple",
-    "color": "#FFB300"
-  },
-  "*Ass": {
-    "label": "Association d'étoiles",
-    "iconName": "google-circles-extended",
-    "color": "#FFA000"
-  },
   "OCl": {
     "label": "Amas ouvert",
     "iconName": "transition",
@@ -88,20 +73,5 @@
     "label": "Nouvelle étoile (Nova)",
     "iconName": "new-box",
     "color": "#FF0055"
-  },
-  "NonEx": {
-    "label": "Objet inexistant",
-    "iconName": "close-circle-outline",
-    "color": "#B0BEC5"
-  },
-  "Dup": {
-    "label": "Objet doublon",
-    "iconName": "content-copy",
-    "color": "#B0BEC5"
-  },
-  "Other": {
-    "label": "Autre classification",
-    "iconName": "help-circle-outline",
-    "color": "#9E9E9E"
   }
 }
