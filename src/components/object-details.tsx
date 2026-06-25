@@ -5,9 +5,17 @@ import { CelestialType } from '@/model/celestialtype';
 import { computeAzAlt, formatToDMS } from '@/utils/compute';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import objectTypes from '../../assets/data/celestialtype.json';
 import const_mapping from '../../assets/data/const_mapping.json';
+import dso_images from '../../assets/data/dso_images.json';
+
+
+// IMAGES
+type DSOImages = {
+    [key: string]: string;
+}
+const dsoImage: DSOImages = dso_images as DSOImages;
 
 interface ObjectDetailsProps {
     object: CelestialObject;
@@ -103,6 +111,18 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
         );
     };
 
+    const renderImage = () => {
+        // Chercher d'abord par M (Messier), puis par Name
+        const urlImg = (object.M && dsoImage[object.M]) || dsoImage[object.Name as string];
+        if (!urlImg) return null;
+        const url = `https://raw.githubusercontent.com/Stellarium/stellarium/master/nebulae/default/${urlImg}`;
+        return (
+            <View style={styles.sectionCard}>
+                <Text style={styles.sectionTitle}>Image</Text>
+                <Image source={{ uri: url }} style={styles.image} />
+            </View>
+        );
+    }
     return (
         <View style={globalStyles.container}>
             {/* En-tête avec bouton retour */}
@@ -186,6 +206,10 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
 
                 {/* Section Identifiants */}
                 {renderIdentifiers()}
+
+                {/* Section Images */}
+                {renderImage()}
+
             </ScrollView>
         </View>
     )
@@ -372,5 +396,12 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: '#e4e4f4',
         fontWeight: '500',
+    },
+    image: {
+        width: '100%',
+        height: 200,
+        borderRadius: 8,
+        marginTop: 4,
+        resizeMode: "cover"
     },
 });

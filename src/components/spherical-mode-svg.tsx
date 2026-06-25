@@ -11,6 +11,7 @@ import { useLocation } from '@/hooks/useLocation';
 import { useMountStore } from '@/hooks/useMountStore';
 import { useObservationStore } from '@/hooks/useObservationStore';
 import { CelestialObject } from '@/model/celestialobject';
+import { ConstellationObject } from '@/model/constellations';
 import { StarObject } from '@/model/stars';
 import { computeAzAlt } from '@/utils/compute';
 import { filterCatalog } from '@/utils/filter';
@@ -21,6 +22,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Platform, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle, G, Line, Text as SvgText } from 'react-native-svg';
+import constellationJson from '../../assets/data/constellations_lines.json';
 import starJson from '../../assets/data/stars.json';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -57,7 +59,30 @@ interface RenderedStar {
     name: string | null;
 }
 
+interface ConstellationSegment {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+}
+
+interface RenderedConstellation {
+    id: string;
+    name: string;
+    segments: ConstellationSegment[];
+}
+
 const starCatalog: StarObject[] = starJson as StarObject[];
+const constellationCatalog: ConstellationObject[] = constellationJson as ConstellationObject[];
+
+// Index HIP → étoile pour lookup rapide (garde la plus brillante si doublon)
+const starByHip: Map<number, StarObject> = new Map();
+for (const star of starCatalog) {
+    const existing = starByHip.get(star.hip);
+    if (!existing || star.v_mag < existing.v_mag) {
+        starByHip.set(star.hip, star);
+    }
+}
 
 const svg_magToSize = (mag: number): number => Math.max(1, 4 - mag * 0.5);
 const svg_magToOpacity = (mag: number): number => Math.max(0.3, Math.min(1, 1.2 - mag * 0.15));
@@ -82,11 +107,14 @@ export default function SvgSphericalPlanetarium() {
     const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>([]);
     const [visibleObjects, setVisibleObjects] = useState<RenderedObject[]>([]);
     const [visibleStars, setVisibleStars] = useState<RenderedStar[]>([]);
+    const [visibleConstellations, setVisibleConstellations] = useState<RenderedConstellation[]>([]);
     const [timeOffset, setTimeOffset] = useState(0);
 
     const [showStars, setShowStars] = useState(true);
     const [showObjects, setShowObjects] = useState(true);
     const [showNames, setShowNames] = useState(true);
+    const [showConstellations, setShowConstellations] = useState(true);
+    const [mirrorView, setMirrorView] = useState(true);
 
     const [starMagnitude, setStarMagnitude] = useState(2.5);
 
@@ -98,7 +126,7 @@ export default function SvgSphericalPlanetarium() {
 
     // ── ViewBox calculé pour le zoom ──────────────────────────────────────────
     const viewBox = useMemo(() => {
-        const viewBoxSize = skyViewSize / zoom;
+        const viewBoxSize = (skyViewSize / zoom) + 20; // +20 for small offset to avoid text cut
         const offsetX = (skyViewSize - viewBoxSize) / 2 + panX;
         const offsetY = (skyViewSize - viewBoxSize) / 2 + panY;
         return `${offsetX} ${offsetY} ${viewBoxSize} ${viewBoxSize}`;
@@ -184,7 +212,7 @@ export default function SvgSphericalPlanetarium() {
             if (!obj.ra_deg || !obj.dec_deg) continue;
 
             const { azimuth, altitude } = computeAzAlt(obj, targetDate);
-            const projected = azimuthalEquidistantProject(azimuth, altitude, skyRadius, -5);
+            const projected = azimuthalEquidistantProject(azimuth, altitude, skyRadius, -5, mirrorView);
 
             if (!projected.visible) continue;
 
@@ -202,7 +230,7 @@ export default function SvgSphericalPlanetarium() {
         }
 
         setVisibleObjects(nextObjects);
-    }, [location.ready, filteredCatalog, targetDate]);
+    }, [location.ready, filteredCatalog, targetDate, mirrorView]);
 
     // ── Projection des étoiles ────────────────────────────────────────────────
     useEffect(() => {
@@ -216,7 +244,7 @@ export default function SvgSphericalPlanetarium() {
             if (altitude < -5) continue;
             if (star.v_mag > starMagnitude) continue;
 
-            const projected = azimuthalEquidistantProject(azimuth, altitude, skyRadius, -5);
+            const projected = azimuthalEquidistantProject(azimuth, altitude, skyRadius, -5, mirrorView);
             if (!projected.visible) continue;
 
             nextStars.push({
@@ -229,7 +257,59 @@ export default function SvgSphericalPlanetarium() {
         }
 
         setVisibleStars(nextStars);
-    }, [location.ready, targetDate, starMagnitude]);
+    }, [location.ready, targetDate, starMagnitude, mirrorView]);
+
+    // ── Projection des constellations ────────────────────────────────────────
+    useEffect(() => {
+        if (!location.ready) return;
+
+        const nextConstellations: RenderedConstellation[] = [];
+
+        for (const constellation of constellationCatalog) {
+            const segments: ConstellationSegment[] = [];
+
+            for (const line of constellation.lines) {
+                // Chaque line est un tableau de HIP connectés
+                for (let i = 0; i < line.length - 1; i++) {
+                    const star1 = starByHip.get(line[i]);
+                    const star2 = starByHip.get(line[i + 1]);
+
+                    if (!star1 || !star2) continue;
+
+                    // Calculer Az/Alt pour chaque étoile
+                    const pos1 = computeAzAlt({ ra_deg: star1.ra, dec_deg: star1.dec } as CelestialObject, targetDate);
+                    const pos2 = computeAzAlt({ ra_deg: star2.ra, dec_deg: star2.dec } as CelestialObject, targetDate);
+
+                    // Ne pas dessiner si les deux étoiles sont sous l'horizon
+                    if (pos1.altitude < -5 && pos2.altitude < -5) continue;
+
+                    // Projeter les positions
+                    const proj1 = azimuthalEquidistantProject(pos1.azimuth, pos1.altitude, skyRadius, -5, mirrorView);
+                    const proj2 = azimuthalEquidistantProject(pos2.azimuth, pos2.altitude, skyRadius, -5, mirrorView);
+
+                    // Ne dessiner que si les deux étoiles sont visibles
+                    if (!proj1.visible || !proj2.visible) continue;
+
+                    segments.push({
+                        x1: proj1.x + skyCenter,
+                        y1: proj1.y + skyCenter,
+                        x2: proj2.x + skyCenter,
+                        y2: proj2.y + skyCenter,
+                    });
+                }
+            }
+
+            if (segments.length > 0) {
+                nextConstellations.push({
+                    id: constellation.id,
+                    name: constellation.name,
+                    segments,
+                });
+            }
+        }
+
+        setVisibleConstellations(nextConstellations);
+    }, [location.ready, targetDate, mirrorView]);
 
     // ── Cercles de grille ─────────────────────────────────────────────────────
     const gridCircles = useMemo(() => {
@@ -242,28 +322,27 @@ export default function SvgSphericalPlanetarium() {
     // ── Lignes et labels cardinaux ────────────────────────────────────────────
     const cardinalData = useMemo(() => {
         return CARDINALS.map(c => {
-            const angleRad = (c.az - 90) * (Math.PI / 180);
-            const projected = azimuthalEquidistantProject(c.az, 0, skyRadius);
+            const projected = azimuthalEquidistantProject(c.az, 0, skyRadius, -10, mirrorView);
             return {
                 ...c,
-                x2: skyCenter + Math.cos(angleRad) * skyRadius,
-                y2: skyCenter + Math.sin(angleRad) * skyRadius,
+                x2: projected.x + skyCenter,
+                y2: projected.y + skyCenter,
                 labelX: projected.x + skyCenter,
                 labelY: projected.y + skyCenter,
             };
         });
-    }, []);
+    }, [mirrorView]);
 
     // ── Position de la monture projetée ───────────────────────────────────────
     const projectedMountPosition = useMemo(() => {
         if (!mountPosition) return null;
-        const projected = azimuthalEquidistantProject(mountPosition.az, mountPosition.alt, skyRadius, -5);
+        const projected = azimuthalEquidistantProject(mountPosition.az, mountPosition.alt, skyRadius, -5, mirrorView);
         if (!projected.visible) return null;
         return {
             x: projected.x + skyCenter,
             y: projected.y + skyCenter,
         };
-    }, [mountPosition]);
+    }, [mountPosition, mirrorView]);
 
     // ── Objet sélectionné ─────────────────────────────────────────────────────
     const selectedPos = useMemo(() => {
@@ -301,6 +380,14 @@ export default function SvgSphericalPlanetarium() {
         setShowNames(!showNames);
     };
 
+    const toggleShowConstellations = () => {
+        setShowConstellations(!showConstellations);
+    };
+
+    const toggleMirrorView = () => {
+        setMirrorView(!mirrorView);
+    };
+
     // ── Rendu ─────────────────────────────────────────────────────────────────
 
     return (
@@ -311,7 +398,7 @@ export default function SvgSphericalPlanetarium() {
                 <View style={styles.header}>
                     <View style={styles.headerInfo}>
                         <Text style={styles.headerTitle}>Grille Azimutale</Text>
-                        <Text style={styles.headerSubtitle}>Zénith au centre · Nord en haut</Text>
+                        <Text style={styles.headerSubtitle}>Zénith au centre · {mirrorView ? 'Est à gauche' : 'Est à droite'}</Text>
                     </View>
                     {zoom > 1 && (
                         <TouchableOpacity
@@ -392,8 +479,9 @@ export default function SvgSphericalPlanetarium() {
                                     key={`label-${c.az}`}
                                     x={c.labelX}
                                     y={c.labelY + 4}
-                                    fontSize={c.az % 90 === 0 ? 14 : 10}
+                                    fontSize={c.az % 90 === 0 ? 16 : 12}
                                     fontWeight="bold"
+                                    fontFamily='astro_font_regular'
                                     fill={c.az % 90 === 0 ? 'rgba(255, 200, 100, 0.9)' : 'rgba(200, 180, 140, 0.6)'}
                                     textAnchor="middle"
                                 >
@@ -418,6 +506,27 @@ export default function SvgSphericalPlanetarium() {
                                 Z
                             </SvgText>
 
+                            {/* Lignes des constellations */}
+                            {showConstellations && (
+                                <G>
+                                    {visibleConstellations.map(constellation => (
+                                        <G key={`const-${constellation.id}`}>
+                                            {constellation.segments.map((seg, i) => (
+                                                <Line
+                                                    key={`${constellation.id}-seg-${i}`}
+                                                    x1={seg.x1}
+                                                    y1={seg.y1}
+                                                    x2={seg.x2}
+                                                    y2={seg.y2}
+                                                    stroke="rgba(100, 149, 237, 0.4)"
+                                                    strokeWidth={1}
+                                                />
+                                            ))}
+                                        </G>
+                                    ))}
+                                </G>
+                            )}
+
                             {/* Étoiles */}
                             {showStars && (
                                 <G>
@@ -435,6 +544,7 @@ export default function SvgSphericalPlanetarium() {
                                                     y={star.y - 12}
                                                     fontSize={10}
                                                     fontWeight="bold"
+                                                    fontFamily='astro_font_regular'
                                                     fill="rgba(255, 255, 255, 0.9)"
                                                     textAnchor="middle"
                                                 >
@@ -475,6 +585,7 @@ export default function SvgSphericalPlanetarium() {
                                                     y={obj.y + 18}
                                                     fontSize={9}
                                                     fontWeight="600"
+                                                    fontFamily='astro_font_regular'
                                                     fill={obj.color}
                                                     textAnchor="middle"
                                                 >
@@ -608,11 +719,17 @@ export default function SvgSphericalPlanetarium() {
                             <TouchableOpacity onPress={toggleShowStars}>
                                 <MaterialCommunityIcons name="star" size={40} color={showStars ? GlobalColors.accent : "#494949ff"} />
                             </TouchableOpacity>
+                            <TouchableOpacity onPress={toggleShowConstellations}>
+                                <MaterialCommunityIcons name="vector-polyline" size={40} color={showConstellations ? GlobalColors.accent : "#494949ff"} />
+                            </TouchableOpacity>
                             <TouchableOpacity onPress={toggleShowObjects}>
                                 <MaterialCommunityIcons name="brightness-4" size={40} color={showObjects ? GlobalColors.accent : "#494949ff"} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={toggleShowNames}>
                                 <MaterialCommunityIcons name="alphabetical" size={40} color={showNames ? GlobalColors.accent : "#494949ff"} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={toggleMirrorView}>
+                                <MaterialCommunityIcons name="flip-horizontal" size={40} color={GlobalColors.accent} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -621,7 +738,7 @@ export default function SvgSphericalPlanetarium() {
                             <Text style={styles.footerLabel}>Star Magnitude: {starMagnitude.toFixed(1)}</Text>
                             <Slider
                                 minimumValue={0}
-                                maximumValue={5}
+                                maximumValue={7}
                                 step={0.1}
                                 value={starMagnitude}
                                 onValueChange={(val) => setStarMagnitude(val[0])}

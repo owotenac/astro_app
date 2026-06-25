@@ -18,11 +18,12 @@ const RAD2DEG = 180 / Math.PI;
 
 
 /**
- * Projection azimutale équidistante centrée sur le zénith (vue "all-sky" Stellarium).
+ * Projection azimutale équidistante centrée sur le zénith (vue "all-sky").
  * - Le zénith (alt=90°) est au centre
  * - L'horizon (alt=0°) est sur le bord
  * - Le Nord (az=0°) est en haut
- * - L'Est (az=90°) est à droite
+ * - mirror=true : Est à gauche (vue "yeux au ciel")
+ * - mirror=false : Est à droite (vue "carte géographique")
  *
  * Distance radiale proportionnelle à la distance zénithale (90° - altitude).
  */
@@ -30,7 +31,8 @@ export function azimuthalEquidistantProject(
     az: number,
     alt: number,
     radius: number,
-    minAlt: number = -10
+    minAlt: number = -10,
+    mirror: boolean = true
 ): ProjectedPoint {
     if (alt < minAlt) {
         return { x: 0, y: 0, visible: false, scale: 1 };
@@ -43,12 +45,12 @@ export function azimuthalEquidistantProject(
     // À l'horizon (zenithDist=90), r = radius
     const r = (zenithDist / 90) * radius;
 
-    // Angle depuis le Nord (en haut), sens horaire
-    // az=0 (Nord) → angle=0 (vers le haut, -Y)
-    // az=90 (Est) → angle=90° (vers la droite, +X)
+    // Angle depuis le Nord (en haut)
+    // mirror=true : sens anti-horaire (Est à gauche)
+    // mirror=false : sens horaire (Est à droite)
     const angleRad = az * DEG2RAD;
 
-    const x = r * Math.sin(angleRad);
+    const x = (mirror ? -1 : 1) * r * Math.sin(angleRad);
     const y = -r * Math.cos(angleRad); // négatif car Y écran croît vers le bas
 
     return {
