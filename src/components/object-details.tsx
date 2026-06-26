@@ -60,7 +60,9 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
 
     // Update targeted Az/Alt when targetDate changes
     useEffect(() => {
-        setTargetAzAlt(computeAzAlt(object, targetDate));
+        if (targetDate) {
+            setTargetAzAlt(computeAzAlt(object, targetDate));
+        }
     }, [object, targetDate]);
 
     const renderPhotometry = () => {

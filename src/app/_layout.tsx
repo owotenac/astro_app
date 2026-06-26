@@ -1,4 +1,5 @@
 import { GlobalColors } from "@/global/theme";
+import { useObservationStore } from "@/hooks/useObservationStore";
 import { useSettings } from "@/hooks/useSettings";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -15,6 +16,11 @@ export default function RootLayout() {
   });
 
   const { loadSettings } = useSettings();
+  const initTargetDate = useObservationStore(state => state.initTargetDate);
+
+  useEffect(() => {
+    initTargetDate();
+  }, []);
 
   useEffect(() => {
     if (loaded || error) {
