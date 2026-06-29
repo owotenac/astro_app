@@ -5,7 +5,7 @@
  */
 
 import typesMapping from '@/assets/data/celestialtype.json';
-import { GlobalColors, globalStyles } from '@/global/theme';
+import { GlobalColors, globalStyles, Spacing, starFillOpacity, SvgTypography, textStyles } from '@/global/theme';
 import { useFilterStore } from '@/hooks/useFilterStore';
 import { useLocation } from '@/hooks/useLocation';
 import { useMountStore } from '@/hooks/useMountStore';
@@ -234,7 +234,7 @@ export default function SvgSphericalPlanetarium() {
             if (!projected.visible) continue;
 
             const typeInfo = typesMapping[obj.Type as keyof typeof typesMapping]
-                ?? { label: obj.Type, color: '#9E9E9E' };
+                ?? { label: obj.Type, color: GlobalColors.unknownType };
 
             nextObjects.push({
                 object: obj,
@@ -448,15 +448,15 @@ export default function SvgSphericalPlanetarium() {
                 {/* Header */}
                 <View style={styles.header}>
                     <View style={styles.headerInfo}>
-                        <Text style={styles.headerTitle}>Grille Azimutale</Text>
-                        <Text style={styles.headerSubtitle}>Zénith au centre · {mirrorView ? 'Est à gauche' : 'Est à droite'}</Text>
+                        <Text style={textStyles.viewTitle}>Grille Azimutale</Text>
+                        <Text style={[textStyles.caption, styles.headerSubtitle]}>Zénith au centre · {mirrorView ? 'Est à gauche' : 'Est à droite'}</Text>
                     </View>
                     {zoom > 1 && (
                         <TouchableOpacity
                             onPress={() => { setZoom(1); setPanX(0); setPanY(0); }}
                             style={styles.headerButton}
                         >
-                            <Text style={styles.zoomIndicator}>{zoom.toFixed(1)}x</Text>
+                            <Text style={textStyles.accentBold}>{zoom.toFixed(1)}x</Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -465,12 +465,12 @@ export default function SvgSphericalPlanetarium() {
                 {slewMode && (
                     <View style={styles.slewModeBanner}>
                         <MaterialCommunityIcons name="target" size={18} color={GlobalColors.background} />
-                        <Text style={styles.slewModeBannerText}>Mode pointage actif — touchez un objet</Text>
+                        <Text style={textStyles.inverse}>Mode pointage actif — touchez un objet</Text>
                     </View>
                 )}
 
                 {/* Vue du ciel SVG */}
-                <View style={styles.skyContainer}>
+                <View style={globalStyles.skyViewport}>
                     <View
                         ref={svgContainerRef}
                         style={[styles.svgContainer, { borderRadius: skyRadius }]}
@@ -481,8 +481,8 @@ export default function SvgSphericalPlanetarium() {
                                 cx={skyCenter}
                                 cy={skyCenter}
                                 r={skyRadius}
-                                fill="#080812"
-                                stroke="rgba(100, 120, 140, 0.5)"
+                                fill={GlobalColors.skyDome}
+                                stroke={GlobalColors.gridStrokeStrong}
                                 strokeWidth={2}
                             />
 
@@ -494,7 +494,7 @@ export default function SvgSphericalPlanetarium() {
                                         cy={skyCenter}
                                         r={radius}
                                         fill="none"
-                                        stroke="rgba(100, 120, 140, 0.25)"
+                                        stroke={GlobalColors.gridStroke}
                                         strokeWidth={1}
                                         strokeDasharray="4,4"
                                     />
@@ -502,8 +502,8 @@ export default function SvgSphericalPlanetarium() {
                                         <SvgText
                                             x={skyCenter}
                                             y={skyCenter - radius - 2}
-                                            fontSize={10}
-                                            fill="rgba(150, 160, 170, 0.6)"
+                                            fontSize={SvgTypography.gridLabel.fontSize}
+                                            fill={GlobalColors.gridLabel}
                                             textAnchor="middle"
                                         >
                                             {alt}°
@@ -520,7 +520,7 @@ export default function SvgSphericalPlanetarium() {
                                     y1={skyCenter}
                                     x2={c.x2}
                                     y2={c.y2}
-                                    stroke="rgba(100, 120, 140, 0.25)"
+                                    stroke={GlobalColors.gridStroke}
                                     strokeWidth={1}
                                 />
                             ))}
@@ -530,10 +530,10 @@ export default function SvgSphericalPlanetarium() {
                                     key={`label-${c.az}`}
                                     x={c.labelX}
                                     y={c.labelY + 4}
-                                    fontSize={c.az % 90 === 0 ? 16 : 12}
-                                    fontWeight="bold"
-                                    fontFamily='astro_font_regular'
-                                    fill={c.az % 90 === 0 ? 'rgba(255, 200, 100, 0.9)' : 'rgba(200, 180, 140, 0.6)'}
+                                    fontSize={c.az % 90 === 0 ? SvgTypography.cardinalMajor.fontSize : SvgTypography.cardinalMinor.fontSize}
+                                    fontWeight={SvgTypography.cardinalMajor.fontWeight}
+                                    fontFamily={SvgTypography.cardinalMajor.fontFamily}
+                                    fill={c.az % 90 === 0 ? GlobalColors.cardinalPrimary : GlobalColors.cardinalSecondary}
                                     textAnchor="middle"
                                 >
                                     {c.label}
@@ -545,13 +545,13 @@ export default function SvgSphericalPlanetarium() {
                                 cx={skyCenter}
                                 cy={skyCenter}
                                 r={3}
-                                fill="rgba(255, 255, 255, 0.5)"
+                                fill={GlobalColors.zenithDot}
                             />
                             <SvgText
                                 x={skyCenter}
                                 y={skyCenter + 14}
-                                fontSize={10}
-                                fill="rgba(255, 255, 255, 0.5)"
+                                fontSize={SvgTypography.zenithLabel.fontSize}
+                                fill={GlobalColors.zenithLabel}
                                 textAnchor="middle"
                             >
                                 Z
@@ -569,7 +569,7 @@ export default function SvgSphericalPlanetarium() {
                                                     y1={seg.y1}
                                                     x2={seg.x2}
                                                     y2={seg.y2}
-                                                    stroke="rgba(100, 149, 237, 0.4)"
+                                                    stroke={GlobalColors.constellationStroke}
                                                     strokeWidth={1}
                                                 />
                                             ))}
@@ -587,16 +587,16 @@ export default function SvgSphericalPlanetarium() {
                                                 cx={star.x}
                                                 cy={star.y}
                                                 r={star.size / 2}
-                                                fill={`rgba(255, 255, 255, ${star.opacity})`}
+                                                fill={starFillOpacity(star.opacity)}
                                             />
                                             {star.name && showNames && (
                                                 <SvgText
                                                     x={star.x}
                                                     y={star.y - 12}
-                                                    fontSize={10}
-                                                    fontWeight="bold"
-                                                    fontFamily='astro_font_regular'
-                                                    fill="rgba(255, 255, 255, 0.9)"
+                                                    fontSize={SvgTypography.starName.fontSize}
+                                                    fontWeight={SvgTypography.starName.fontWeight}
+                                                    fontFamily={SvgTypography.starName.fontFamily}
+                                                    fill={GlobalColors.starName}
                                                     textAnchor="middle"
                                                 >
                                                     {star.name}
@@ -620,7 +620,7 @@ export default function SvgSphericalPlanetarium() {
                                                 cx={obj.x}
                                                 cy={obj.y}
                                                 r={9}
-                                                fill="rgba(0,0,0,0.4)"
+                                                fill={GlobalColors.objectLabelBg}
                                                 stroke={obj.color}
                                                 strokeWidth={1.5}
                                             />
@@ -634,9 +634,9 @@ export default function SvgSphericalPlanetarium() {
                                                 <SvgText
                                                     x={obj.x}
                                                     y={obj.y + 18}
-                                                    fontSize={9}
-                                                    fontWeight="600"
-                                                    fontFamily='astro_font_regular'
+                                                    fontSize={SvgTypography.objectName.fontSize}
+                                                    fontWeight={SvgTypography.objectName.fontWeight}
+                                                    fontFamily={SvgTypography.objectName.fontFamily}
                                                     fill={obj.color}
                                                     textAnchor="middle"
                                                 >
@@ -652,8 +652,8 @@ export default function SvgSphericalPlanetarium() {
                             {plateSolveFov && (
                                 <Polygon
                                     points={plateSolveFov}
-                                    fill="rgba(196, 119, 19, 0.1)"
-                                    stroke="#00ffc8"
+                                    fill={GlobalColors.fovFill}
+                                    stroke={GlobalColors.fovStroke}
                                     strokeWidth={1}
                                 />
                             )}
@@ -666,7 +666,7 @@ export default function SvgSphericalPlanetarium() {
                                         cy={projectedMountPosition.y}
                                         r={14}
                                         fill="none"
-                                        stroke="#ff6b6b"
+                                        stroke={GlobalColors.mountMarker}
                                         strokeWidth={2}
                                     />
                                     <Line
@@ -674,7 +674,7 @@ export default function SvgSphericalPlanetarium() {
                                         y1={projectedMountPosition.y}
                                         x2={projectedMountPosition.x - 8}
                                         y2={projectedMountPosition.y}
-                                        stroke="#ff6b6b"
+                                        stroke={GlobalColors.mountMarker}
                                         strokeWidth={2}
                                     />
                                     <Line
@@ -682,7 +682,7 @@ export default function SvgSphericalPlanetarium() {
                                         y1={projectedMountPosition.y}
                                         x2={projectedMountPosition.x + 20}
                                         y2={projectedMountPosition.y}
-                                        stroke="#ff6b6b"
+                                        stroke={GlobalColors.mountMarker}
                                         strokeWidth={2}
                                     />
                                     <Line
@@ -690,7 +690,7 @@ export default function SvgSphericalPlanetarium() {
                                         y1={projectedMountPosition.y - 20}
                                         x2={projectedMountPosition.x}
                                         y2={projectedMountPosition.y - 8}
-                                        stroke="#ff6b6b"
+                                        stroke={GlobalColors.mountMarker}
                                         strokeWidth={2}
                                     />
                                     <Line
@@ -698,7 +698,7 @@ export default function SvgSphericalPlanetarium() {
                                         y1={projectedMountPosition.y + 8}
                                         x2={projectedMountPosition.x}
                                         y2={projectedMountPosition.y + 20}
-                                        stroke="#ff6b6b"
+                                        stroke={GlobalColors.mountMarker}
                                         strokeWidth={2}
                                     />
                                 </G>
@@ -712,7 +712,7 @@ export default function SvgSphericalPlanetarium() {
                                         cy={selectedPos.y}
                                         r={18}
                                         fill="none"
-                                        stroke={GlobalColors.accent}
+                                        stroke={GlobalColors.cardinalPrimary}
                                         strokeWidth={2}
                                     />
                                     <Line
@@ -720,7 +720,7 @@ export default function SvgSphericalPlanetarium() {
                                         y1={selectedPos.y}
                                         x2={selectedPos.x - 12}
                                         y2={selectedPos.y}
-                                        stroke={GlobalColors.accent}
+                                        stroke={GlobalColors.cardinalPrimary}
                                         strokeWidth={2}
                                     />
                                     <Line
@@ -728,7 +728,7 @@ export default function SvgSphericalPlanetarium() {
                                         y1={selectedPos.y}
                                         x2={selectedPos.x + 25}
                                         y2={selectedPos.y}
-                                        stroke={GlobalColors.accent}
+                                        stroke={GlobalColors.cardinalPrimary}
                                         strokeWidth={2}
                                     />
                                     <Line
@@ -736,7 +736,7 @@ export default function SvgSphericalPlanetarium() {
                                         y1={selectedPos.y - 25}
                                         x2={selectedPos.x}
                                         y2={selectedPos.y - 12}
-                                        stroke={GlobalColors.accent}
+                                        stroke={GlobalColors.cardinalPrimary}
                                         strokeWidth={2}
                                     />
                                     <Line
@@ -744,7 +744,7 @@ export default function SvgSphericalPlanetarium() {
                                         y1={selectedPos.y + 12}
                                         x2={selectedPos.x}
                                         y2={selectedPos.y + 25}
-                                        stroke={GlobalColors.accent}
+                                        stroke={GlobalColors.cardinalPrimary}
                                         strokeWidth={2}
                                     />
                                 </G>
@@ -757,12 +757,12 @@ export default function SvgSphericalPlanetarium() {
                 <View style={styles.footer}>
                     <View style={styles.footerElement}>
                         <View style={styles.footerRow}>
-                            <Text style={styles.footerLabel}>Location:</Text>
-                            <Text style={styles.footerLabel}>{location.latitude.toFixed(2)}° - {location.longitude.toFixed(2)}° - {location.altitude.toFixed(0)} m</Text>
+                            <Text style={textStyles.caption}>Location:</Text>
+                            <Text style={textStyles.caption}>{location.latitude.toFixed(2)}° - {location.longitude.toFixed(2)}° - {location.altitude.toFixed(0)} m</Text>
                         </View>
                         <View style={styles.footerRow}>
-                            <Text style={styles.footerLabel}>Heure d'observation</Text>
-                            <Text style={styles.footerValue}>{observationTime()}</Text>
+                            <Text style={textStyles.caption}>Heure d'observation</Text>
+                            <Text style={textStyles.accentHighlight}>{observationTime()}</Text>
                         </View>
                         <Slider
                             minimumValue={0}
@@ -771,23 +771,23 @@ export default function SvgSphericalPlanetarium() {
                             value={timeOffset}
                             onValueChange={(val) => setTimeOffset(val[0])}
                             minimumTrackTintColor={GlobalColors.accent}
-                            maximumTrackTintColor="#1f2833"
+                            maximumTrackTintColor={GlobalColors.sliderTrack}
                             thumbTintColor={GlobalColors.accent}
                         />
                     </View>
                     <View style={styles.footerElement}>
                         <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
                             <TouchableOpacity onPress={toggleShowStars}>
-                                <MaterialCommunityIcons name="star" size={40} color={showStars ? GlobalColors.accent : "#494949ff"} />
+                                <MaterialCommunityIcons name="star" size={40} color={showStars ? GlobalColors.accent : GlobalColors.iconInactive} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={toggleShowConstellations}>
-                                <MaterialCommunityIcons name="vector-polyline" size={40} color={showConstellations ? GlobalColors.accent : "#494949ff"} />
+                                <MaterialCommunityIcons name="vector-polyline" size={40} color={showConstellations ? GlobalColors.accent : GlobalColors.iconInactive} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={toggleShowObjects}>
-                                <MaterialCommunityIcons name="brightness-4" size={40} color={showObjects ? GlobalColors.accent : "#494949ff"} />
+                                <MaterialCommunityIcons name="brightness-4" size={40} color={showObjects ? GlobalColors.accent : GlobalColors.iconInactive} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={toggleShowNames}>
-                                <MaterialCommunityIcons name="alphabetical" size={40} color={showNames ? GlobalColors.accent : "#494949ff"} />
+                                <MaterialCommunityIcons name="alphabetical" size={40} color={showNames ? GlobalColors.accent : GlobalColors.iconInactive} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={toggleMirrorView}>
                                 <MaterialCommunityIcons name="flip-horizontal" size={40} color={GlobalColors.accent} />
@@ -796,7 +796,7 @@ export default function SvgSphericalPlanetarium() {
                     </View>
                     <View style={styles.footerElement}>
                         <View style={{ minWidth: 100 }}>
-                            <Text style={styles.footerLabel}>Star Magnitude: {starMagnitude.toFixed(1)}</Text>
+                            <Text style={textStyles.caption}>Star Magnitude: {starMagnitude.toFixed(1)}</Text>
                             <Slider
                                 minimumValue={0}
                                 maximumValue={7}
@@ -807,7 +807,7 @@ export default function SvgSphericalPlanetarium() {
                                     updateView({ starMagnitude: val[0] });
                                 }}
                                 minimumTrackTintColor={GlobalColors.accent}
-                                maximumTrackTintColor="#1f2833"
+                                maximumTrackTintColor={GlobalColors.sliderTrack}
                                 thumbTintColor={GlobalColors.accent}
                             />
                         </View>
@@ -827,92 +827,59 @@ export default function SvgSphericalPlanetarium() {
 
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: 'rgba(11, 12, 16, 0.95)',
+        backgroundColor: GlobalColors.overlayDark,
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingTop: 12,
-        paddingBottom: 12,
+        paddingHorizontal: Spacing.lg,
+        paddingVertical: Spacing.md,
         borderBottomWidth: 1,
-        borderColor: '#1f2833',
-        gap: 12,
+        borderColor: GlobalColors.separator,
+        gap: Spacing.md,
     },
     headerInfo: {
         flex: 1,
     },
-    headerTitle: {
-        color: GlobalColors.foreground,
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
     headerSubtitle: {
-        color: '#888',
-        fontSize: 12,
-        marginTop: 2,
+        marginTop: Spacing.xs,
     },
     headerButton: {
-        padding: 4,
-    },
-    zoomIndicator: {
-        color: GlobalColors.accent,
-        fontSize: 14,
-        fontWeight: 'bold',
+        padding: Spacing.xs,
     },
     slewModeBanner: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 8,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
+        gap: Spacing.sm,
+        paddingVertical: Spacing.sm,
+        paddingHorizontal: Spacing.lg,
         backgroundColor: GlobalColors.accent,
-    },
-    slewModeBannerText: {
-        color: GlobalColors.background,
-        fontSize: 14,
-        fontWeight: '600',
-    },
-    skyContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#020205',
     },
     svgContainer: {
         overflow: 'hidden',
     },
     footer: {
-        padding: 16,
-        backgroundColor: 'rgba(11,12,16,0.95)',
+        padding: Spacing.lg,
+        backgroundColor: GlobalColors.overlayDark,
         borderTopWidth: 1,
-        borderColor: '#1f2833',
+        borderColor: GlobalColors.separator,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        gap: 30,
+        gap: Spacing.xxl,
     },
     footerElement: {
         borderRightWidth: 1,
-        borderColor: '#1f2833',
-        paddingRight: 20,
+        borderColor: GlobalColors.separator,
+        paddingRight: Spacing.xl,
         height: "100%",
         justifyContent: 'center'
     },
     footerRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 6,
-        gap: 10,
-    },
-    footerLabel: {
-        color: '#c5c6c7',
-        fontSize: 12,
-    },
-    footerValue: {
-        color: GlobalColors.accent,
-        fontSize: 13,
-        fontWeight: 'bold',
+        marginBottom: Spacing.sm,
+        gap: Spacing.md,
     },
 });

@@ -9,7 +9,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Catalog from "../components/catalog";
 import ObjectDetailsComponent from "../components/object-details";
 import SvgSphericalPlanetarium from "../components/spherical-mode-svg";
-import { GlobalColors, globalStyles } from "../global/theme";
+import { GlobalColors, globalStyles, Spacing, textStyles } from "../global/theme";
 
 type Panel = 'catalog' | 'filter' | 'mount' | 'camera' | 'details';
 
@@ -39,9 +39,9 @@ export default function Index() {
 
         <View style={styles.planetariumContainer}>
           <View style={{ width: "30%" }}>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-              <Text style={globalStyles.font_title}>Astro App</Text>
-              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-around", gap: 10 }}>
+            <View style={[globalStyles.rowBetween, styles.homeHeader]}>
+              <Text style={textStyles.appTitle}>Astro App</Text>
+              <View style={[globalStyles.row, styles.toolbar]}>
                 <TouchableOpacity onPress={() => togglePanel('filter')}>
                   <MaterialCommunityIcons name="tune-variant" size={30} color={activePanel === 'filter' ? GlobalColors.primary : GlobalColors.accent} />
                 </TouchableOpacity>
@@ -70,22 +70,15 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-
   planetariumContainer: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
   },
-  button: {
-    backgroundColor: GlobalColors.foreground,
-    padding: 10,
-    borderRadius: 10,
-    marginVertical: 10,
-    alignItems: "center",
-    width: 200,
+  homeHeader: {
+    marginBottom: Spacing.xs,
   },
-  buttonText: {
-    color: GlobalColors.background,
-    fontWeight: "bold",
-  }
+  toolbar: {
+    gap: Spacing.md,
+  },
 })

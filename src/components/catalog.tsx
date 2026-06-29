@@ -4,9 +4,9 @@ import { useMountStore } from '@/hooks/useMountStore'
 import { useObservationStore } from '@/hooks/useObservationStore'
 import { filterCatalog } from '@/utils/filter'
 import { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
+import { FlatList, Text, TextInput, View } from 'react-native'
 import ngc from '../../assets/data/ngc.json'
-import { GlobalColors, globalStyles } from '../global/theme'
+import { GlobalColors, globalStyles, textStyles } from '../global/theme'
 import { CelestialObject } from '../model/celestialobject'
 
 const catalog: CelestialObject[] = ngc as CelestialObject[];
@@ -28,12 +28,12 @@ export default function Catalog() {
 
     return (
         <View style={globalStyles.container}>
-            <View style={styles.header}>
-                <Text style={globalStyles.font_subtitle}>Catalogue</Text>
+            <View style={globalStyles.panelHeader}>
+                <Text style={textStyles.panelTitle}>Catalogue</Text>
             </View>
-            <View style={styles.search_view}>
+            <View style={globalStyles.searchRow}>
                 <TextInput
-                    style={styles.search_bar}
+                    style={globalStyles.searchBar}
                     onChangeText={setSearchTxt}
                     value={searchTxt}
                     placeholder='Rechercher'
@@ -44,7 +44,7 @@ export default function Catalog() {
                 />
 
             </View>
-            <Text style={styles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
+            <Text style={textStyles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
 
             <FlatList
                 showsVerticalScrollIndicator={false}
@@ -60,53 +60,3 @@ export default function Catalog() {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    header: {
-        padding: 5,
-        gap: 10
-    },
-    search_view: {
-        padding: 5,
-        height: 60,
-        flexDirection: 'row',
-        width: '100%',
-        alignItems: 'center',
-        gap: 15,
-        marginBottom: 10
-    },
-    search_bar: {
-        color: GlobalColors.white,
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: GlobalColors.searchBorder,
-        backgroundColor: GlobalColors.searchBackground,
-        padding: 15,
-        //fontFamily: "f-regular",
-        flex: 1
-
-    },
-    filter_bar: {
-        padding: 5,
-        flexDirection: 'row',
-        width: '100%',
-        flexWrap: 'wrap',
-        height: 'auto',
-        gap: 5
-    },
-    badge: {
-        fontSize: 13,
-        fontWeight: '500',
-        color: GlobalColors.white,
-        borderRadius: 6,
-        paddingVertical: 2,
-        paddingHorizontal: 7,
-        overflow: 'hidden',
-        marginRight: 5,
-    },
-    sectionCount: {
-        fontSize: 11,
-        color: GlobalColors.accent,
-        marginBottom: 10,
-    },
-})

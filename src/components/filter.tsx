@@ -1,5 +1,5 @@
 import objectTypesJson from '@/assets/data/celestialtype.json'
-import { GlobalColors, globalStyles } from '@/global/theme'
+import { GlobalColors, globalStyles, Radius, Spacing, textStyles } from '@/global/theme'
 import { useFilterStore } from '@/hooks/useFilterStore'
 import { useSettingsStore } from '@/hooks/useSettings'
 import { CelestialType } from '@/model/celestialtype'
@@ -46,20 +46,20 @@ export default function Filter({ onClose }: Props) {
         <View style={globalStyles.container}>
 
             {/* Header */}
-            <View style={styles.header}>
+            <View style={globalStyles.panelHeader}>
                 <TouchableOpacity onPress={applyFilter}>
-                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.white} />
+                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.textPrimary} />
                 </TouchableOpacity>
-                <Text style={globalStyles.font_subtitle}>Filtres</Text>
+                <Text style={textStyles.panelTitle}>Filtres</Text>
             </View>
 
             {/* Magnitude */}
-            <Text style={styles.sectionLabel}>Magnitude</Text>
-            <View style={styles.magContainer}>
-                <View style={styles.magLabels}>
-                    <Text style={styles.magValue}>{magRange[0].toFixed(1)}</Text>
-                    <Text style={styles.magHint}>Plus brillant → Plus faible</Text>
-                    <Text style={styles.magValue}>{magRange[1].toFixed(1)}</Text>
+            <Text style={[textStyles.sectionLabel, globalStyles.sectionLabelMargin]}>Magnitude</Text>
+            <View style={[globalStyles.panel, styles.panelSpacing]}>
+                <View style={[globalStyles.rowBetween, styles.magLabels]}>
+                    <Text style={[textStyles.valueEmphasis, styles.magValue]}>{magRange[0].toFixed(1)}</Text>
+                    <Text style={textStyles.hint}>Plus brillant → Plus faible</Text>
+                    <Text style={[textStyles.valueEmphasis, styles.magValue]}>{magRange[1].toFixed(1)}</Text>
                 </View>
                 <Slider
                     value={magRange}
@@ -79,12 +79,12 @@ export default function Filter({ onClose }: Props) {
             </View>
 
             {/* Visibility */}
-            <Text style={styles.sectionLabel}>Visibilité</Text>
-            <View style={styles.magContainer}>
-                <View style={styles.magLabels}>
-                    <Text style={styles.magValue}>{altRange[0].toFixed(1)}°</Text>
-                    <Text style={styles.magHint}>Altitude Minimale</Text>
-                    <Text style={styles.magValue}>{altRange[1].toFixed(1)}°</Text>
+            <Text style={[textStyles.sectionLabel, globalStyles.sectionLabelMargin]}>Visibilité</Text>
+            <View style={[globalStyles.panel, styles.panelSpacing]}>
+                <View style={[globalStyles.rowBetween, styles.magLabels]}>
+                    <Text style={[textStyles.valueEmphasis, styles.magValue]}>{altRange[0].toFixed(1)}°</Text>
+                    <Text style={textStyles.hint}>Altitude Minimale</Text>
+                    <Text style={[textStyles.valueEmphasis, styles.magValue]}>{altRange[1].toFixed(1)}°</Text>
                 </View>
                 <Slider
                     value={altRange}
@@ -104,14 +104,14 @@ export default function Filter({ onClose }: Props) {
             </View>
 
             {/* Types */}
-            <View style={styles.sectionRow}>
-                <Text style={styles.sectionLabel}>Type d'objet</Text>
+            <View style={[globalStyles.rowBetween, styles.sectionRow]}>
+                <Text style={textStyles.sectionLabel}>Type d'objet</Text>
                 {selectedTypes.length > 0 && (
-                    <Text style={styles.sectionCount}>{selectedTypes.length} sélectionné(s)</Text>
+                    <Text style={textStyles.sectionCount}>{selectedTypes.length} sélectionné(s)</Text>
                 )}
             </View>
 
-            <View style={styles.typeList}>
+            <View style={[globalStyles.panel, styles.typeList]}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {Object.entries(objectTypes).map(([key, type], index, arr) => {
                         const isSelected = selectedTypes.includes(key)
@@ -119,21 +119,21 @@ export default function Filter({ onClose }: Props) {
                         return (
                             <TouchableOpacity
                                 key={key}
-                                style={[styles.typeRow, !isLast && styles.typeRowBorder]}
+                                style={[globalStyles.listRow, !isLast && styles.typeRowBorder]}
                                 onPress={() => toggleType(key)}
                                 activeOpacity={0.7}
                             >
-                                <View style={[styles.typeIcon, { backgroundColor: type.color + '30' }]}>
+                                <View style={[globalStyles.typeIcon, { backgroundColor: type.color + '30' }]}>
                                     <MaterialCommunityIcons
                                         name={type.iconName as any}
                                         size={18}
                                         color={type.color}
                                     />
                                 </View>
-                                <Text style={styles.typeLabel}>{type.label}</Text>
+                                <Text style={[textStyles.listLabel, styles.typeLabel]}>{type.label}</Text>
                                 <View style={[styles.checkbox, isSelected && styles.checkboxOn]}>
                                     {isSelected && (
-                                        <MaterialCommunityIcons name="check" size={12} color={GlobalColors.white} />
+                                        <MaterialCommunityIcons name="check" size={12} color={GlobalColors.textPrimary} />
                                     )}
                                 </View>
                             </TouchableOpacity>
@@ -147,96 +147,37 @@ export default function Filter({ onClose }: Props) {
 }
 
 const styles = StyleSheet.create({
-
-    // Header
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 5,
-        gap: 10
-    },
-    // Section labels
-    sectionLabel: {
-        fontSize: 11,
-        color: GlobalColors.mutedText,
-        letterSpacing: 0.08,
-        textTransform: 'uppercase',
-        marginBottom: 10,
-        marginTop: 4,
-    },
     sectionRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 8,
+        marginTop: Spacing.sm,
     },
-    sectionCount: {
-        fontSize: 11,
-        color: GlobalColors.accent,
-        marginBottom: 10,
-    },
-
-    // Magnitude slider
-    magContainer: {
-        backgroundColor: GlobalColors.containerBackground,
-        borderRadius: 12,
-        padding: 14,
-        marginBottom: 20,
+    panelSpacing: {
+        marginBottom: Spacing.xl,
     },
     magLabels: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 4,
+        marginBottom: Spacing.xs,
     },
     magValue: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: GlobalColors.textLight,
         fontVariant: ['tabular-nums'],
         minWidth: 32,
-    },
-    magHint: {
-        fontSize: 10,
-        color: GlobalColors.mutedText,
     },
     slider: {
         width: '100%',
     },
-
-    // Type list
     typeList: {
         flex: 1,
-        backgroundColor: GlobalColors.containerBackground,
-        borderRadius: 12,
-    },
-    typeRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        padding: 12,
+        padding: 0,
     },
     typeRowBorder: {
         borderBottomWidth: 0.5,
         borderBottomColor: GlobalColors.separator,
     },
-    typeIcon: {
-        width: 34,
-        height: 34,
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-    },
     typeLabel: {
         flex: 1,
-        fontSize: 13,
-        color: GlobalColors.textLight,
     },
     checkbox: {
-        width: 20,
-        height: 20,
-        borderRadius: 10,
+        width: Spacing.xl,
+        height: Spacing.xl,
+        borderRadius: Radius.md,
         borderWidth: 1.5,
         borderColor: GlobalColors.checkboxBorder,
         alignItems: 'center',
