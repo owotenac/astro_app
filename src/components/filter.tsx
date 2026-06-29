@@ -1,7 +1,7 @@
 import objectTypesJson from '@/assets/data/celestialtype.json'
 import { GlobalColors, globalStyles } from '@/global/theme'
 import { useFilterStore } from '@/hooks/useFilterStore'
-import { useSettings } from '@/hooks/useSettings'
+import { useSettingsStore } from '@/hooks/useSettings'
 import { CelestialType } from '@/model/celestialtype'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Slider } from '@miblanchard/react-native-slider'
@@ -22,7 +22,7 @@ type Props = {
 
 export default function Filter({ onClose }: Props) {
     const { currentFilter, setFilter } = useFilterStore();
-    const { applySettings } = useSettings();
+    const updateFilter = useSettingsStore(state => state.updateFilter);
     const [selectedTypes, setSelectedTypes] = useState<string[]>(currentFilter.types)
     const [magRange, setMagRange] = useState<[number, number]>([currentFilter.magMin, currentFilter.magMax])
     const [altRange, setAltRange] = useState<[number, number]>([currentFilter.altMin, currentFilter.altMax])
@@ -38,7 +38,7 @@ export default function Filter({ onClose }: Props) {
     const applyFilter = useCallback(() => {
         const filter = { magMin: magRange[0], magMax: magRange[1], altMin: altRange[0], altMax: altRange[1], types: selectedTypes }
         setFilter(filter)
-        applySettings(filter)
+        updateFilter(filter)
         onClose();
     }, [magRange, altRange, selectedTypes])
 

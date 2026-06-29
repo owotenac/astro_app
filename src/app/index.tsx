@@ -1,29 +1,37 @@
+import Camera from '@/components/camera';
 import Filter from '@/components/filter';
 import Mount from '@/components/mount';
 import { useMountStore } from '@/hooks/useMountStore';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Catalog from "../components/catalog";
 import ObjectDetailsComponent from "../components/object-details";
-// import SphericalPlanetariumScreen from "../components/spherical-mode";
 import SvgSphericalPlanetarium from "../components/spherical-mode-svg";
 import { GlobalColors, globalStyles } from "../global/theme";
+
+type Panel = 'catalog' | 'filter' | 'mount' | 'camera' | 'details';
 
 export default function Index() {
   const selectedObject = useMountStore(state => state.selectedObject);
   const setSelectedObject = useMountStore(state => state.setSelectedObject);
-  const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [showMount, setShowMount] = useState<boolean>(false);
+  const [activePanel, setActivePanel] = useState<Panel>('catalog');
 
-  const openFilter = () => {
-    setShowFilter(!showFilter);
-  }
+  useEffect(() => {
+    if (selectedObject) {
+      setActivePanel('details');
+    }
+  }, [selectedObject]);
 
-  const openMount = () => {
-    setShowMount(!showMount);
-  }
+  const togglePanel = (panel: Panel) => {
+    setActivePanel(activePanel === panel ? 'catalog' : panel);
+  };
+
+  const closePanel = () => {
+    setSelectedObject(null);
+    setActivePanel('catalog');
+  };
 
   return (
     <SafeAreaProvider>
@@ -34,34 +42,26 @@ export default function Index() {
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
               <Text style={globalStyles.font_title}>Astro App</Text>
               <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-around", gap: 10 }}>
-                <TouchableOpacity onPress={openFilter}>
-                  <MaterialCommunityIcons name="tune-variant" size={30} color={GlobalColors.accent} />
+                <TouchableOpacity onPress={() => togglePanel('filter')}>
+                  <MaterialCommunityIcons name="tune-variant" size={30} color={activePanel === 'filter' ? GlobalColors.primary : GlobalColors.accent} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={openMount}>
-                  <MaterialCommunityIcons name="telescope" size={30} color={GlobalColors.accent} />
+                <TouchableOpacity onPress={() => togglePanel('mount')}>
+                  <MaterialCommunityIcons name="telescope" size={30} color={activePanel === 'mount' ? GlobalColors.primary : GlobalColors.accent} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => togglePanel('camera')}>
+                  <MaterialCommunityIcons name="camera" size={30} color={activePanel === 'camera' ? GlobalColors.primary : GlobalColors.accent} />
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Afficher soit le Catalogue soit les Détails soit les settings*/}
-            {selectedObject ? (
-              <ObjectDetailsComponent
-                object={selectedObject}
-                onClose={() => setSelectedObject(null)}
-              />
-            ) : (
-              showFilter ? (
-                <Filter onClose={openFilter} />
-              ) : (
-                showMount ? (
-                  <Mount onClose={openMount} />
-                ) : (
-                  <Catalog />
-                )
-              )
+            {activePanel === 'details' && selectedObject && (
+              <ObjectDetailsComponent object={selectedObject} onClose={closePanel} />
             )}
+            {activePanel === 'filter' && <Filter onClose={closePanel} />}
+            {activePanel === 'mount' && <Mount onClose={closePanel} />}
+            {activePanel === 'camera' && <Camera onClose={closePanel} />}
+            {activePanel === 'catalog' && <Catalog />}
           </View>
-          {/* <SphericalPlanetariumScreen /> */}
           <SvgSphericalPlanetarium />
         </View>
       </SafeAreaView>

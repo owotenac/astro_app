@@ -1,7 +1,7 @@
 import { GlobalColors, globalStyles } from '@/global/theme'
 import { useMountStore } from '@/hooks/useMountStore'
+import { ASCOM_Telescope } from '@/utils/ascom_services'
 import { formatToDMS } from '@/utils/compute'
-import { ASCOM_Telescope } from '@/utils/mount'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'

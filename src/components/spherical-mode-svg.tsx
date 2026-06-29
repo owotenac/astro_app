@@ -10,18 +10,21 @@ import { useFilterStore } from '@/hooks/useFilterStore';
 import { useLocation } from '@/hooks/useLocation';
 import { useMountStore } from '@/hooks/useMountStore';
 import { useObservationStore } from '@/hooks/useObservationStore';
+import { usePlateSolveStore } from '@/hooks/usePlateSolveStore';
+import { useSettingsStore } from '@/hooks/useSettings';
 import { CelestialObject } from '@/model/celestialobject';
 import { ConstellationObject } from '@/model/constellations';
 import { StarObject } from '@/model/stars';
 import { computeAzAlt } from '@/utils/compute';
 import { filterCatalog } from '@/utils/filter';
+import { computeFovCorners } from '@/utils/platesolve';
 import { azimuthalEquidistantProject } from '@/utils/projection';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Slider } from '@miblanchard/react-native-slider';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Svg, { Circle, G, Line, Text as SvgText } from 'react-native-svg';
+import Svg, { Circle, G, Line, Polygon, Text as SvgText } from 'react-native-svg';
 import constellationJson from '../../assets/data/constellations_lines.json';
 import starJson from '../../assets/data/stars.json';
 
@@ -99,6 +102,8 @@ export default function SvgSphericalPlanetarium() {
     const location = useLocation();
     const setTargetDate = useObservationStore(state => state.setTargetDate);
     const mountPosition = useMountStore(state => state.mountPosition);
+    const plateSolveCalibration = usePlateSolveStore(state => state.calibration);
+    const cameraDimensions = usePlateSolveStore(state => state.cameraDimensions);
     const slewMode = useMountStore(state => state.slewMode);
     const setTargetPosition = useMountStore(state => state.setTargetPosition);
     const selectedObject = useMountStore(state => state.selectedObject);
@@ -110,13 +115,25 @@ export default function SvgSphericalPlanetarium() {
     const [visibleConstellations, setVisibleConstellations] = useState<RenderedConstellation[]>([]);
     const [timeOffset, setTimeOffset] = useState(0);
 
-    const [showStars, setShowStars] = useState(true);
-    const [showObjects, setShowObjects] = useState(true);
-    const [showNames, setShowNames] = useState(true);
-    const [showConstellations, setShowConstellations] = useState(true);
-    const [mirrorView, setMirrorView] = useState(true);
+    const viewSettings = useSettingsStore(state => state.settings.view);
+    const updateView = useSettingsStore(state => state.updateView);
 
-    const [starMagnitude, setStarMagnitude] = useState(2.5);
+    const [showStars, setShowStars] = useState(viewSettings.showStars);
+    const [showObjects, setShowObjects] = useState(viewSettings.showObjects);
+    const [showNames, setShowNames] = useState(viewSettings.showNames);
+    const [showConstellations, setShowConstellations] = useState(viewSettings.showConstellations);
+    const [mirrorView, setMirrorView] = useState(viewSettings.mirrorView);
+
+    const [starMagnitude, setStarMagnitude] = useState(viewSettings.starMagnitude);
+
+    useEffect(() => {
+        setShowStars(viewSettings.showStars);
+        setShowConstellations(viewSettings.showConstellations);
+        setShowObjects(viewSettings.showObjects);
+        setShowNames(viewSettings.showNames);
+        setMirrorView(viewSettings.mirrorView);
+        setStarMagnitude(viewSettings.starMagnitude);
+    }, [viewSettings]);
 
     // Zoom state
     const [zoom, setZoom] = useState(1);
@@ -350,6 +367,30 @@ export default function SvgSphericalPlanetarium() {
         return visibleObjects.find(obj => obj.object.Name === selectedObject.Name);
     }, [selectedObject, visibleObjects]);
 
+    // ── Champ de vision plate solve ───────────────────────────────────────────
+    const plateSolveFov = useMemo(() => {
+        if (!plateSolveCalibration || !cameraDimensions || !location.ready) return null;
+
+        const corners = computeFovCorners(plateSolveCalibration, cameraDimensions);
+
+        const projectedCorners = corners.map(corner => {
+            const { azimuth, altitude } = computeAzAlt(
+                { ra_deg: corner.ra, dec_deg: corner.dec } as CelestialObject,
+                targetDate
+            );
+            const projected = azimuthalEquidistantProject(azimuth, altitude, skyRadius, -5, mirrorView);
+            return {
+                x: projected.x + skyCenter,
+                y: projected.y + skyCenter,
+                visible: projected.visible,
+            };
+        });
+
+        if (projectedCorners.some(c => !c.visible)) return null;
+
+        return projectedCorners.map(c => `${c.x},${c.y}`).join(' ');
+    }, [plateSolveCalibration, cameraDimensions, location.ready, targetDate, mirrorView]);
+
     // ── Handlers ──────────────────────────────────────────────────────────────
     const handleObjectPress = useCallback((obj: RenderedObject) => {
         if (slewMode) {
@@ -369,23 +410,33 @@ export default function SvgSphericalPlanetarium() {
     };
 
     const toggleShowStars = () => {
-        setShowStars(!showStars);
+        const newValue = !showStars;
+        setShowStars(newValue);
+        updateView({ showStars: newValue });
     };
 
     const toggleShowObjects = () => {
-        setShowObjects(!showObjects);
+        const newValue = !showObjects;
+        setShowObjects(newValue);
+        updateView({ showObjects: newValue });
     };
 
     const toggleShowNames = () => {
-        setShowNames(!showNames);
+        const newValue = !showNames;
+        setShowNames(newValue);
+        updateView({ showNames: newValue });
     };
 
     const toggleShowConstellations = () => {
-        setShowConstellations(!showConstellations);
+        const newValue = !showConstellations;
+        setShowConstellations(newValue);
+        updateView({ showConstellations: newValue });
     };
 
     const toggleMirrorView = () => {
-        setMirrorView(!mirrorView);
+        const newValue = !mirrorView;
+        setMirrorView(newValue);
+        updateView({ mirrorView: newValue });
     };
 
     // ── Rendu ─────────────────────────────────────────────────────────────────
@@ -597,6 +648,16 @@ export default function SvgSphericalPlanetarium() {
                                 </G>
                             )}
 
+                            {/* Plate Solve FOV Rectangle */}
+                            {plateSolveFov && (
+                                <Polygon
+                                    points={plateSolveFov}
+                                    fill="rgba(196, 119, 19, 0.1)"
+                                    stroke="#00ffc8"
+                                    strokeWidth={1}
+                                />
+                            )}
+
                             {/* Mount Position Marker */}
                             {projectedMountPosition && (
                                 <G>
@@ -741,7 +802,10 @@ export default function SvgSphericalPlanetarium() {
                                 maximumValue={7}
                                 step={0.1}
                                 value={starMagnitude}
-                                onValueChange={(val) => setStarMagnitude(val[0])}
+                                onValueChange={(val) => {
+                                    setStarMagnitude(val[0]);
+                                    updateView({ starMagnitude: val[0] });
+                                }}
                                 minimumTrackTintColor={GlobalColors.accent}
                                 maximumTrackTintColor="#1f2833"
                                 thumbTintColor={GlobalColors.accent}
