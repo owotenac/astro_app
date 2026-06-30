@@ -1,10 +1,12 @@
 import { GlobalColors, globalStyles, Spacing, textStyles } from '@/global/theme'
 import { usePlateSolveStore } from '@/hooks/usePlateSolveStore'
 import { useSettingsStore } from '@/hooks/useSettings'
+import { Annotation } from '@/model/platesolve_types'
 import { ASCOM_Camera, ASCOM_plate_solver, PlateSolveResult } from '@/utils/ascom_services'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import AnnotatedImagePreview from './AnnotatedImagePreview'
 
 type ConnectionState = 'unknown' | 'disconnected' | 'connecting' | 'connected' | 'disconnecting'
 
@@ -36,6 +38,9 @@ const Camera = ({ onClose }: Props) => {
 
     const setCalibration = usePlateSolveStore(state => state.setCalibration)
     const setCameraDimensions = usePlateSolveStore(state => state.setCameraDimensions)
+    const cameraDimensions = usePlateSolveStore(state => state.cameraDimensions)
+
+    const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
     const [gain, setGain] = useState<string>(cameraSettings.gain.toString())
     const [exposureTime, setExposureTime] = useState<string>(cameraSettings.exposureTime.toString())
@@ -81,7 +86,8 @@ const Camera = ({ onClose }: Props) => {
                     if (result) {
                         setSolveState({ status: 'solved', result })
                         setCalibration(result.calibration)
-                        console.log('Plate solved:', result)
+                        setAnnotations(result.annotations)
+                        console.log('Plate solved:', result.annotations)
                     } else {
                         setSolveState({ status: 'failed', message: 'Échec de récupération du résultat' })
                     }
@@ -307,11 +313,15 @@ const Camera = ({ onClose }: Props) => {
                 </View>
 
                 {/* Preview */}
-                <View style={[globalStyles.cardSection, { flex: 1 }]}>
+                <View style={globalStyles.cardSection}>
                     <Text style={globalStyles.sectionAccent}>Aperçu</Text>
                     <View style={[globalStyles.insetBox, styles.previewContainer]}>
-                        {previewUri ? (
-                            <Image source={{ uri: previewUri }} style={styles.previewImage} resizeMode="contain" />
+                        {previewUri && cameraDimensions ? (
+                            <AnnotatedImagePreview
+                                imageUri={previewUri}
+                                annotations={annotations}
+                                imageDimensions={{ width: cameraDimensions.xsize, height: cameraDimensions.ysize }}
+                            />
                         ) : (
                             <View style={styles.previewPlaceholder}>
                                 <MaterialCommunityIcons name="image-off" size={48} color={GlobalColors.textSecondary} />
@@ -352,15 +362,6 @@ const Camera = ({ onClose }: Props) => {
                             <Text style={[textStyles.small, styles.resultText]}>
                                 Échelle: {solveState.result.calibration.pixscale.toFixed(2)} "/px
                             </Text>
-                            {solveState.result.annotations.length > 0 && (
-                                <Text style={[textStyles.small, styles.resultText]}>
-                                    Objets: {solveState.result.annotations
-                                        .filter(a => a.names)
-                                        .map(a => a.names?.[0])
-                                        .slice(0, 5)
-                                        .join(', ')}
-                                </Text>
-                            )}
                         </View>
                     )}
 
@@ -392,14 +393,10 @@ const styles = StyleSheet.create({
     },
     previewContainer: {
         flex: 1,
-        padding: 0,
-        overflow: 'hidden',
+        //padding: 0,
+        //overflow: 'hidden',
         minHeight: 250,
         marginBottom: Spacing.lg,
-    },
-    previewImage: {
-        width: '100%',
-        height: '100%',
     },
     previewPlaceholder: {
         flex: 1,

@@ -1,18 +1,5 @@
+import { Calibration, CameraDimensions } from '@/model/platesolve_types';
 import { create } from 'zustand';
-
-export type Calibration = {
-    ra: number;
-    dec: number;
-    orientation: number;
-    pixscale: number;
-    radius: number;
-    parity: number;
-};
-
-export type CameraDimensions = {
-    xsize: number;
-    ysize: number;
-};
 
 type PlateSolveStore = {
     calibration: Calibration | null;

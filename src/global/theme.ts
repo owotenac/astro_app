@@ -383,7 +383,7 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: GlobalColors.primary,
         paddingVertical: Spacing.lg,
         paddingHorizontal: Spacing.lg,
-        borderRadius: Radius.md,
+        borderRadius: Radius.sm,
     },
     buttonDanger: { backgroundColor: GlobalColors.danger },
     buttonDisabled: { opacity: 0.4 },

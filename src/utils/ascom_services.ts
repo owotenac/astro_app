@@ -1,3 +1,4 @@
+import { Annotation, Calibration } from '@/model/platesolve_types';
 import axios from 'axios';
 
 const getBaseURL = () => {
@@ -56,6 +57,12 @@ export type CameraConnectResult = {
     xsize?: number;
     ysize?: number;
 };
+export type PlateSolveResult = {
+    status: 'solved';
+    job_id: number;
+    calibration: Calibration;
+    annotations: Annotation[];
+};
 
 export class ASCOM_Camera {
 
@@ -108,26 +115,4 @@ export class ASCOM_plate_solver {
     }
 }
 
-export type Calibration = {
-    ra: number;
-    dec: number;
-    orientation: number;
-    pixscale: number;
-    radius: number;
-    parity: number;
-};
 
-export type Annotation = {
-    type: string;
-    names?: string[];
-    pixelx: number;
-    pixely: number;
-    radius?: number;
-};
-
-export type PlateSolveResult = {
-    status: 'solved';
-    job_id: number;
-    calibration: Calibration;
-    annotations: Annotation[];
-};

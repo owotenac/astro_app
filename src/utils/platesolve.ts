@@ -1,4 +1,4 @@
-import { Calibration, CameraDimensions } from '@/hooks/usePlateSolveStore';
+import { Calibration, CameraDimensions } from '@/model/platesolve_types';
 
 const DEG2RAD = Math.PI / 180;
 

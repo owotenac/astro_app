@@ -652,7 +652,7 @@ export default function SvgSphericalPlanetarium() {
                             {plateSolveFov && (
                                 <Polygon
                                     points={plateSolveFov}
-                                    fill={GlobalColors.fovFill}
+                                    //fill={GlobalColors.fovFill}
                                     stroke={GlobalColors.fovStroke}
                                     strokeWidth={1}
                                 />
