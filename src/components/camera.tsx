@@ -25,6 +25,8 @@ type Props = {
 const camera = new ASCOM_Camera()
 const plate_solver = new ASCOM_plate_solver()
 
+const ICON_SIZE = 16
+
 const Camera = ({ onClose }: Props) => {
     const [connectionState, setConnectionState] = useState<ConnectionState>('unknown')
     const [error, setError] = useState<string | null>(null)
@@ -169,7 +171,6 @@ const Camera = ({ onClose }: Props) => {
 
             if (result) {
                 setSolveState({ status: 'polling', submissionId: result.submission_id })
-                //get the image from result
                 setPreviewUri(result.image)
             } else {
                 setSolveState({ status: 'failed', message: 'Échec de soumission' })
@@ -192,82 +193,80 @@ const Camera = ({ onClose }: Props) => {
         }
     }
 
+    const statusLabel = () => {
+        switch (connectionState) {
+            case 'unknown': return 'Vérification...'
+            case 'disconnected': return 'Déconnecté'
+            case 'connecting': return 'Connexion...'
+            case 'connected': return 'Connecté'
+            case 'disconnecting': return 'Déconnexion...'
+        }
+    }
+
     return (
-        <View style={globalStyles.container}>
-            {/* Header */}
+        <View style={globalStyles.sidebarPanel}>
             <View style={globalStyles.panelHeader}>
-                <TouchableOpacity onPress={onClose}>
-                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.textPrimary} />
+                <TouchableOpacity style={globalStyles.panelBackButton} onPress={onClose}>
+                    <MaterialCommunityIcons name="arrow-left" size={18} color={GlobalColors.textPrimary} />
                 </TouchableOpacity>
                 <Text style={textStyles.panelTitle}>Caméra</Text>
             </View>
 
-            {/* Connection Status */}
-            <View style={globalStyles.statusContainer}>
-                <View style={globalStyles.statusRow}>
+            <ScrollView style={globalStyles.sidebarScroll} showsVerticalScrollIndicator={false}>
+                <View style={globalStyles.statusPill}>
                     <View style={[globalStyles.statusIndicator, isConnected && globalStyles.statusIndicatorConnected]} />
-                    <Text style={textStyles.status}>
-                        {connectionState === 'unknown' && 'Vérification...'}
-                        {connectionState === 'disconnected' && 'Déconnecté'}
-                        {connectionState === 'connecting' && 'Connexion...'}
-                        {connectionState === 'connected' && 'Connecté'}
-                        {connectionState === 'disconnecting' && 'Déconnexion...'}
-                    </Text>
+                    <Text style={textStyles.status}>{statusLabel()}</Text>
                 </View>
-            </View>
 
-            {/* Error Message */}
-            {error && (
-                <View style={globalStyles.errorContainer}>
-                    <MaterialCommunityIcons name="alert-circle" size={16} color={GlobalColors.error} />
-                    <Text style={globalStyles.errorMessage}>{error}</Text>
+                {error && (
+                    <View style={globalStyles.errorContainer}>
+                        <MaterialCommunityIcons name="alert-circle" size={14} color={GlobalColors.error} />
+                        <Text style={globalStyles.errorMessage}>{error}</Text>
+                    </View>
+                )}
+
+                <View style={globalStyles.connectionButtonRow}>
+                    <TouchableOpacity
+                        style={[globalStyles.buttonCompact, isConnected && globalStyles.buttonDisabled]}
+                        onPress={handleConnect}
+                        disabled={isConnected || isLoading}
+                    >
+                        {connectionState === 'connecting' ? (
+                            <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
+                        ) : (
+                            <>
+                                <MaterialCommunityIcons name="lan-connect" size={ICON_SIZE} color={GlobalColors.textPrimary} />
+                                <Text style={textStyles.button}>Connecter</Text>
+                            </>
+                        )}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[
+                            globalStyles.buttonCompactSecondary,
+                            globalStyles.buttonCompactDanger,
+                            !isConnected && globalStyles.buttonDisabled,
+                        ]}
+                        onPress={handleDisconnect}
+                        disabled={!isConnected || isLoading}
+                    >
+                        {connectionState === 'disconnecting' ? (
+                            <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
+                        ) : (
+                            <>
+                                <MaterialCommunityIcons name="lan-disconnect" size={ICON_SIZE} color={GlobalColors.textSecondary} />
+                                <Text style={[textStyles.button, styles.dangerButtonText]}>Déconnecter</Text>
+                            </>
+                        )}
+                    </TouchableOpacity>
                 </View>
-            )}
 
-            {/* Connection Buttons */}
-            <View style={globalStyles.buttonRow}>
-                <TouchableOpacity
-                    style={[globalStyles.buttonPrimary, isConnected && globalStyles.buttonDisabled]}
-                    onPress={handleConnect}
-                    disabled={isConnected || isLoading}
-                >
-                    {connectionState === 'connecting' ? (
-                        <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
-                    ) : (
-                        <>
-                            <MaterialCommunityIcons name="lan-connect" size={20} color={GlobalColors.textPrimary} />
-                            <Text style={textStyles.button}>Connecter</Text>
-                        </>
-                    )}
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[globalStyles.buttonPrimary, globalStyles.buttonDanger, !isConnected && globalStyles.buttonDisabled]}
-                    onPress={handleDisconnect}
-                    disabled={!isConnected || isLoading}
-                >
-                    {connectionState === 'disconnecting' ? (
-                        <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
-                    ) : (
-                        <>
-                            <MaterialCommunityIcons name="lan-disconnect" size={20} color={GlobalColors.textPrimary} />
-                            <Text style={textStyles.button}>Déconnecter</Text>
-                        </>
-                    )}
-                </TouchableOpacity>
-            </View>
-
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                style={{ flex: 1 }}>
-
-                {/* Capture Settings */}
-                <View style={globalStyles.cardSection}>
+                <View style={globalStyles.sidebarSection}>
                     <Text style={globalStyles.sectionAccent}>Paramètres de capture</Text>
 
                     <View style={[globalStyles.row, styles.inputRow]}>
                         <View style={styles.inputGroup}>
-                            <Text style={[textStyles.label, globalStyles.inputLabelMargin]}>Gain</Text>
+                            <Text style={[textStyles.sectionLabel, styles.inputLabel]}>Gain</Text>
                             <TextInput
                                 style={globalStyles.searchBar}
                                 value={gain}
@@ -280,7 +279,7 @@ const Camera = ({ onClose }: Props) => {
                         </View>
 
                         <View style={styles.inputGroup}>
-                            <Text style={[textStyles.label, globalStyles.inputLabelMargin]}>Exposition (s)</Text>
+                            <Text style={[textStyles.sectionLabel, styles.inputLabel]}>Exposition (s)</Text>
                             <TextInput
                                 style={globalStyles.searchBar}
                                 value={exposureTime}
@@ -294,7 +293,7 @@ const Camera = ({ onClose }: Props) => {
                     </View>
 
                     <TouchableOpacity
-                        style={[globalStyles.buttonPrimary, styles.captureButton, (!isConnected || isCapturing) && globalStyles.buttonDisabled]}
+                        style={[globalStyles.buttonBlock, (!isConnected || isCapturing) && globalStyles.buttonDisabled]}
                         onPress={handleStartCapture}
                         disabled={!isConnected || isCapturing}
                     >
@@ -305,15 +304,14 @@ const Camera = ({ onClose }: Props) => {
                             </>
                         ) : (
                             <>
-                                <MaterialCommunityIcons name="camera" size={20} color={GlobalColors.textPrimary} />
+                                <MaterialCommunityIcons name="camera" size={ICON_SIZE} color={GlobalColors.textPrimary} />
                                 <Text style={textStyles.button}>Démarrer la capture</Text>
                             </>
                         )}
                     </TouchableOpacity>
                 </View>
 
-                {/* Preview */}
-                <View style={globalStyles.cardSection}>
+                <View style={globalStyles.sidebarSection}>
                     <Text style={globalStyles.sectionAccent}>Aperçu</Text>
                     <View style={[globalStyles.insetBox, styles.previewContainer]}>
                         {previewUri && cameraDimensions ? (
@@ -324,13 +322,14 @@ const Camera = ({ onClose }: Props) => {
                             />
                         ) : (
                             <View style={styles.previewPlaceholder}>
-                                <MaterialCommunityIcons name="image-off" size={48} color={GlobalColors.textSecondary} />
-                                <Text style={textStyles.label}>Aucune capture</Text>
+                                <MaterialCommunityIcons name="image-off" size={32} color={GlobalColors.textMuted} />
+                                <Text style={textStyles.hint}>Aucune capture</Text>
                             </View>
                         )}
                     </View>
+
                     <TouchableOpacity
-                        style={[globalStyles.buttonPrimary, styles.captureButton, (!isConnected || isCapturing || isSolving) && globalStyles.buttonDisabled]}
+                        style={[globalStyles.buttonCompact, (!isConnected || isCapturing || isSolving) && globalStyles.buttonDisabled]}
                         onPress={handlePlateSolving}
                         disabled={!isConnected || isCapturing || isSolving}
                     >
@@ -341,7 +340,7 @@ const Camera = ({ onClose }: Props) => {
                             </>
                         ) : (
                             <>
-                                <MaterialCommunityIcons name="crosshairs-gps" size={20} color={GlobalColors.textPrimary} />
+                                <MaterialCommunityIcons name="crosshairs-gps" size={ICON_SIZE} color={GlobalColors.textPrimary} />
                                 <Text style={textStyles.button}>Plate Solving</Text>
                             </>
                         )}
@@ -350,24 +349,28 @@ const Camera = ({ onClose }: Props) => {
                     {solveState.status === 'solved' && (
                         <View style={globalStyles.resultBox}>
                             <Text style={[textStyles.success, styles.resultTitle]}>Résultat</Text>
-                            <Text style={[textStyles.small, styles.resultText]}>
-                                RA: {solveState.result.calibration.ra.toFixed(4)}°
-                            </Text>
-                            <Text style={[textStyles.small, styles.resultText]}>
-                                Dec: {solveState.result.calibration.dec.toFixed(4)}°
-                            </Text>
-                            <Text style={[textStyles.small, styles.resultText]}>
-                                Orientation: {solveState.result.calibration.orientation.toFixed(1)}°
-                            </Text>
-                            <Text style={[textStyles.small, styles.resultText]}>
-                                Échelle: {solveState.result.calibration.pixscale.toFixed(2)} "/px
-                            </Text>
+                            <View style={globalStyles.kvRow}>
+                                <Text style={textStyles.rowLabel}>RA</Text>
+                                <Text style={textStyles.rowValue}>{solveState.result.calibration.ra.toFixed(4)}°</Text>
+                            </View>
+                            <View style={globalStyles.kvRow}>
+                                <Text style={textStyles.rowLabel}>Dec</Text>
+                                <Text style={textStyles.rowValue}>{solveState.result.calibration.dec.toFixed(4)}°</Text>
+                            </View>
+                            <View style={globalStyles.kvRow}>
+                                <Text style={textStyles.rowLabel}>Orientation</Text>
+                                <Text style={textStyles.rowValue}>{solveState.result.calibration.orientation.toFixed(1)}°</Text>
+                            </View>
+                            <View style={[globalStyles.kvRow, styles.kvRowLast]}>
+                                <Text style={textStyles.rowLabel}>Échelle</Text>
+                                <Text style={textStyles.rowValue}>{solveState.result.calibration.pixscale.toFixed(2)} "/px</Text>
+                            </View>
                         </View>
                     )}
 
                     {solveState.status === 'failed' && (
                         <View style={globalStyles.errorContainer}>
-                            <MaterialCommunityIcons name="alert-circle" size={16} color={GlobalColors.error} />
+                            <MaterialCommunityIcons name="alert-circle" size={14} color={GlobalColors.error} />
                             <Text style={globalStyles.errorMessage}>{solveState.message}</Text>
                         </View>
                     )}
@@ -380,34 +383,35 @@ const Camera = ({ onClose }: Props) => {
 export default Camera
 
 const styles = StyleSheet.create({
+    dangerButtonText: {
+        color: GlobalColors.textSecondary,
+    },
     inputRow: {
-        gap: Spacing.lg,
-        marginBottom: Spacing.lg,
+        gap: Spacing.sm,
+        marginBottom: Spacing.sm,
     },
     inputGroup: {
         flex: 1,
     },
-    captureButton: {
-        flex: 0,
-        backgroundColor: GlobalColors.accent,
+    inputLabel: {
+        marginBottom: Spacing.xs,
     },
     previewContainer: {
-        flex: 1,
-        //padding: 0,
-        //overflow: 'hidden',
-        minHeight: 250,
-        marginBottom: Spacing.lg,
+        minHeight: 200,
+        marginBottom: Spacing.sm,
+        padding: 0,
+        overflow: 'hidden',
     },
     previewPlaceholder: {
-        flex: 1,
+        minHeight: 200,
         alignItems: 'center',
         justifyContent: 'center',
-        gap: Spacing.md,
+        gap: Spacing.sm,
     },
     resultTitle: {
         marginBottom: Spacing.sm,
     },
-    resultText: {
-        marginBottom: Spacing.xs,
+    kvRowLast: {
+        borderBottomWidth: 0,
     },
 })

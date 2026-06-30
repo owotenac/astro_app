@@ -17,6 +17,17 @@ npm run lint       # Run ESLint via expo lint
 
 For device builds, use EAS: `eas build --platform android|ios`
 
+## Standalone Deployment
+
+The web client can be bundled with the ASCOM server for standalone deployment on a Windows mini-PC:
+
+```bash
+# From C:/Git/astro_app root directory
+build_standalone.bat
+```
+
+This creates `server_ascom/dist/astro_app.exe` which serves the web UI at `http://localhost:5001`.
+
 ## Architecture
 
 React Native + Expo SDK 55 astronomy app with file-based routing (expo-router).

@@ -47,7 +47,7 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 
 ### Running the App
 
-Astro App can be run on multiple platforms thanks to Expo.
+Astro App can be so far on WEB only but will run on multiple platforms thanks to Expo.
 
 - **Start the development server:**
   ```bash
@@ -59,15 +59,6 @@ Astro App can be run on multiple platforms thanks to Expo.
   npm run web
   ```
 
-- **Run on Android:**
-  ```bash
-  npm run android
-  ```
-
-- **Run on iOS:**
-  ```bash
-  npm run ios
-  ```
 
 ## 📂 Project Structure
 

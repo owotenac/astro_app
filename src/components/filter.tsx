@@ -43,7 +43,7 @@ export default function Filter({ onClose }: Props) {
     }, [magRange, altRange, selectedTypes])
 
     return (
-        <View style={globalStyles.container}>
+        <View style={globalStyles.sidebarPanel}>
 
             {/* Header */}
             <View style={globalStyles.panelHeader}>

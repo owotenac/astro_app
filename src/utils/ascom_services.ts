@@ -91,7 +91,7 @@ export class ASCOM_Camera {
 
 export class ASCOM_plate_solver {
 
-    url_solver: string = "/api/v1/simu"
+    url_solver: string = "/api/v1/platesolver"
 
     async plateSolve(exposure_time: number, gain: number): Promise<{ submission_id: number, image: string } | null> {
         const response = await api.post(`${this.url_solver}/solve`, { exposure_time, gain }, { timeout: 120000 });

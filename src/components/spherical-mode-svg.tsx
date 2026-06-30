@@ -5,7 +5,7 @@
  */
 
 import typesMapping from '@/assets/data/celestialtype.json';
-import { GlobalColors, globalStyles, Spacing, starFillOpacity, SvgTypography, textStyles } from '@/global/theme';
+import { GlobalColors, globalStyles, Radius, Spacing, starFillOpacity, SvgTypography, textStyles } from '@/global/theme';
 import { useFilterStore } from '@/hooks/useFilterStore';
 import { useLocation } from '@/hooks/useLocation';
 import { useMountStore } from '@/hooks/useMountStore';
@@ -94,7 +94,7 @@ const svg_magToOpacity = (mag: number): number => Math.max(0.3, Math.min(1, 1.2 
 
 export default function SvgSphericalPlanetarium() {
     const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-    const skyViewSize = Math.max(100, Math.min(screenWidth - 16, screenHeight - 220));
+    const skyViewSize = Math.max(100, Math.min(screenWidth - 16, screenHeight - 180));
     const skyRadius = skyViewSize / 2;
     const skyCenter = skyRadius;
 
@@ -443,7 +443,7 @@ export default function SvgSphericalPlanetarium() {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView style={[globalStyles.container, { padding: 0, paddingTop: 0 }]}>
+            <SafeAreaView style={globalStyles.appShell}>
 
                 {/* Header */}
                 <View style={styles.header}>
@@ -757,65 +757,75 @@ export default function SvgSphericalPlanetarium() {
                 <View style={styles.footer}>
                     <View style={styles.footerElement}>
                         <View style={styles.footerRow}>
-                            <Text style={textStyles.caption}>Location:</Text>
-                            <Text style={textStyles.caption}>{location.latitude.toFixed(2)}° - {location.longitude.toFixed(2)}° - {location.altitude.toFixed(0)} m</Text>
+                            <Text style={textStyles.sectionLabel}>Position</Text>
+                            <Text style={textStyles.meta}>
+                                {location.latitude.toFixed(2)}° · {location.longitude.toFixed(2)}° · {location.altitude.toFixed(0)} m
+                            </Text>
                         </View>
                         <View style={styles.footerRow}>
-                            <Text style={textStyles.caption}>Heure d'observation</Text>
-                            <Text style={textStyles.accentHighlight}>{observationTime()}</Text>
+                            <Text style={textStyles.sectionLabel}>Heure</Text>
+                            <Text style={textStyles.valueEmphasis}>{observationTime()}</Text>
                         </View>
                         <Slider
+                            containerStyle={styles.footerSlider}
                             minimumValue={0}
                             maximumValue={24}
                             step={0.25}
                             value={timeOffset}
                             onValueChange={(val) => setTimeOffset(val[0])}
-                            minimumTrackTintColor={GlobalColors.accent}
+                            minimumTrackTintColor={GlobalColors.primary}
                             maximumTrackTintColor={GlobalColors.sliderTrack}
                             thumbTintColor={GlobalColors.accent}
                         />
                     </View>
                     <View style={styles.footerElement}>
-                        <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
-                            <TouchableOpacity onPress={toggleShowStars}>
-                                <MaterialCommunityIcons name="star" size={40} color={showStars ? GlobalColors.accent : GlobalColors.iconInactive} />
+                        <View style={globalStyles.footerToolbar}>
+                            <TouchableOpacity
+                                style={[globalStyles.footerIconButton, showStars && globalStyles.footerIconButtonActive]}
+                                onPress={toggleShowStars}
+                            >
+                                <MaterialCommunityIcons name="star" size={18} color={showStars ? GlobalColors.textPrimary : GlobalColors.textMuted} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={toggleShowConstellations}>
-                                <MaterialCommunityIcons name="vector-polyline" size={40} color={showConstellations ? GlobalColors.accent : GlobalColors.iconInactive} />
+                            <TouchableOpacity
+                                style={[globalStyles.footerIconButton, showConstellations && globalStyles.footerIconButtonActive]}
+                                onPress={toggleShowConstellations}
+                            >
+                                <MaterialCommunityIcons name="vector-polyline" size={18} color={showConstellations ? GlobalColors.textPrimary : GlobalColors.textMuted} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={toggleShowObjects}>
-                                <MaterialCommunityIcons name="brightness-4" size={40} color={showObjects ? GlobalColors.accent : GlobalColors.iconInactive} />
+                            <TouchableOpacity
+                                style={[globalStyles.footerIconButton, showObjects && globalStyles.footerIconButtonActive]}
+                                onPress={toggleShowObjects}
+                            >
+                                <MaterialCommunityIcons name="brightness-4" size={18} color={showObjects ? GlobalColors.textPrimary : GlobalColors.textMuted} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={toggleShowNames}>
-                                <MaterialCommunityIcons name="alphabetical" size={40} color={showNames ? GlobalColors.accent : GlobalColors.iconInactive} />
+                            <TouchableOpacity
+                                style={[globalStyles.footerIconButton, showNames && globalStyles.footerIconButtonActive]}
+                                onPress={toggleShowNames}
+                            >
+                                <MaterialCommunityIcons name="alphabetical" size={18} color={showNames ? GlobalColors.textPrimary : GlobalColors.textMuted} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={toggleMirrorView}>
-                                <MaterialCommunityIcons name="flip-horizontal" size={40} color={GlobalColors.accent} />
+                            <TouchableOpacity style={globalStyles.footerIconButton} onPress={toggleMirrorView}>
+                                <MaterialCommunityIcons name="flip-horizontal" size={18} color={GlobalColors.textMuted} />
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.footerElement}>
-                        <View style={{ minWidth: 100 }}>
-                            <Text style={textStyles.caption}>Star Magnitude: {starMagnitude.toFixed(1)}</Text>
-                            <Slider
-                                minimumValue={0}
-                                maximumValue={7}
-                                step={0.1}
-                                value={starMagnitude}
-                                onValueChange={(val) => {
-                                    setStarMagnitude(val[0]);
-                                    updateView({ starMagnitude: val[0] });
-                                }}
-                                minimumTrackTintColor={GlobalColors.accent}
-                                maximumTrackTintColor={GlobalColors.sliderTrack}
-                                thumbTintColor={GlobalColors.accent}
-                            />
-                        </View>
-                        <View>
-
-                        </View>
+                    <View style={styles.footerElementLast}>
+                        <Text style={textStyles.sectionLabel}>Etoile: Magnitude limite · {starMagnitude.toFixed(1)}</Text>
+                        <Slider
+                            containerStyle={styles.footerSlider}
+                            minimumValue={0}
+                            maximumValue={7}
+                            step={0.1}
+                            value={starMagnitude}
+                            onValueChange={(val) => {
+                                setStarMagnitude(val[0]);
+                                updateView({ starMagnitude: val[0] });
+                            }}
+                            minimumTrackTintColor={GlobalColors.primary}
+                            maximumTrackTintColor={GlobalColors.sliderTrack}
+                            thumbTintColor={GlobalColors.accent}
+                        />
                     </View>
-
                 </View>
 
             </SafeAreaView>
@@ -835,17 +845,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: Spacing.lg,
         paddingVertical: Spacing.md,
         borderBottomWidth: 1,
-        borderColor: GlobalColors.separator,
+        borderBottomColor: GlobalColors.separator,
         gap: Spacing.md,
     },
     headerInfo: {
         flex: 1,
     },
     headerSubtitle: {
-        marginTop: Spacing.xs,
+        marginTop: 2,
+        color: GlobalColors.textMuted,
     },
     headerButton: {
-        padding: Spacing.xs,
+        paddingHorizontal: Spacing.sm,
+        paddingVertical: Spacing.xs,
+        borderRadius: Radius.sm,
+        backgroundColor: GlobalColors.surfaceRaised,
     },
     slewModeBanner: {
         flexDirection: 'row',
@@ -854,32 +868,42 @@ const styles = StyleSheet.create({
         gap: Spacing.sm,
         paddingVertical: Spacing.sm,
         paddingHorizontal: Spacing.lg,
-        backgroundColor: GlobalColors.accent,
+        backgroundColor: GlobalColors.primary,
     },
     svgContainer: {
         overflow: 'hidden',
     },
     footer: {
-        padding: Spacing.lg,
+        paddingHorizontal: Spacing.lg,
+        paddingVertical: Spacing.md,
         backgroundColor: GlobalColors.overlayDark,
         borderTopWidth: 1,
-        borderColor: GlobalColors.separator,
+        borderTopColor: GlobalColors.separator,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        gap: Spacing.xxl,
+        gap: Spacing.xl,
     },
     footerElement: {
         borderRightWidth: 1,
-        borderColor: GlobalColors.separator,
+        borderRightColor: GlobalColors.separator,
         paddingRight: Spacing.xl,
-        height: "100%",
-        justifyContent: 'center'
+        justifyContent: 'center',
+        minWidth: 250
+    },
+    footerElementLast: {
+        justifyContent: 'center',
+        minWidth: 140,
+        //flex: 1,
+        gap: Spacing.xs,
     },
     footerRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: Spacing.sm,
-        gap: Spacing.md,
+        marginBottom: Spacing.xs,
+        gap: Spacing.sm,
     },
+    footerSlider: {
+        //height: 24,
+    }
 });

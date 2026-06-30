@@ -1,10 +1,10 @@
-import { GlobalColors, globalStyles, Spacing, textStyles } from '@/global/theme'
+import { GlobalColors, globalStyles, Radius, Spacing, textStyles } from '@/global/theme'
 import { useMountStore } from '@/hooks/useMountStore'
 import { ASCOM_Telescope } from '@/utils/ascom_services'
 import { formatToDMS } from '@/utils/compute'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 type ConnectionState = 'unknown' | 'disconnected' | 'connecting' | 'connected' | 'disconnecting'
 
@@ -13,6 +13,8 @@ type Props = {
 }
 
 const telescope = new ASCOM_Telescope()
+
+const ICON_SIZE = 16
 
 const Mount = ({ onClose }: Props) => {
     const [connectionState, setConnectionState] = useState<ConnectionState>('unknown')
@@ -36,12 +38,9 @@ const Mount = ({ onClose }: Props) => {
             try {
                 const connected = await telescope.isConnected()
                 setConnectionState(connected as ConnectionState)
-                // get actual position
-                //if (isConnected) {
                 const position = await telescope.getPosition()
                 setActualAz(position.az)
                 setActualAlt(position.alt)
-                //}
             } catch {
                 setConnectionState('disconnected')
             }
@@ -104,98 +103,92 @@ const Mount = ({ onClose }: Props) => {
         }
     }
 
-    const formatCoord = (value: number | undefined, suffix: string) => {
-        if (value === undefined) return '--'
-        return `${value.toFixed(2)}${suffix}`
+    const statusLabel = () => {
+        switch (connectionState) {
+            case 'unknown': return 'Vérification...'
+            case 'disconnected': return 'Déconnecté'
+            case 'connecting': return 'Connexion...'
+            case 'connected': return 'Connecté'
+            case 'disconnecting': return 'Déconnexion...'
+        }
     }
 
     return (
-        <View style={globalStyles.container}>
-            {/* Header */}
+        <View style={globalStyles.sidebarPanel}>
             <View style={globalStyles.panelHeader}>
-                <TouchableOpacity onPress={onClose}>
-                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.textPrimary} />
+                <TouchableOpacity style={globalStyles.panelBackButton} onPress={onClose}>
+                    <MaterialCommunityIcons name="arrow-left" size={18} color={GlobalColors.textPrimary} />
                 </TouchableOpacity>
                 <Text style={textStyles.panelTitle}>Monture</Text>
             </View>
 
-            {/* Connection Status */}
-            <View style={globalStyles.statusContainer}>
-                <View style={globalStyles.statusRow}>
+            <ScrollView style={globalStyles.sidebarScroll} showsVerticalScrollIndicator={false}>
+                <View style={globalStyles.statusPill}>
                     <View style={[globalStyles.statusIndicator, isConnected && globalStyles.statusIndicatorConnected]} />
-                    <Text style={textStyles.status}>
-                        {connectionState === 'unknown' && 'Vérification...'}
-                        {connectionState === 'disconnected' && 'Déconnecté'}
-                        {connectionState === 'connecting' && 'Connexion...'}
-                        {connectionState === 'connected' && 'Connecté'}
-                        {connectionState === 'disconnecting' && 'Déconnexion...'}
-                    </Text>
+                    <Text style={textStyles.status}>{statusLabel()}</Text>
                 </View>
-            </View>
 
-            {/* Error Message */}
-            {error && (
-                <View style={globalStyles.errorContainer}>
-                    <MaterialCommunityIcons name="alert-circle" size={16} color={GlobalColors.error} />
-                    <Text style={globalStyles.errorMessage}>{error}</Text>
+                {error && (
+                    <View style={globalStyles.errorContainer}>
+                        <MaterialCommunityIcons name="alert-circle" size={14} color={GlobalColors.error} />
+                        <Text style={globalStyles.errorMessage}>{error}</Text>
+                    </View>
+                )}
+
+                <View style={globalStyles.connectionButtonRow}>
+                    <TouchableOpacity
+                        style={[globalStyles.buttonCompact, isConnected && globalStyles.buttonDisabled]}
+                        onPress={handleConnect}
+                        disabled={isConnected || isLoading}
+                    >
+                        {connectionState === 'connecting' ? (
+                            <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
+                        ) : (
+                            <>
+                                <MaterialCommunityIcons name="lan-connect" size={ICON_SIZE} color={GlobalColors.textPrimary} />
+                                <Text style={textStyles.button}>Connecter</Text>
+                            </>
+                        )}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[
+                            globalStyles.buttonCompactSecondary,
+                            globalStyles.buttonCompactDanger,
+                            !isConnected && globalStyles.buttonDisabled,
+                        ]}
+                        onPress={handleDisconnect}
+                        disabled={!isConnected || isLoading}
+                    >
+                        {connectionState === 'disconnecting' ? (
+                            <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
+                        ) : (
+                            <>
+                                <MaterialCommunityIcons name="lan-disconnect" size={ICON_SIZE} color={GlobalColors.textSecondary} />
+                                <Text style={[textStyles.button, styles.dangerButtonText]}>Déconnecter</Text>
+                            </>
+                        )}
+                    </TouchableOpacity>
                 </View>
-            )}
 
-            {/* Connection Buttons */}
-            <View style={globalStyles.buttonRow}>
-                <TouchableOpacity
-                    style={[globalStyles.buttonPrimary, isConnected && globalStyles.buttonDisabled]}
-                    onPress={handleConnect}
-                    disabled={isConnected || isLoading}
-                >
-                    {connectionState === 'connecting' ? (
-                        <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
-                    ) : (
-                        <>
-                            <MaterialCommunityIcons name="lan-connect" size={20} color={GlobalColors.textPrimary} />
-                            <Text style={textStyles.button}>Connecter</Text>
-                        </>
-                    )}
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[globalStyles.buttonPrimary, globalStyles.buttonDanger, !isConnected && globalStyles.buttonDisabled]}
-                    onPress={handleDisconnect}
-                    disabled={!isConnected || isLoading}
-                >
-                    {connectionState === 'disconnecting' ? (
-                        <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
-                    ) : (
-                        <>
-                            <MaterialCommunityIcons name="lan-disconnect" size={20} color={GlobalColors.textPrimary} />
-                            <Text style={textStyles.button}>Déconnecter</Text>
-                        </>
-                    )}
-                </TouchableOpacity>
-            </View>
-
-            {/* position */}
-            <View>
-                <View style={globalStyles.cardSection}>
-                    <View style={globalStyles.rowBetween}>
+                <View style={globalStyles.sidebarSection}>
+                    <View style={globalStyles.sidebarSectionHeader}>
                         <Text style={globalStyles.sectionAccent}>Position</Text>
-                        <TouchableOpacity onPress={handleActualPosition}>
-                            <MaterialCommunityIcons name="refresh" size={20} color={GlobalColors.textPrimary} />
+                        <TouchableOpacity style={globalStyles.iconButton} onPress={handleActualPosition}>
+                            <MaterialCommunityIcons name="refresh" size={14} color={GlobalColors.textMuted} />
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.coordsContainer}>
-                        <View style={globalStyles.rowBetween}>
-                            <Text style={textStyles.label}>Azimut</Text>
-                            <Text style={textStyles.value}>{actualAz !== undefined ? formatToDMS(actualAz) : '--'}</Text>
-                        </View>
-                        <View style={globalStyles.rowBetween}>
-                            <Text style={textStyles.label}>Altitude</Text>
-                            <Text style={textStyles.value}>{actualAlt !== undefined ? formatToDMS(actualAlt) : '--'}</Text>
-                        </View>
+                    <View style={globalStyles.kvRow}>
+                        <Text style={textStyles.rowLabel}>Azimut</Text>
+                        <Text style={textStyles.rowValue}>{actualAz !== undefined ? formatToDMS(actualAz) : '--'}</Text>
+                    </View>
+                    <View style={[globalStyles.kvRow, styles.kvRowLast]}>
+                        <Text style={textStyles.rowLabel}>Altitude</Text>
+                        <Text style={textStyles.rowValue}>{actualAlt !== undefined ? formatToDMS(actualAlt) : '--'}</Text>
                     </View>
 
                     <TouchableOpacity
-                        style={[globalStyles.buttonPrimary, styles.showPositionButton, actualAz === undefined && globalStyles.buttonDisabled]}
+                        style={[globalStyles.buttonBlock, actualAz === undefined && globalStyles.buttonDisabled]}
                         onPress={() => {
                             if (actualAz !== undefined && actualAlt !== undefined) {
                                 setMountPosition({ az: actualAz, alt: actualAlt })
@@ -203,79 +196,71 @@ const Mount = ({ onClose }: Props) => {
                         }}
                         disabled={actualAz === undefined || actualAlt === undefined}
                     >
-                        <MaterialCommunityIcons name="crosshairs-gps" size={20} color={GlobalColors.textPrimary} />
+                        <MaterialCommunityIcons name="crosshairs-gps" size={ICON_SIZE} color={GlobalColors.textPrimary} />
                         <Text style={textStyles.button}>Afficher sur la carte</Text>
                     </TouchableOpacity>
-
-                </View>
-            </View>
-
-            {/* Slew Section */}
-            <View style={[globalStyles.cardSection, slewMode && styles.slewSectionActive]}>
-                <View style={globalStyles.rowBetween}>
-                    <Text style={globalStyles.sectionAccent}>Pointage</Text>
-                    <TouchableOpacity
-                        style={[globalStyles.pillToggle, slewMode && globalStyles.pillToggleActive]}
-                        onPress={toggleSlewMode}
-                    >
-                        <MaterialCommunityIcons
-                            name={slewMode ? 'target' : 'target'}
-                            size={18}
-                            color={slewMode ? GlobalColors.background : GlobalColors.accent}
-                        />
-                        <Text style={[textStyles.accentSmall, slewMode && styles.modeToggleTextActive]}>
-                            {slewMode ? 'Mode actif' : 'Sélectionner'}
-                        </Text>
-                    </TouchableOpacity>
                 </View>
 
-                {slewMode && !targetPosition && (
-                    <View style={globalStyles.calloutBox}>
-                        <MaterialCommunityIcons name="gesture-tap" size={20} color={GlobalColors.accent} />
-                        <Text style={[textStyles.accent, styles.instructionText]}>
-                            Touchez un objet sur la carte du ciel
-                        </Text>
-                    </View>
-                )}
-
-                {targetPosition && (
-                    <>
-                        <View style={[globalStyles.row, styles.targetNameContainer]}>
-                            <MaterialCommunityIcons name="star-four-points" size={16} color={GlobalColors.accent} />
-                            <Text style={textStyles.headingSmall}>{targetPosition.name}</Text>
-                        </View>
-                            <View style={styles.coordsContainer}>
-                            <View style={globalStyles.rowBetween}>
-                                <Text style={textStyles.label}>Azimut</Text>
-                                <Text style={textStyles.value}>{formatToDMS(targetPosition.az)}</Text>
-                            </View>
-                            <View style={globalStyles.rowBetween}>
-                                <Text style={textStyles.label}>Altitude</Text>
-                                <Text style={textStyles.value}>{formatToDMS(targetPosition.alt)}</Text>
-                            </View>
-                        </View>
-
+                <View style={[globalStyles.sidebarSection, slewMode && styles.sectionActive]}>
+                    <View style={globalStyles.sidebarSectionHeader}>
+                        <Text style={globalStyles.sectionAccent}>Pointage</Text>
                         <TouchableOpacity
-                            style={[
-                                globalStyles.buttonPrimary,
-                                styles.slewButton,
-                                !isConnected && globalStyles.buttonDisabled
-                            ]}
-                            onPress={handleSlew}
-                            disabled={!isConnected || isSlewing}
+                            style={[globalStyles.pillToggle, slewMode && globalStyles.pillToggleActive]}
+                            onPress={toggleSlewMode}
                         >
-                            {isSlewing ? (
-                                <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
-                            ) : (
-                                <>
-                                    <MaterialCommunityIcons name="telescope" size={20} color={GlobalColors.textPrimary} />
-                                    <Text style={textStyles.button}>Pointer</Text>
-                                </>
-                            )}
+                            <MaterialCommunityIcons
+                                name="target"
+                                size={14}
+                                color={slewMode ? GlobalColors.textPrimary : GlobalColors.textMuted}
+                            />
+                            <Text style={[textStyles.chip, slewMode && styles.pillToggleTextActive]}>
+                                {slewMode ? 'Actif' : 'Sélectionner'}
+                            </Text>
                         </TouchableOpacity>
-                    </>
-                )}
-            </View>
+                    </View>
+
+                    {slewMode && !targetPosition && (
+                        <View style={globalStyles.calloutBox}>
+                            <MaterialCommunityIcons name="gesture-tap" size={16} color={GlobalColors.textMuted} />
+                            <Text style={[textStyles.hint, styles.instructionText]}>
+                                Touchez un objet sur la carte du ciel
+                            </Text>
+                        </View>
+                    )}
+
+                    {targetPosition && (
+                        <>
+                            <View style={[globalStyles.row, styles.targetNameContainer]}>
+                                <MaterialCommunityIcons name="star-four-points" size={14} color={GlobalColors.textMuted} />
+                                <Text style={textStyles.objectTitle}>{targetPosition.name}</Text>
+                            </View>
+                            <View style={globalStyles.kvRow}>
+                                <Text style={textStyles.rowLabel}>Azimut</Text>
+                                <Text style={textStyles.rowValue}>{formatToDMS(targetPosition.az)}</Text>
+                            </View>
+                            <View style={[globalStyles.kvRow, styles.kvRowLast]}>
+                                <Text style={textStyles.rowLabel}>Altitude</Text>
+                                <Text style={textStyles.rowValue}>{formatToDMS(targetPosition.alt)}</Text>
+                            </View>
+
+                            <TouchableOpacity
+                                style={[globalStyles.buttonCompact, !isConnected && globalStyles.buttonDisabled]}
+                                onPress={handleSlew}
+                                disabled={!isConnected || isSlewing}
+                            >
+                                {isSlewing ? (
+                                    <ActivityIndicator color={GlobalColors.textPrimary} size="small" />
+                                ) : (
+                                    <>
+                                        <MaterialCommunityIcons name="telescope" size={ICON_SIZE} color={GlobalColors.textPrimary} />
+                                        <Text style={textStyles.button}>Pointer</Text>
+                                    </>
+                                )}
+                            </TouchableOpacity>
+                        </>
+                    )}
+                </View>
+            </ScrollView>
         </View>
     )
 }
@@ -283,30 +268,27 @@ const Mount = ({ onClose }: Props) => {
 export default Mount
 
 const styles = StyleSheet.create({
-    coordsContainer: {
-        marginBottom: Spacing.lg,
-        gap: Spacing.md,
+    dangerButtonText: {
+        color: GlobalColors.textSecondary,
     },
-    slewButton: {
-        flex: 0,
+    kvRowLast: {
+        borderBottomWidth: 0,
+        marginBottom: Spacing.sm,
     },
-    showPositionButton: {
-        flex: 0,
-        marginTop: Spacing.md,
-        backgroundColor: GlobalColors.accent,
+    sectionActive: {
+        backgroundColor: GlobalColors.surfaceInset,
+        marginHorizontal: -Spacing.xs,
+        paddingHorizontal: Spacing.xs,
+        borderRadius: Radius.sm,
     },
-    slewSectionActive: {
-        borderWidth: 2,
-        borderColor: GlobalColors.accent,
-    },
-    modeToggleTextActive: {
-        color: GlobalColors.background,
+    pillToggleTextActive: {
+        color: GlobalColors.textPrimary,
     },
     instructionText: {
         flex: 1,
     },
     targetNameContainer: {
-        gap: Spacing.sm,
-        marginBottom: Spacing.md,
+        gap: Spacing.xs,
+        marginBottom: Spacing.sm,
     },
 })

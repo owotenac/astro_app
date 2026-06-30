@@ -121,7 +121,7 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
         );
     }
     return (
-        <View style={globalStyles.container}>
+        <View style={globalStyles.sidebarPanel}>
             {/* En-tête avec bouton retour */}
             <View style={[globalStyles.panelHeader, styles.header]}>
                 <TouchableOpacity onPress={onClose} style={styles.backButton}>

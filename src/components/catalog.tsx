@@ -4,9 +4,9 @@ import { useMountStore } from '@/hooks/useMountStore'
 import { useObservationStore } from '@/hooks/useObservationStore'
 import { filterCatalog } from '@/utils/filter'
 import { useEffect, useState } from 'react'
-import { FlatList, Text, TextInput, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
 import ngc from '../../assets/data/ngc.json'
-import { GlobalColors, globalStyles, textStyles } from '../global/theme'
+import { GlobalColors, globalStyles, Spacing, textStyles } from '../global/theme'
 import { CelestialObject } from '../model/celestialobject'
 
 const catalog: CelestialObject[] = ngc as CelestialObject[];
@@ -27,7 +27,7 @@ export default function Catalog() {
     }
 
     return (
-        <View style={globalStyles.container}>
+        <View style={globalStyles.sidebarPanel}>
             <View style={globalStyles.panelHeader}>
                 <Text style={textStyles.panelTitle}>Catalogue</Text>
             </View>
@@ -42,11 +42,13 @@ export default function Catalog() {
                     autoCorrect={false}
                     onSubmitEditing={onSearch}
                 />
-
             </View>
-            <Text style={textStyles.sectionCount}>{filteredCatalog.length} / {catalog.length} objets</Text>
+            <Text style={[textStyles.sectionCount, styles.countLine]}>
+                {filteredCatalog.length} / {catalog.length} objets
+            </Text>
 
             <FlatList
+                style={styles.list}
                 showsVerticalScrollIndicator={false}
                 data={filteredCatalog}
                 renderItem={({ item }) => (
@@ -60,3 +62,14 @@ export default function Catalog() {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    countLine: {
+        marginBottom: Spacing.sm,
+        paddingHorizontal: Spacing.xs,
+    },
+    list: {
+        flex: 1,
+        marginHorizontal: -Spacing.xs,
+    },
+})

@@ -9,9 +9,11 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Catalog from "../components/catalog";
 import ObjectDetailsComponent from "../components/object-details";
 import SvgSphericalPlanetarium from "../components/spherical-mode-svg";
-import { GlobalColors, globalStyles, Spacing, textStyles } from "../global/theme";
+import { GlobalColors, globalStyles, textStyles } from "../global/theme";
 
 type Panel = 'catalog' | 'filter' | 'mount' | 'camera' | 'details';
+
+const TOOLBAR_ICON_SIZE = 18;
 
 export default function Index() {
   const selectedObject = useMountStore(state => state.selectedObject);
@@ -33,23 +35,34 @@ export default function Index() {
     setActivePanel('catalog');
   };
 
+  const toolbarIconColor = (panel: Panel) =>
+    activePanel === panel ? GlobalColors.textPrimary : GlobalColors.textMuted;
+
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={globalStyles.container}>
-
+      <SafeAreaView style={globalStyles.appShell}>
         <View style={styles.planetariumContainer}>
-          <View style={{ width: "30%" }}>
-            <View style={[globalStyles.rowBetween, styles.homeHeader]}>
+          <View style={globalStyles.sidebar}>
+            <View style={globalStyles.sidebarHeader}>
               <Text style={textStyles.appTitle}>Astro App</Text>
-              <View style={[globalStyles.row, styles.toolbar]}>
-                <TouchableOpacity onPress={() => togglePanel('filter')}>
-                  <MaterialCommunityIcons name="tune-variant" size={30} color={activePanel === 'filter' ? GlobalColors.primary : GlobalColors.accent} />
+              <View style={globalStyles.toolbar}>
+                <TouchableOpacity
+                  style={[globalStyles.toolbarButton, activePanel === 'filter' && globalStyles.toolbarButtonActive]}
+                  onPress={() => togglePanel('filter')}
+                >
+                  <MaterialCommunityIcons name="tune-variant" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('filter')} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => togglePanel('mount')}>
-                  <MaterialCommunityIcons name="telescope" size={30} color={activePanel === 'mount' ? GlobalColors.primary : GlobalColors.accent} />
+                <TouchableOpacity
+                  style={[globalStyles.toolbarButton, activePanel === 'mount' && globalStyles.toolbarButtonActive]}
+                  onPress={() => togglePanel('mount')}
+                >
+                  <MaterialCommunityIcons name="telescope" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('mount')} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => togglePanel('camera')}>
-                  <MaterialCommunityIcons name="camera" size={30} color={activePanel === 'camera' ? GlobalColors.primary : GlobalColors.accent} />
+                <TouchableOpacity
+                  style={[globalStyles.toolbarButton, activePanel === 'camera' && globalStyles.toolbarButtonActive]}
+                  onPress={() => togglePanel('camera')}
+                >
+                  <MaterialCommunityIcons name="camera" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('camera')} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -62,7 +75,9 @@ export default function Index() {
             {activePanel === 'camera' && <Camera onClose={closePanel} />}
             {activePanel === 'catalog' && <Catalog />}
           </View>
-          <SvgSphericalPlanetarium />
+          <View style={globalStyles.mainContent}>
+            <SvgSphericalPlanetarium />
+          </View>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -73,12 +88,7 @@ const styles = StyleSheet.create({
   planetariumContainer: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "center",
-  },
-  homeHeader: {
-    marginBottom: Spacing.xs,
-  },
-  toolbar: {
-    gap: Spacing.md,
+    minHeight: 0,
+    overflow: "hidden",
   },
 })

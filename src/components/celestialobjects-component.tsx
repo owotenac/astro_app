@@ -32,35 +32,37 @@ const CelestialObjectComponent = ({ object, onPress }: CelestialObjectComponentP
 
     return (
         <TouchableOpacity style={globalStyles.listItem} onPress={() => handlePress()}>
-            <View style={[globalStyles.typeIcon, { marginRight: Spacing.md, backgroundColor: objectType.color + '30' }]}>
+            <View style={[globalStyles.typeAccent, { backgroundColor: objectType.color }]} />
+            <View style={globalStyles.typeIcon}>
                 <MaterialCommunityIcons
                     name={objectType.iconName as any}
-                    size={18}
-                    color={objectType.color}
+                    size={14}
+                    color={GlobalColors.textMuted}
                 />
             </View>
             <View style={styles.content}>
                 <View style={styles.textBlock}>
                     <Text style={textStyles.objectTitle} numberOfLines={1}>{title}</Text>
-                    <Text style={textStyles.objectSubtitle} numberOfLines={1}>{subtitle}</Text>
-                    <View style={[globalStyles.row, { gap: Spacing.md }]}>
-                        <View style={globalStyles.inlineRow}>
-                            <MaterialCommunityIcons name="weather-sunny" size={12} color={GlobalColors.textPrimary} />
-                            {object.magnitude != null && (
+                    {subtitle && (
+                        <Text style={textStyles.objectSubtitle} numberOfLines={1}>{subtitle}</Text>
+                    )}
+                    <View style={[globalStyles.row, styles.metaRow]}>
+                        {object.magnitude != null && (
+                            <View style={globalStyles.inlineRow}>
+                                <MaterialCommunityIcons name="brightness-5" size={11} color={GlobalColors.textMuted} />
                                 <Text style={textStyles.meta}>{object.magnitude.toFixed(2)}</Text>
-                            )}
-                        </View>
-                        <View style={globalStyles.inlineRow}>
-                            <MaterialCommunityIcons name="dots-circle" size={12} color={GlobalColors.textPrimary} />
-                            {object.Const != null && (
+                            </View>
+                        )}
+                        {object.Const != null && (
+                            <View style={globalStyles.inlineRow}>
+                                <MaterialCommunityIcons name="star-outline" size={11} color={GlobalColors.textMuted} />
                                 <Text style={textStyles.meta}>{constellationName}</Text>
-                            )}
-                        </View>
+                            </View>
+                        )}
                     </View>
-
                 </View>
-                <View style={[globalStyles.badgeWrapper, { backgroundColor: objectType.color + '30' }]}>
-                    <Text style={textStyles.badge}>
+                <View style={{ ...globalStyles.badgeWrapper, backgroundColor: objectType.color + '30' }}>
+                    <Text style={textStyles.badge} numberOfLines={1}>
                         {objectType.label}
                     </Text>
                 </View>
@@ -79,7 +81,11 @@ const styles = StyleSheet.create({
     },
     textBlock: {
         flex: 1,
-        gap: Spacing.xs,
+        gap: 2,
+    },
+    metaRow: {
+        gap: Spacing.md,
+        marginTop: 2,
     },
 })
 export default CelestialObjectComponent
