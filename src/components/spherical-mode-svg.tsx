@@ -86,6 +86,9 @@ interface RenderedPlanet {
 const starCatalog: StarObject[] = starJson as StarObject[];
 const constellationCatalog: ConstellationObject[] = constellationJson as ConstellationObject[];
 
+// Pré-trier les étoiles par magnitude pour optimiser le filtre
+const starCatalogSorted = [...starCatalog].sort((a, b) => a.v_mag - b.v_mag);
+
 // Index HIP → étoile pour lookup rapide (garde la plus brillante si doublon)
 const starByHip: Map<number, StarObject> = new Map();
 for (const star of starCatalog) {
@@ -97,6 +100,84 @@ for (const star of starCatalog) {
 
 const svg_magToSize = (mag: number): number => Math.max(1, 4 - mag * 0.5);
 const svg_magToOpacity = (mag: number): number => Math.max(0.3, Math.min(1, 1.2 - mag * 0.15));
+
+// ─── Sous-composants mémoïsés ─────────────────────────────────────────────────
+
+const StarsLayer = React.memo(({ stars, showNames }: { stars: RenderedStar[]; showNames: boolean }) => (
+    <G>
+        {stars.map((star, i) => (
+            <G key={`star-${i}`}>
+                <Circle
+                    cx={star.x}
+                    cy={star.y}
+                    r={star.size / 2}
+                    fill={starFillOpacity(star.opacity)}
+                />
+                {star.name && showNames && (
+                    <SvgText
+                        x={star.x}
+                        y={star.y - 12}
+                        fontSize={SvgTypography.starName.fontSize}
+                        fontWeight={SvgTypography.starName.fontWeight}
+                        fontFamily={SvgTypography.starName.fontFamily}
+                        fill={GlobalColors.starName}
+                        textAnchor="middle"
+                    >
+                        {star.name}
+                    </SvgText>
+                )}
+            </G>
+        ))}
+    </G>
+));
+
+const ConstellationsLayer = React.memo(({ constellations }: { constellations: RenderedConstellation[] }) => (
+    <G>
+        {constellations.map(constellation => (
+            <G key={`const-${constellation.id}`}>
+                {constellation.segments.map((seg, i) => (
+                    <Line
+                        key={`${constellation.id}-seg-${i}`}
+                        x1={seg.x1}
+                        y1={seg.y1}
+                        x2={seg.x2}
+                        y2={seg.y2}
+                        stroke={GlobalColors.constellationStroke}
+                        strokeWidth={1}
+                    />
+                ))}
+            </G>
+        ))}
+    </G>
+));
+
+const PlanetsLayer = React.memo(({ planets, showNames }: { planets: RenderedPlanet[]; showNames: boolean }) => (
+    <G>
+        {planets.map((p, i) => (
+            <G key={`planet-${i}`} opacity={p.planet.altitude < 10 ? 0.25 : 1}>
+                <Circle
+                    cx={p.x}
+                    cy={p.y}
+                    r={p.planet.radius}
+                    fill={p.planet.color}
+                />
+                {showNames && (
+                    <SvgText
+                        x={p.x}
+                        y={p.y + 20}
+                        fontSize={SvgTypography.objectName.fontSize}
+                        fontWeight={SvgTypography.objectName.fontWeight}
+                        fontFamily={SvgTypography.objectName.fontFamily}
+                        fill={p.planet.color}
+                        textAnchor="middle"
+                    >
+                        {p.planet.name}
+                    </SvgText>
+                )}
+            </G>
+        ))}
+    </G>
+));
 
 // ─── Composant principal ──────────────────────────────────────────────────────
 
@@ -177,7 +258,8 @@ export default function SvgSphericalPlanetarium() {
     useEffect(() => {
         const tick = () => setTimeOffset(t => t + 0.0001);
         tick();
-        const intervalId = setInterval(tick, 1000);
+        // Toutes les 5 secondes suffit pour un planétarium
+        const intervalId = setInterval(tick, 5000);
         return () => clearInterval(intervalId);
     }, []);
 
@@ -259,17 +341,27 @@ export default function SvgSphericalPlanetarium() {
         setVisibleObjects(nextObjects);
     }, [location.ready, filteredCatalog, targetDate, mirrorView, showObjects]);
 
+    // ── Étoiles filtrées par magnitude (mémoïsé) ────────────────────────────────
+    const filteredStars = useMemo(() => {
+        // Catalogue trié par magnitude → on peut s'arrêter dès qu'on dépasse la limite
+        const result: StarObject[] = [];
+        for (const star of starCatalogSorted) {
+            if (star.v_mag > starMagnitude) break;
+            result.push(star);
+        }
+        return result;
+    }, [starMagnitude]);
+
     // ── Projection des étoiles ────────────────────────────────────────────────
     useEffect(() => {
         if (!location.ready || !showStars) return;
 
         const nextStars: RenderedStar[] = [];
 
-        for (const star of starCatalog) {
+        for (const star of filteredStars) {
             const starAsObj = { ra_deg: star.ra, dec_deg: star.dec } as CelestialObject;
             const { azimuth, altitude } = computeAzAlt(starAsObj, targetDate);
             if (altitude < -5) continue;
-            if (star.v_mag > starMagnitude) continue;
 
             const projected = azimuthalEquidistantProject(azimuth, altitude, skyRadius, -5, mirrorView);
             if (!projected.visible) continue;
@@ -284,7 +376,7 @@ export default function SvgSphericalPlanetarium() {
         }
 
         setVisibleStars(nextStars);
-    }, [location.ready, targetDate, starMagnitude, mirrorView, showStars]);
+    }, [location.ready, targetDate, filteredStars, mirrorView, showStars]);
 
     // ── Projection des constellations ────────────────────────────────────────
     useEffect(() => {
@@ -597,54 +689,10 @@ export default function SvgSphericalPlanetarium() {
                             </SvgText>
 
                             {/* Lignes des constellations */}
-                            {showConstellations && (
-                                <G>
-                                    {visibleConstellations.map(constellation => (
-                                        <G key={`const-${constellation.id}`}>
-                                            {constellation.segments.map((seg, i) => (
-                                                <Line
-                                                    key={`${constellation.id}-seg-${i}`}
-                                                    x1={seg.x1}
-                                                    y1={seg.y1}
-                                                    x2={seg.x2}
-                                                    y2={seg.y2}
-                                                    stroke={GlobalColors.constellationStroke}
-                                                    strokeWidth={1}
-                                                />
-                                            ))}
-                                        </G>
-                                    ))}
-                                </G>
-                            )}
+                            {showConstellations && <ConstellationsLayer constellations={visibleConstellations} />}
 
                             {/* Étoiles */}
-                            {showStars && (
-                                <G>
-                                    {visibleStars.map((star, i) => (
-                                        <G key={`star-${i}`}>
-                                            <Circle
-                                                cx={star.x}
-                                                cy={star.y}
-                                                r={star.size / 2}
-                                                fill={starFillOpacity(star.opacity)}
-                                            />
-                                            {star.name && showNames && (
-                                                <SvgText
-                                                    x={star.x}
-                                                    y={star.y - 12}
-                                                    fontSize={SvgTypography.starName.fontSize}
-                                                    fontWeight={SvgTypography.starName.fontWeight}
-                                                    fontFamily={SvgTypography.starName.fontFamily}
-                                                    fill={GlobalColors.starName}
-                                                    textAnchor="middle"
-                                                >
-                                                    {star.name}
-                                                </SvgText>
-                                            )}
-                                        </G>
-                                    ))}
-                                </G>
-                            )}
+                            {showStars && <StarsLayer stars={visibleStars} showNames={showNames} />}
 
                             {/* Objets célestes */}
                             {showObjects && (
@@ -688,33 +736,7 @@ export default function SvgSphericalPlanetarium() {
                             )}
 
                             {/* Planètes */}
-                            {showPlanets && (
-                                <G>
-                                    {visiblePlanets.map((p, i) => (
-                                        <G key={`planet-${i}`} opacity={p.planet.altitude < 10 ? 0.25 : 1}>
-                                            <Circle
-                                                cx={p.x}
-                                                cy={p.y}
-                                                r={p.planet.radius}
-                                                fill={p.planet.color}
-                                            />
-                                            {showNames && (
-                                                <SvgText
-                                                    x={p.x}
-                                                    y={p.y + 20}
-                                                    fontSize={SvgTypography.objectName.fontSize}
-                                                    fontWeight={SvgTypography.objectName.fontWeight}
-                                                    fontFamily={SvgTypography.objectName.fontFamily}
-                                                    fill={p.planet.color}
-                                                    textAnchor="middle"
-                                                >
-                                                    {p.planet.name}
-                                                </SvgText>
-                                            )}
-                                        </G>
-                                    ))}
-                                </G>
-                            )}
+                            {showPlanets && <PlanetsLayer planets={visiblePlanets} showNames={showNames} />}
                             {/* Plate Solve FOV Rectangle */}
                             {plateSolveFov && (
                                 <Polygon
