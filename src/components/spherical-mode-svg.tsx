@@ -14,9 +14,11 @@ import { usePlateSolveStore } from '@/hooks/usePlateSolveStore';
 import { useSettingsStore } from '@/hooks/useSettings';
 import { CelestialObject } from '@/model/celestialobject';
 import { ConstellationObject } from '@/model/constellations';
+import { Planet } from '@/model/planet';
 import { StarObject } from '@/model/stars';
 import { computeAzAlt } from '@/utils/compute';
 import { filterCatalog } from '@/utils/filter';
+import { computeAllPlanets } from '@/utils/planets';
 import { computeFovCorners } from '@/utils/platesolve';
 import { azimuthalEquidistantProject } from '@/utils/projection';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -75,6 +77,12 @@ interface RenderedConstellation {
     segments: ConstellationSegment[];
 }
 
+interface RenderedPlanet {
+    planet: Planet;
+    x: number;
+    y: number;
+}
+
 const starCatalog: StarObject[] = starJson as StarObject[];
 const constellationCatalog: ConstellationObject[] = constellationJson as ConstellationObject[];
 
@@ -113,6 +121,7 @@ export default function SvgSphericalPlanetarium() {
     const [visibleObjects, setVisibleObjects] = useState<RenderedObject[]>([]);
     const [visibleStars, setVisibleStars] = useState<RenderedStar[]>([]);
     const [visibleConstellations, setVisibleConstellations] = useState<RenderedConstellation[]>([]);
+    const [visiblePlanets, setVisiblePlanets] = useState<RenderedPlanet[]>([]);
     const [timeOffset, setTimeOffset] = useState(0);
 
     const viewSettings = useSettingsStore(state => state.settings.view);
@@ -123,6 +132,7 @@ export default function SvgSphericalPlanetarium() {
     const [showNames, setShowNames] = useState(viewSettings.showNames);
     const [showConstellations, setShowConstellations] = useState(viewSettings.showConstellations);
     const [mirrorView, setMirrorView] = useState(viewSettings.mirrorView);
+    const [showPlanets, setShowPlanets] = useState(viewSettings.showPlanets);
 
     const [starMagnitude, setStarMagnitude] = useState(viewSettings.starMagnitude);
 
@@ -221,7 +231,7 @@ export default function SvgSphericalPlanetarium() {
 
     // ── Projection des objets célestes ────────────────────────────────────────
     useEffect(() => {
-        if (!location.ready) return;
+        if (!location.ready || !showObjects) return;
 
         const nextObjects: RenderedObject[] = [];
 
@@ -247,11 +257,11 @@ export default function SvgSphericalPlanetarium() {
         }
 
         setVisibleObjects(nextObjects);
-    }, [location.ready, filteredCatalog, targetDate, mirrorView]);
+    }, [location.ready, filteredCatalog, targetDate, mirrorView, showObjects]);
 
     // ── Projection des étoiles ────────────────────────────────────────────────
     useEffect(() => {
-        if (!location.ready) return;
+        if (!location.ready || !showStars) return;
 
         const nextStars: RenderedStar[] = [];
 
@@ -274,11 +284,11 @@ export default function SvgSphericalPlanetarium() {
         }
 
         setVisibleStars(nextStars);
-    }, [location.ready, targetDate, starMagnitude, mirrorView]);
+    }, [location.ready, targetDate, starMagnitude, mirrorView, showStars]);
 
     // ── Projection des constellations ────────────────────────────────────────
     useEffect(() => {
-        if (!location.ready) return;
+        if (!location.ready || !showConstellations) return;
 
         const nextConstellations: RenderedConstellation[] = [];
 
@@ -326,7 +336,30 @@ export default function SvgSphericalPlanetarium() {
         }
 
         setVisibleConstellations(nextConstellations);
-    }, [location.ready, targetDate, mirrorView]);
+    }, [location.ready, targetDate, mirrorView, showConstellations]);
+
+    // ── Projection des planètes ───────────────────────────────────────────────
+    useEffect(() => {
+        if (!location.ready || !showPlanets) return;
+
+        const planets = computeAllPlanets(targetDate, true);
+        const nextPlanets: RenderedPlanet[] = [];
+
+        for (const planet of planets) {
+            if (planet.altitude < -5) continue;
+
+            const projected = azimuthalEquidistantProject(planet.azimuth, planet.altitude, skyRadius, -5, mirrorView);
+            if (!projected.visible) continue;
+
+            nextPlanets.push({
+                planet,
+                x: projected.x + skyCenter,
+                y: projected.y + skyCenter,
+            });
+        }
+
+        setVisiblePlanets(nextPlanets);
+    }, [location.ready, targetDate, mirrorView, showPlanets]);
 
     // ── Cercles de grille ─────────────────────────────────────────────────────
     const gridCircles = useMemo(() => {
@@ -438,6 +471,12 @@ export default function SvgSphericalPlanetarium() {
         setMirrorView(newValue);
         updateView({ mirrorView: newValue });
     };
+
+    const toogleShowPlanets = () => {
+        const newValue = !showPlanets;
+        setShowPlanets(newValue);
+        updateView({ showPlanets: newValue });
+    }
 
     // ── Rendu ─────────────────────────────────────────────────────────────────
 
@@ -648,6 +687,34 @@ export default function SvgSphericalPlanetarium() {
                                 </G>
                             )}
 
+                            {/* Planètes */}
+                            {showPlanets && (
+                                <G>
+                                    {visiblePlanets.map((p, i) => (
+                                        <G key={`planet-${i}`} opacity={p.planet.altitude < 10 ? 0.25 : 1}>
+                                            <Circle
+                                                cx={p.x}
+                                                cy={p.y}
+                                                r={p.planet.radius}
+                                                fill={p.planet.color}
+                                            />
+                                            {showNames && (
+                                                <SvgText
+                                                    x={p.x}
+                                                    y={p.y + 20}
+                                                    fontSize={SvgTypography.objectName.fontSize}
+                                                    fontWeight={SvgTypography.objectName.fontWeight}
+                                                    fontFamily={SvgTypography.objectName.fontFamily}
+                                                    fill={p.planet.color}
+                                                    textAnchor="middle"
+                                                >
+                                                    {p.planet.name}
+                                                </SvgText>
+                                            )}
+                                        </G>
+                                    ))}
+                                </G>
+                            )}
                             {/* Plate Solve FOV Rectangle */}
                             {plateSolveFov && (
                                 <Polygon
@@ -798,6 +865,13 @@ export default function SvgSphericalPlanetarium() {
                             >
                                 <MaterialCommunityIcons name="brightness-4" size={18} color={showObjects ? GlobalColors.textPrimary : GlobalColors.textMuted} />
                             </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[globalStyles.footerIconButton, showPlanets && globalStyles.footerIconButtonActive]}
+                                onPress={toogleShowPlanets}
+                            >
+                                <MaterialCommunityIcons name="brightness-2" size={18} color={showPlanets ? GlobalColors.textPrimary : GlobalColors.textMuted} />
+                            </TouchableOpacity>
+
                             <TouchableOpacity
                                 style={[globalStyles.footerIconButton, showNames && globalStyles.footerIconButtonActive]}
                                 onPress={toggleShowNames}

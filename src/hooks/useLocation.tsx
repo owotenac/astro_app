@@ -1,4 +1,4 @@
-import { updateObserver } from '@/utils/compute';
+import { updateObserver } from '@/utils/observer';
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
 

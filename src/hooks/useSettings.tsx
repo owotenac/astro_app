@@ -14,6 +14,7 @@ export interface ViewSettings {
   showConstellations: boolean;
   showObjects: boolean;
   showNames: boolean;
+  showPlanets: boolean;
   mirrorView: boolean;
   starMagnitude: number;
 }
@@ -27,13 +28,13 @@ export interface Settings {
 const defaultSettings: Settings = {
   filter: {
     magMin: 0.0,
-    magMax: 15.0,
+    magMax: 11.0,
     altMin: 0.0,
     altMax: 90.0,
     types: []
   },
   camera: {
-    gain: 100,
+    gain: 20,
     exposureTime: 5
   },
   view: {
@@ -41,6 +42,7 @@ const defaultSettings: Settings = {
     showConstellations: true,
     showObjects: true,
     showNames: true,
+    showPlanets: true,
     mirrorView: true,
     starMagnitude: 2.5
   }
