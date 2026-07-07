@@ -15,6 +15,7 @@ import { useSettingsStore } from '@/hooks/useSettings';
 import { CelestialObject } from '@/model/celestialobject';
 import { ConstellationObject } from '@/model/constellations';
 import { Planet } from '@/model/planet';
+import { PointableObject } from '@/model/pointable';
 import { StarObject } from '@/model/stars';
 import { computeAzAlt } from '@/utils/compute';
 import { filterCatalog } from '@/utils/filter';
@@ -47,21 +48,17 @@ const ALTITUDE_CIRCLES = [75, 60, 45, 30, 15, 0];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface RenderedObject {
+interface RenderedObject extends PointableObject {
     object: CelestialObject;
     color: string;
-    x: number;
-    y: number;
-    alt: number;
-    az: number;
+    size?: number;
+    opacity?: number;
 }
 
-interface RenderedStar {
-    x: number;
-    y: number;
+interface RenderedStar extends PointableObject {
     size: number;
     opacity: number;
-    name: string | null;
+    displayName: string | null;  // Nom à afficher (null si pas de nom commun)
 }
 
 interface ConstellationSegment {
@@ -77,10 +74,8 @@ interface RenderedConstellation {
     segments: ConstellationSegment[];
 }
 
-interface RenderedPlanet {
+interface RenderedPlanet extends PointableObject {
     planet: Planet;
-    x: number;
-    y: number;
 }
 
 const starCatalog: StarObject[] = starJson as StarObject[];
@@ -103,17 +98,17 @@ const svg_magToOpacity = (mag: number): number => Math.max(0.3, Math.min(1, 1.2 
 
 // ─── Sous-composants mémoïsés ─────────────────────────────────────────────────
 
-const StarsLayer = React.memo(({ stars, showNames }: { stars: RenderedStar[]; showNames: boolean }) => (
+const StarsLayer = React.memo(({ stars, showNames, onPress }: { stars: RenderedStar[]; showNames: boolean; onPress?: (star: RenderedStar) => void }) => (
     <G>
         {stars.map((star, i) => (
-            <G key={`star-${i}`}>
+            <G key={`star-${i}`} onPress={onPress ? () => onPress(star) : undefined}>
                 <Circle
                     cx={star.x}
                     cy={star.y}
                     r={star.size / 2}
                     fill={starFillOpacity(star.opacity)}
                 />
-                {star.name && showNames && (
+                {star.displayName && showNames && (
                     <SvgText
                         x={star.x}
                         y={star.y - 12}
@@ -123,7 +118,7 @@ const StarsLayer = React.memo(({ stars, showNames }: { stars: RenderedStar[]; sh
                         fill={GlobalColors.starName}
                         textAnchor="middle"
                     >
-                        {star.name}
+                        {star.displayName}
                     </SvgText>
                 )}
             </G>
@@ -151,10 +146,10 @@ const ConstellationsLayer = React.memo(({ constellations }: { constellations: Re
     </G>
 ));
 
-const PlanetsLayer = React.memo(({ planets, showNames }: { planets: RenderedPlanet[]; showNames: boolean }) => (
+const PlanetsLayer = React.memo(({ planets, showNames, onPress }: { planets: RenderedPlanet[]; showNames: boolean; onPress?: (planet: RenderedPlanet) => void }) => (
     <G>
         {planets.map((p, i) => (
-            <G key={`planet-${i}`} opacity={p.planet.altitude < 10 ? 0.25 : 1}>
+            <G key={`planet-${i}`} opacity={p.planet.altitude < 10 ? 0.25 : 1} onPress={onPress ? () => onPress(p) : undefined}>
                 <Circle
                     cx={p.x}
                     cy={p.y}
@@ -335,6 +330,8 @@ export default function SvgSphericalPlanetarium() {
                 y: projected.y + skyCenter,
                 alt: altitude,
                 az: azimuth,
+                name: obj.Common_names || obj.M || obj.Name,
+                type: 'object',
             });
         }
 
@@ -371,7 +368,11 @@ export default function SvgSphericalPlanetarium() {
                 y: projected.y + skyCenter,
                 size: svg_magToSize(star.v_mag),
                 opacity: svg_magToOpacity(star.v_mag),
-                name: star.v_mag <= 2.5 ? star.common_name : null,
+                name: star.common_name || `HIP ${star.hip}`,
+                displayName: star.v_mag <= 2.5 ? star.common_name : null,
+                az: azimuth,
+                alt: altitude,
+                type: 'star',
             });
         }
 
@@ -447,6 +448,10 @@ export default function SvgSphericalPlanetarium() {
                 planet,
                 x: projected.x + skyCenter,
                 y: projected.y + skyCenter,
+                az: planet.azimuth,
+                alt: planet.altitude,
+                name: planet.name,
+                type: 'planet',
             });
         }
 
@@ -517,14 +522,31 @@ export default function SvgSphericalPlanetarium() {
     }, [plateSolveCalibration, cameraDimensions, location.ready, targetDate, mirrorView]);
 
     // ── Handlers ──────────────────────────────────────────────────────────────
+    const handlePointablePress = useCallback((pointable: PointableObject) => {
+        if (slewMode) {
+            setTargetPosition({ az: pointable.az, alt: pointable.alt, name: pointable.name });
+        }
+    }, [slewMode, setTargetPosition]);
+
     const handleObjectPress = useCallback((obj: RenderedObject) => {
         if (slewMode) {
-            const name = obj.object.Common_names || obj.object.M || obj.object.Name;
-            setTargetPosition({ az: obj.az, alt: obj.alt, name });
+            handlePointablePress(obj);
         } else {
             setSelectedObject(obj.object);
         }
-    }, [slewMode, setTargetPosition, setSelectedObject]);
+    }, [slewMode, handlePointablePress, setSelectedObject]);
+
+    const handlePlanetPress = useCallback((planet: RenderedPlanet) => {
+        if (slewMode) {
+            handlePointablePress(planet);
+        }
+    }, [slewMode, handlePointablePress]);
+
+    const handleStarPress = useCallback((star: RenderedStar) => {
+        if (slewMode) {
+            handlePointablePress(star);
+        }
+    }, [slewMode, handlePointablePress]);
 
     const observationTime = (): string => {
         return `${targetDate.toLocaleDateString('fr-FR', {
@@ -692,7 +714,7 @@ export default function SvgSphericalPlanetarium() {
                             {showConstellations && <ConstellationsLayer constellations={visibleConstellations} />}
 
                             {/* Étoiles */}
-                            {showStars && <StarsLayer stars={visibleStars} showNames={showNames} />}
+                            {showStars && <StarsLayer stars={visibleStars} showNames={showNames} onPress={slewMode ? handleStarPress : undefined} />}
 
                             {/* Objets célestes */}
                             {showObjects && (
@@ -736,7 +758,7 @@ export default function SvgSphericalPlanetarium() {
                             )}
 
                             {/* Planètes */}
-                            {showPlanets && <PlanetsLayer planets={visiblePlanets} showNames={showNames} />}
+                            {showPlanets && <PlanetsLayer planets={visiblePlanets} showNames={showNames} onPress={slewMode ? handlePlanetPress : undefined} />}
                             {/* Plate Solve FOV Rectangle */}
                             {plateSolveFov && (
                                 <Polygon
