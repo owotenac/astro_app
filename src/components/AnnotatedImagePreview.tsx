@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     annotationContainer: {
         position: 'absolute',
         alignItems: 'center',
-        transform: [{ translateX: -1 }, { translateY: -1 }],
+        transform: [{ translateX: -37 }, { translateY: -1 }],
     },
     annotationMarker: {
         width: 10,
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         //backgroundColor: GlobalColors.accent,
         borderWidth: 2,
-        borderColor: GlobalColors.textPrimary,
+        borderColor: GlobalColors.fovStroke,
     },
     annotationLabel: {
         ...textStyles.small,

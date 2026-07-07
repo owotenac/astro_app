@@ -191,7 +191,7 @@ export default function SvgSphericalPlanetarium() {
     const location = useLocation();
     const setTargetDate = useObservationStore(state => state.setTargetDate);
     const mountPosition = useMountStore(state => state.mountPosition);
-    const plateSolveCalibration = usePlateSolveStore(state => state.calibration);
+    const plateSolveCalibration = usePlateSolveStore(state => state.lastResult?.calibration);
     const cameraDimensions = usePlateSolveStore(state => state.cameraDimensions);
     const slewMode = useMountStore(state => state.slewMode);
     const setTargetPosition = useMountStore(state => state.setTargetPosition);

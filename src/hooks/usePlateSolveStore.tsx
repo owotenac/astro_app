@@ -1,18 +1,24 @@
-import { Calibration, CameraDimensions } from '@/model/platesolve_types';
+import { Annotation, Calibration, CameraDimensions } from '@/model/platesolve_types';
 import { create } from 'zustand';
 
+type PlateSolveResult = {
+    calibration: Calibration;
+    annotations: Annotation[];
+    imageUri: string;
+};
+
 type PlateSolveStore = {
-    calibration: Calibration | null;
+    lastResult: PlateSolveResult | null;
     cameraDimensions: CameraDimensions | null;
-    setCalibration: (cal: Calibration) => void;
+    setLastResult: (result: PlateSolveResult) => void;
     setCameraDimensions: (dim: CameraDimensions) => void;
     clearPlateSolve: () => void;
 };
 
 export const usePlateSolveStore = create<PlateSolveStore>((set) => ({
-    calibration: null,
+    lastResult: null,
     cameraDimensions: null,
-    setCalibration: (cal: Calibration) => set({ calibration: cal }),
+    setLastResult: (result: PlateSolveResult) => set({ lastResult: result }),
     setCameraDimensions: (dim: CameraDimensions) => set({ cameraDimensions: dim }),
-    clearPlateSolve: () => set({ calibration: null }),
+    clearPlateSolve: () => set({ lastResult: null }),
 }));

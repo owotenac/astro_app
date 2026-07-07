@@ -1,6 +1,7 @@
 import Camera from '@/components/camera';
 import Filter from '@/components/filter';
 import Mount from '@/components/mount';
+import PlateSolving from '@/components/plate-solving';
 import { useMountStore } from '@/hooks/useMountStore';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
@@ -11,7 +12,7 @@ import ObjectDetailsComponent from "../components/object-details";
 import SvgSphericalPlanetarium from "../components/spherical-mode-svg";
 import { GlobalColors, globalStyles, textStyles } from "../global/theme";
 
-type Panel = 'catalog' | 'filter' | 'mount' | 'camera' | 'details';
+type Panel = 'catalog' | 'filter' | 'mount' | 'camera' | 'plate-solving' | 'details';
 
 const TOOLBAR_ICON_SIZE = 18;
 
@@ -64,6 +65,13 @@ export default function Planetarium() {
                 >
                   <MaterialCommunityIcons name="camera" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('camera')} />
                 </TouchableOpacity>
+                <TouchableOpacity
+                  style={[globalStyles.toolbarButton, activePanel === 'plate-solving' && globalStyles.toolbarButtonActive]}
+                  onPress={() => togglePanel('plate-solving')}
+                >
+                  <MaterialCommunityIcons name="target" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('plate-solving')} />
+                </TouchableOpacity>
+
               </View>
             </View>
 
@@ -73,6 +81,7 @@ export default function Planetarium() {
             {activePanel === 'filter' && <Filter onClose={closePanel} />}
             {activePanel === 'mount' && <Mount onClose={closePanel} />}
             {activePanel === 'camera' && <Camera onClose={closePanel} />}
+            {activePanel === 'plate-solving' && <PlateSolving onClose={closePanel} />}
             {activePanel === 'catalog' && <Catalog />}
           </View>
           <View style={globalStyles.mainContent}>

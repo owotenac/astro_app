@@ -28,12 +28,19 @@ api.interceptors.response.use(
 
 export class ASCOM_Telescope {
 
-    async connect(): Promise<void> {
-        await api.get('/api/v1/mount/connect');
+    async connect(): Promise<string> {
+        const response = await api.get('/api/v1/mount/connect');
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
+        return response.data.name;
     }
 
     async disconnect(): Promise<void> {
-        await api.get('/api/v1/mount/disconnect');
+        const response = await api.get('/api/v1/mount/disconnect');
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
     }
 
     async isConnected(): Promise<string> {
@@ -43,11 +50,31 @@ export class ASCOM_Telescope {
 
     async getPosition(): Promise<{ az: number; alt: number }> {
         const response = await api.get('/api/v1/mount/position');
-        return response.data;
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
+        return { az: response.data.az, alt: response.data.alt };
     }
 
     async slew(az: number, alt: number): Promise<void> {
-        await api.post('/api/v1/mount/slew', { "az": az, "alt": alt });
+        const response = await api.post('/api/v1/mount/slew', { az, alt });
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
+    }
+
+    async syncToAltAz(az: number, alt: number): Promise<void> {
+        const response = await api.post('/api/v1/mount/syncToAltAz', { az, alt });
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
+    }
+
+    async syncToRaDec(ra: number, dec: number): Promise<void> {
+        const response = await api.post('/api/v1/mount/syncToRaDec', { ra, dec });
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
     }
 }
 
@@ -68,51 +95,70 @@ export class ASCOM_Camera {
 
     async connect(): Promise<CameraConnectResult> {
         const response = await api.get('/api/v1/camera/connect');
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
         return response.data;
     }
 
     async disconnect(): Promise<void> {
-        await api.get('/api/v1/camera/disconnect');
-    }
-
-    async isConnected(): Promise<string> {
-        const response = await api.get('/api/v1/camera/state');
-        return response.data.status;
-    }
-
-    async takeExposure(exposure_time: number, gain: number): Promise<string | null> {
-        const response = await api.post('/api/v1/camera/start_capture', { "exposure_time": exposure_time, "gain": gain });
-        if (response.data.status === 'image_ready') {
-            return response.data.image;
+        const response = await api.get('/api/v1/camera/disconnect');
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
         }
-        return null;
+    }
+
+    async isConnected(): Promise<CameraConnectResult> {
+        const response = await api.get('/api/v1/camera/state');
+        return response.data;
+    }
+
+    async takeExposure(exposure_time: number, gain: number): Promise<string> {
+        const response = await api.post('/api/v1/camera/start_capture', { exposure_time, gain });
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
+        if (response.data.status !== 'image_ready') {
+            throw new Error('Image non disponible');
+        }
+        return response.data.image;
     }
 }
 
 export class ASCOM_plate_solver {
 
-    url_solver: string = "/api/v1/platesolver"
+    url_solver: string = "/api/v1/simu"
 
-    async plateSolve(exposure_time: number, gain: number): Promise<{ submission_id: number, image: string } | null> {
+    async plateSolve(exposure_time: number, gain: number): Promise<{ submission_id: number, image: string }> {
         const response = await api.post(`${this.url_solver}/solve`, { exposure_time, gain }, { timeout: 120000 });
-        if (response.data.status === 'submitted') {
-            return { submission_id: response.data.submission_id, image: response.data.image };
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
         }
-        return null;
+        if (response.data.status !== 'submitted') {
+            throw new Error('Échec de soumission du plate solve');
+        }
+        return { submission_id: response.data.submission_id, image: response.data.image };
     }
 
     async plateStatus(submission_id: number): Promise<{ job_status: string; job_id: number | null; submission_id: number }> {
         const response = await api.post(`${this.url_solver}/solve_status`, { submission_id });
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
         return response.data;
     }
 
-    async getPlateSolveResult(job_id: number): Promise<PlateSolveResult | null> {
+    async getPlateSolveResult(job_id: number): Promise<PlateSolveResult> {
         const response = await api.post(`${this.url_solver}/solve_result`, { job_id });
-        if (response.data.status === 'solved') {
-            return response.data;
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
         }
-        return null;
+        if (response.data.status !== 'solved') {
+            throw new Error('Plate solve non résolu');
+        }
+        return response.data;
     }
+
 }
 
 
