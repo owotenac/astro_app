@@ -3,6 +3,7 @@ import Filter from '@/components/filter';
 import Mount from '@/components/mount';
 import PlateSolving from '@/components/plate-solving';
 import { useMountStore } from '@/hooks/useMountStore';
+import { checkServerHealth } from '@/utils/ascom_services';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -20,6 +21,17 @@ export default function Planetarium() {
   const selectedObject = useMountStore(state => state.selectedObject);
   const setSelectedObject = useMountStore(state => state.setSelectedObject);
   const [activePanel, setActivePanel] = useState<Panel>('catalog');
+  const [serverAvailable, setServerAvailable] = useState(false);
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      const available = await checkServerHealth();
+      setServerAvailable(available);
+    };
+    checkHealth();
+    const interval = setInterval(checkHealth, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (selectedObject) {
@@ -56,20 +68,23 @@ export default function Planetarium() {
                 <TouchableOpacity
                   style={[globalStyles.toolbarButton, activePanel === 'mount' && globalStyles.toolbarButtonActive]}
                   onPress={() => togglePanel('mount')}
+                  disabled={!serverAvailable}
                 >
-                  <MaterialCommunityIcons name="telescope" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('mount')} />
+                  <MaterialCommunityIcons name="telescope" size={TOOLBAR_ICON_SIZE} color={serverAvailable ? toolbarIconColor('mount') : GlobalColors.textDisabled} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[globalStyles.toolbarButton, activePanel === 'camera' && globalStyles.toolbarButtonActive]}
                   onPress={() => togglePanel('camera')}
+                  disabled={!serverAvailable}
                 >
-                  <MaterialCommunityIcons name="camera" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('camera')} />
+                  <MaterialCommunityIcons name="camera" size={TOOLBAR_ICON_SIZE} color={serverAvailable ? toolbarIconColor('camera') : GlobalColors.textDisabled} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[globalStyles.toolbarButton, activePanel === 'plate-solving' && globalStyles.toolbarButtonActive]}
                   onPress={() => togglePanel('plate-solving')}
+                  disabled={!serverAvailable}
                 >
-                  <MaterialCommunityIcons name="target" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('plate-solving')} />
+                  <MaterialCommunityIcons name="target" size={TOOLBAR_ICON_SIZE} color={serverAvailable ? toolbarIconColor('plate-solving') : GlobalColors.textDisabled} />
                 </TouchableOpacity>
 
               </View>

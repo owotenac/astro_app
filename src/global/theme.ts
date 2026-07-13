@@ -21,6 +21,7 @@ export const GlobalColors = {
     textSecondary: "#8b95a5",
     textMuted: "#6b7585",
     textLight: "#c8cdd6",
+    textDisabled: "#3a4050",
     placeholder: "#5c6573",
 
     // Marque & interactif

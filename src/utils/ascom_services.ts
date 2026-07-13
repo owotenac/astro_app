@@ -26,6 +26,15 @@ api.interceptors.response.use(
     }
 );
 
+export async function checkServerHealth(): Promise<boolean> {
+    try {
+        await api.get('/api/health', { timeout: 3000 });
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 export class ASCOM_Telescope {
 
     async connect(): Promise<string> {
@@ -127,7 +136,7 @@ export class ASCOM_Camera {
 
 export class ASCOM_plate_solver {
 
-    url_solver: string = "/api/v1/simu"
+    url_solver: string = "/api/v1/platesolver"
 
     async plateSolve(exposure_time: number, gain: number): Promise<{ submission_id: number, image: string }> {
         const response = await api.post(`${this.url_solver}/solve`, { exposure_time, gain }, { timeout: 120000 });
