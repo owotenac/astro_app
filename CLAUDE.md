@@ -30,7 +30,7 @@ This creates `server_ascom/dist/astro_app.exe` which serves the web UI at `http:
 
 ## Architecture
 
-React Native + Expo SDK 55 astronomy app with file-based routing (expo-router).
+React Native + Expo SDK 57 astronomy app with file-based routing (expo-router).
 
 ### Data Flow
 

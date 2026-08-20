@@ -205,7 +205,7 @@ const BaseText = {
     sectionCount: t({ fontSize: Font.size.xs, color: GlobalColors.textMuted, letterSpacing: 0.2 }),
     sectionLabel: t({
         fontSize: Font.size.sm,
-        color: GlobalColors.textMuted,
+        color: GlobalColors.textLight,
         letterSpacing: 0.08,
         textTransform: "uppercase",
     }),

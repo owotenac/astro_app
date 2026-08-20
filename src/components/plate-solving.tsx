@@ -23,7 +23,7 @@ const PlateSolving = ({ onClose }: Props) => {
     const [solveStatus, setSolveStatus] = useState<SolveStatus>('idle')
     const [submissionId, setSubmissionId] = useState<number | null>(null)
     const [isSyncing, setIsSyncing] = useState(false)
-    const pollingRef = useRef<NodeJS.Timeout | null>(null)
+    const pollingRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const cameraSettings = useSettingsStore(state => state.settings.camera)
     const updateCamera = useSettingsStore(state => state.updateCamera)

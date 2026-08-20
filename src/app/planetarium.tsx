@@ -2,6 +2,7 @@ import Camera from '@/components/camera';
 import Filter from '@/components/filter';
 import Mount from '@/components/mount';
 import PlateSolving from '@/components/plate-solving';
+import Weather from '@/components/weather';
 import { useMountStore } from '@/hooks/useMountStore';
 import { checkServerHealth } from '@/utils/ascom_services';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -13,7 +14,7 @@ import ObjectDetailsComponent from "../components/object-details";
 import SvgSphericalPlanetarium from "../components/spherical-mode-svg";
 import { GlobalColors, globalStyles, textStyles } from "../global/theme";
 
-type Panel = 'catalog' | 'filter' | 'mount' | 'camera' | 'plate-solving' | 'details';
+type Panel = 'catalog' | 'filter' | 'mount' | 'camera' | 'plate-solving' | 'details' | 'weather';
 
 const TOOLBAR_ICON_SIZE = 18;
 
@@ -86,6 +87,12 @@ export default function Planetarium() {
                 >
                   <MaterialCommunityIcons name="target" size={TOOLBAR_ICON_SIZE} color={serverAvailable ? toolbarIconColor('plate-solving') : GlobalColors.textDisabled} />
                 </TouchableOpacity>
+                <TouchableOpacity
+                  style={[globalStyles.toolbarButton, activePanel === 'weather' && globalStyles.toolbarButtonActive]}
+                  onPress={() => togglePanel('weather')}
+                >
+                  <MaterialCommunityIcons name="weather-cloudy" size={TOOLBAR_ICON_SIZE} color={toolbarIconColor('weather')} />
+                </TouchableOpacity>
 
               </View>
             </View>
@@ -97,6 +104,7 @@ export default function Planetarium() {
             {activePanel === 'mount' && <Mount onClose={closePanel} />}
             {activePanel === 'camera' && <Camera onClose={closePanel} />}
             {activePanel === 'plate-solving' && <PlateSolving onClose={closePanel} />}
+            {activePanel === 'weather' && <Weather onClose={closePanel} />}
             {activePanel === 'catalog' && <Catalog />}
           </View>
           <View style={globalStyles.mainContent}>

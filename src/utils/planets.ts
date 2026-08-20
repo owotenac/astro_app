@@ -1,11 +1,11 @@
-import { Equator, Horizon, Illumination, Body } from 'astronomy-engine';
-import { Planet, PLANET_BODIES, EXTRA_BODIES } from '@/model/planet';
+import { EXTRA_BODIES, Planet, PLANET_BODIES } from '@/model/planet';
+import { Body, Equator, Horizon, Illumination } from 'astronomy-engine';
 import { getObserver } from './observer';
 
 /**
  * Calcule la position d'une planète à une date donnée.
  */
-function computePlanetPosition(
+export function computePlanetPosition(
     bodyInfo: { name: string; body: Body; radius: number; color: string },
     date: Date
 ): Planet {
@@ -41,7 +41,7 @@ function computePlanetPosition(
  * @param date Date d'observation (défaut: maintenant)
  * @param includeExtras Inclure Soleil et Lune (défaut: false)
  */
-export function computeAllPlanets(date: Date = new Date(), includeExtras: boolean = false): Planet[] {
+export function computeAllPlanets(date: Date = new Date(), includeExtras: boolean = true): Planet[] {
     const bodies = includeExtras
         ? [...PLANET_BODIES, ...EXTRA_BODIES]
         : PLANET_BODIES;
@@ -64,6 +64,6 @@ export function computePlanetByName(name: string, date: Date = new Date()): Plan
 /**
  * Filtre les planètes visibles (altitude > 0).
  */
-export function getVisiblePlanets(date: Date = new Date(), includeExtras: boolean = false): Planet[] {
+export function getVisiblePlanets(date: Date = new Date(), includeExtras: boolean = true): Planet[] {
     return computeAllPlanets(date, includeExtras).filter(p => p.altitude > 0);
 }
