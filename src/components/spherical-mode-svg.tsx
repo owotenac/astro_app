@@ -6,6 +6,7 @@
 
 import typesMapping from '@/assets/data/celestialtype.json';
 import { GlobalColors, globalStyles, Radius, Spacing, starFillOpacity, SvgTypography, textStyles } from '@/global/theme';
+import { useCatalog } from '@/hooks/useCatalog';
 import { useFilterStore } from '@/hooks/useFilterStore';
 import { useLocation } from '@/hooks/useLocation';
 import { useMountStore } from '@/hooks/useMountStore';
@@ -29,7 +30,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle, G, Line, Polygon, Text as SvgText } from 'react-native-svg';
-import { useDebouncedCallback } from 'use-debounce';
+
 
 import constellationJson from '../../assets/data/constellations_lines.json';
 import starJson from '../../assets/data/stars.json';
@@ -198,6 +199,7 @@ export default function SvgSphericalPlanetarium() {
     const skyCenter = skyRadius;
 
     const currentFilter = useFilterStore(state => state.currentFilter);
+    const { catalog } = useCatalog();
     const location = useLocation();
     const setTargetDate = useObservationStore(state => state.setTargetDate);
     const mountPosition = useMountStore(state => state.mountPosition);
@@ -214,6 +216,7 @@ export default function SvgSphericalPlanetarium() {
     const [visibleConstellations, setVisibleConstellations] = useState<RenderedConstellation[]>([]);
     const [visiblePlanets, setVisiblePlanets] = useState<RenderedPlanet[]>([]);
     const [timeOffset, setTimeOffset] = useState(0);
+    const [displayTimeOffset, setDisplayTimeOffset] = useState(0);
 
     const viewSettings = useSettingsStore(state => state.settings.view);
     const updateView = useSettingsStore(state => state.updateView);
@@ -236,7 +239,7 @@ export default function SvgSphericalPlanetarium() {
         setStarMagnitude(viewSettings.starMagnitude);
     }, [viewSettings]);
 
-    // Zoom state
+    // Zoom state (React state for web/reset, shared values for gestures)
     const [zoom, setZoom] = useState(1);
     const [panX, setPanX] = useState(0);
     const [panY, setPanY] = useState(0);
@@ -257,16 +260,27 @@ export default function SvgSphericalPlanetarium() {
         return d;
     }, [timeOffset]);
 
+    const displayDate = useMemo(() => {
+        const d = new Date();
+        d.setTime(d.getTime() + displayTimeOffset * 3600 * 1000);
+        return d;
+    }, [displayTimeOffset]);
+
     useEffect(() => {
-        setFilteredCatalog(filterCatalog(currentFilter, '', targetDate));
-    }, [currentFilter, targetDate]);
+        if (catalog.length > 0) {
+            setFilteredCatalog(filterCatalog(catalog, currentFilter, '', targetDate));
+        }
+    }, [catalog, currentFilter, targetDate]);
 
     useEffect(() => {
         setTargetDate(targetDate);
     }, [targetDate, setTargetDate]);
 
     useEffect(() => {
-        const tick = () => setTimeOffset(t => t + 0.0001);
+        const tick = () => {
+            setTimeOffset(t => t + 0.0001);
+            setDisplayTimeOffset(t => t + 0.0001);
+        };
         tick();
         // Toutes les 5 secondes suffit pour un planétarium
         const intervalId = setInterval(tick, 5000);
@@ -563,19 +577,12 @@ export default function SvgSphericalPlanetarium() {
         }
     }, [slewMode, handlePointablePress]);
 
-    const debouncedTime = useDebouncedCallback(
-        (timeOffset) => {
-            setTimeOffset(timeOffset);
-        },
-        100
-    )
-
     const observationTime = (): string => {
-        return `${targetDate.toLocaleDateString('fr-FR', {
+        return `${displayDate.toLocaleDateString('fr-FR', {
             day: '2-digit',
             month: 'short',
             year: 'numeric'
-        })} - ${targetDate.getHours()}h${targetDate.getMinutes().toString().padStart(2, '0')}m${targetDate.getSeconds().toString().padStart(2, '0')}s`;
+        })} - ${displayDate.getHours()}h${displayDate.getMinutes().toString().padStart(2, '0')}m${displayDate.getSeconds().toString().padStart(2, '0')}s`;
     };
 
     const toggleShowStars = () => {
@@ -883,7 +890,7 @@ export default function SvgSphericalPlanetarium() {
                                 </G>
                             )}
                         </Svg>
-                    </View>
+                        </View>
                 </View>
 
                 {/* Footer */}
@@ -907,8 +914,9 @@ export default function SvgSphericalPlanetarium() {
                                     minimumValue={0}
                                     maximumValue={24}
                                     step={0.25}
-                                    value={timeOffset}
-                                    onValueChange={(val) => debouncedTime(val[0])}
+                                    value={displayTimeOffset}
+                                    onValueChange={(val) => setDisplayTimeOffset(val[0])}
+                                    onSlidingComplete={(val) => setTimeOffset(val[0])}
                                     minimumTrackTintColor={GlobalColors.primary}
                                     maximumTrackTintColor={GlobalColors.sliderTrack}
                                     thumbTintColor={GlobalColors.accent}

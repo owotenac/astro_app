@@ -1,11 +1,8 @@
 import { CurrentFilter } from "@/hooks/useFilterStore";
 import { CelestialObject } from "@/model/celestialobject";
-import catalogJson from '../../assets/data/ngc.json';
 import { computeAzAlt } from "./compute";
 
-const catalog: CelestialObject[] = catalogJson as CelestialObject[];
-
-export const filterCatalog = (currentFilter: CurrentFilter, searchTxt: string = '', observationDate: Date | null = null): CelestialObject[] => {
+export const filterCatalog = (catalog: CelestialObject[], currentFilter: CurrentFilter, searchTxt: string = '', observationDate: Date | null = null): CelestialObject[] => {
     const date = observationDate ?? new Date();
     let filterCatalogTemp = catalog;
 

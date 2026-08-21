@@ -1,31 +1,41 @@
 import CelestialObjectComponent from '@/components/celestialobjects-component'
+import { useCatalog } from '@/hooks/useCatalog'
 import { useFilterStore } from '@/hooks/useFilterStore'
 import { useMountStore } from '@/hooks/useMountStore'
 import { useObservationStore } from '@/hooks/useObservationStore'
 import { filterCatalog } from '@/utils/filter'
 import { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
-import ngc from '../../assets/data/ngc.json'
+import { ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
 import { GlobalColors, globalStyles, Spacing, textStyles } from '../global/theme'
 import { useResponsive } from '../hooks/useResponsive'
 import { CelestialObject } from '../model/celestialobject'
 
-const catalog: CelestialObject[] = ngc as CelestialObject[];
-
 export default function Catalog() {
     const { isMobilePortrait } = useResponsive()
+    const { catalog, loading } = useCatalog();
     const setSelectedObject = useMountStore(state => state.setSelectedObject);
     const currentFilter = useFilterStore(state => state.currentFilter);
     const targetDate = useObservationStore(state => state.targetDate);
     const [searchTxt, setSearchTxt] = useState("");
-    const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>(catalog);
+    const [filteredCatalog, setFilteredCatalog] = useState<CelestialObject[]>([]);
 
     useEffect(() => {
-        setFilteredCatalog(filterCatalog(currentFilter, searchTxt, targetDate));
-    }, [currentFilter, searchTxt, targetDate]);
+        if (!loading) {
+            setFilteredCatalog(filterCatalog(catalog, currentFilter, searchTxt, targetDate));
+        }
+    }, [catalog, loading, currentFilter, searchTxt, targetDate]);
 
     const onSearch = () => {
-        setFilteredCatalog(filterCatalog(currentFilter, searchTxt, targetDate));
+        setFilteredCatalog(filterCatalog(catalog, currentFilter, searchTxt, targetDate));
+    }
+
+    if (loading) {
+        return (
+            <View style={[globalStyles.sidebarPanel, styles.loadingContainer]}>
+                <ActivityIndicator size="large" color={GlobalColors.primary} />
+                <Text style={textStyles.meta}>Chargement du catalogue...</Text>
+            </View>
+        );
     }
 
     return (
@@ -68,6 +78,11 @@ export default function Catalog() {
 }
 
 const styles = StyleSheet.create({
+    loadingContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: Spacing.md,
+    },
     countLine: {
         marginBottom: Spacing.sm,
         paddingHorizontal: Spacing.xs,

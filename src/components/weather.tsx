@@ -180,7 +180,7 @@ const Weather = ({ onClose }: Props) => {
                                 {[0, 50, 100].map((value) => (
                                     <SvgText
                                         key={`y-${value}`}
-                                        x={CHART_CONFIG.margin.left - 5}
+                                        x={CHART_CONFIG.margin.left - 20}
                                         y={componentData.layout.toY(value) + 3}
                                         fill={GlobalColors.textPrimary}
                                         fontSize={10}
