@@ -13,7 +13,7 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Catalog from "../components/catalog";
 import ObjectDetailsComponent from "../components/object-details";
-import SvgSphericalPlanetarium from "../components/spherical-mode-svg";
+import SphericalPlanetarium from "../components/spherical-mode";
 import { GlobalColors, globalStyles, Spacing, textStyles } from "../global/theme";
 
 type Panel = 'catalog' | 'filter' | 'mount' | 'camera' | 'plate-solving' | 'details' | 'weather';
@@ -106,7 +106,7 @@ export default function Planetarium() {
       <SafeAreaProvider>
         <SafeAreaView style={globalStyles.appShell}>
           <View style={styles.mobileContainer}>
-            <SvgSphericalPlanetarium />
+            <SphericalPlanetarium />
             <MobileNav
               activePanel={activePanel}
               onPanelPress={togglePanel}
@@ -184,7 +184,7 @@ export default function Planetarium() {
             {renderPanelContent()}
           </View>
           <View style={globalStyles.mainContent}>
-            <SvgSphericalPlanetarium />
+            <SphericalPlanetarium />
           </View>
         </View>
       </SafeAreaView>
