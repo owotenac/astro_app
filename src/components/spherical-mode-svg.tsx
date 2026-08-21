@@ -11,6 +11,7 @@ import { useLocation } from '@/hooks/useLocation';
 import { useMountStore } from '@/hooks/useMountStore';
 import { useObservationStore } from '@/hooks/useObservationStore';
 import { usePlateSolveStore } from '@/hooks/usePlateSolveStore';
+import { useResponsive } from '@/hooks/useResponsive';
 import { useSettingsStore } from '@/hooks/useSettings';
 import { CelestialObject } from '@/model/celestialobject';
 import { ConstellationObject } from '@/model/constellations';
@@ -25,9 +26,11 @@ import { azimuthalEquidistantProject } from '@/utils/projection';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Slider } from '@miblanchard/react-native-slider';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle, G, Line, Polygon, Text as SvgText } from 'react-native-svg';
+import { useDebouncedCallback } from 'use-debounce';
+
 import constellationJson from '../../assets/data/constellations_lines.json';
 import starJson from '../../assets/data/stars.json';
 
@@ -177,8 +180,20 @@ const PlanetsLayer = React.memo(({ planets, showNames, onPress }: { planets: Ren
 // ─── Composant principal ──────────────────────────────────────────────────────
 
 export default function SvgSphericalPlanetarium() {
-    const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-    const skyViewSize = Math.max(100, Math.min(screenWidth - 16, screenHeight - 180));
+    const { width: screenWidth, height: screenHeight, isMobilePortrait } = useResponsive();
+
+    const HEADER_HEIGHT = 52;
+    const FOOTER_HEIGHT_COLLAPSED = 56;
+    const FOOTER_HEIGHT_EXPANDED = 180;
+    const NAV_HEIGHT = isMobilePortrait ? 60 : 0;
+
+    const [footerExpanded, setFooterExpanded] = useState(false);
+    const currentFooterHeight = isMobilePortrait
+        ? (footerExpanded ? FOOTER_HEIGHT_EXPANDED : FOOTER_HEIGHT_COLLAPSED)
+        : 100;
+
+    const availableHeight = screenHeight - HEADER_HEIGHT - currentFooterHeight - NAV_HEIGHT - 16;
+    const skyViewSize = Math.max(100, Math.min(screenWidth - 16, availableHeight));
     const skyRadius = skyViewSize / 2;
     const skyCenter = skyRadius;
 
@@ -548,6 +563,13 @@ export default function SvgSphericalPlanetarium() {
         }
     }, [slewMode, handlePointablePress]);
 
+    const debouncedTime = useDebouncedCallback(
+        (timeOffset) => {
+            setTimeOffset(timeOffset);
+        },
+        100
+    )
+
     const observationTime = (): string => {
         return `${targetDate.toLocaleDateString('fr-FR', {
             day: '2-digit',
@@ -602,7 +624,7 @@ export default function SvgSphericalPlanetarium() {
                 <View style={styles.header}>
                     <View style={styles.headerInfo}>
                         <Text style={textStyles.viewTitle}>Grille Azimutale</Text>
-                        <Text style={[textStyles.caption, styles.headerSubtitle]}>Zénith au centre · {mirrorView ? 'Est à gauche' : 'Est à droite'}</Text>
+                        {/* <Text style={[textStyles.caption, styles.headerSubtitle]}>Zénith au centre · {mirrorView ? 'Est à gauche' : 'Est à droite'}</Text> */}
                     </View>
                     {zoom > 1 && (
                         <TouchableOpacity
@@ -865,31 +887,54 @@ export default function SvgSphericalPlanetarium() {
                 </View>
 
                 {/* Footer */}
-                <View style={styles.footer}>
-                    <View style={styles.footerElement}>
-                        <View style={styles.footerRow}>
-                            <Text style={textStyles.sectionLabel}>Position</Text>
-                            <Text style={textStyles.meta}>
-                                {location.latitude.toFixed(2)}° · {location.longitude.toFixed(2)}° · {location.altitude.toFixed(0)} m
-                            </Text>
-                        </View>
-                        <View style={styles.footerRow}>
-                            <Text style={textStyles.sectionLabel}>Heure</Text>
-                            <Text style={textStyles.valueEmphasis}>{observationTime()}</Text>
-                        </View>
-                        <Slider
-                            containerStyle={styles.footerSlider}
-                            minimumValue={0}
-                            maximumValue={24}
-                            step={0.25}
-                            value={timeOffset}
-                            onValueChange={(val) => setTimeOffset(val[0])}
-                            minimumTrackTintColor={GlobalColors.primary}
-                            maximumTrackTintColor={GlobalColors.sliderTrack}
-                            thumbTintColor={GlobalColors.accent}
-                        />
-                    </View>
-                    <View style={styles.footerElement}>
+                <View style={[styles.footer, isMobilePortrait && styles.footerMobile]}>
+                    {/* Details section - collapsible on mobile */}
+                    {(!isMobilePortrait || footerExpanded) && (
+                        <>
+                            <View style={[styles.footerElement, isMobilePortrait && styles.footerElementMobile]}>
+                                <View style={styles.footerRow}>
+                                    <Text style={textStyles.sectionLabel}>Position</Text>
+                                    <Text style={textStyles.meta}>
+                                        {location.latitude.toFixed(2)}° · {location.longitude.toFixed(2)}° · {location.altitude.toFixed(0)} m
+                                    </Text>
+                                </View>
+                                <View style={styles.footerRow}>
+                                    <Text style={textStyles.sectionLabel}>Heure</Text>
+                                    <Text style={textStyles.valueEmphasis}>{observationTime()}</Text>
+                                </View>
+                                <Slider
+                                    containerStyle={styles.footerSlider}
+                                    minimumValue={0}
+                                    maximumValue={24}
+                                    step={0.25}
+                                    value={timeOffset}
+                                    onValueChange={(val) => debouncedTime(val[0])}
+                                    minimumTrackTintColor={GlobalColors.primary}
+                                    maximumTrackTintColor={GlobalColors.sliderTrack}
+                                    thumbTintColor={GlobalColors.accent}
+                                />
+                            </View>
+                            <View style={[styles.footerElementMagnitude, isMobilePortrait && styles.footerElementMobile]}>
+                                <Text style={textStyles.sectionLabel}>Étoiles · Magnitude limite · {starMagnitude.toFixed(1)}</Text>
+                                <Slider
+                                    containerStyle={styles.footerSlider}
+                                    minimumValue={0}
+                                    maximumValue={7}
+                                    step={0.1}
+                                    value={starMagnitude}
+                                    onValueChange={(val) => {
+                                        setStarMagnitude(val[0]);
+                                        updateView({ starMagnitude: val[0] });
+                                    }}
+                                    minimumTrackTintColor={GlobalColors.primary}
+                                    maximumTrackTintColor={GlobalColors.sliderTrack}
+                                    thumbTintColor={GlobalColors.accent}
+                                />
+                            </View>
+                        </>
+                    )}
+                    {/* Toggles toolbar - always visible */}
+                    <View style={[styles.footerToggles, isMobilePortrait && styles.footerTogglesMobile]}>
                         <View style={globalStyles.footerToolbar}>
                             <TouchableOpacity
                                 style={[globalStyles.footerIconButton, showStars && globalStyles.footerIconButtonActive]}
@@ -915,7 +960,6 @@ export default function SvgSphericalPlanetarium() {
                             >
                                 <MaterialCommunityIcons name="brightness-2" size={18} color={showPlanets ? GlobalColors.textPrimary : GlobalColors.textMuted} />
                             </TouchableOpacity>
-
                             <TouchableOpacity
                                 style={[globalStyles.footerIconButton, showNames && globalStyles.footerIconButtonActive]}
                                 onPress={toggleShowNames}
@@ -926,23 +970,18 @@ export default function SvgSphericalPlanetarium() {
                                 <MaterialCommunityIcons name="flip-horizontal" size={18} color={GlobalColors.textMuted} />
                             </TouchableOpacity>
                         </View>
-                    </View>
-                    <View style={styles.footerElementLast}>
-                        <Text style={textStyles.sectionLabel}>Etoile: Magnitude limite · {starMagnitude.toFixed(1)}</Text>
-                        <Slider
-                            containerStyle={styles.footerSlider}
-                            minimumValue={0}
-                            maximumValue={7}
-                            step={0.1}
-                            value={starMagnitude}
-                            onValueChange={(val) => {
-                                setStarMagnitude(val[0]);
-                                updateView({ starMagnitude: val[0] });
-                            }}
-                            minimumTrackTintColor={GlobalColors.primary}
-                            maximumTrackTintColor={GlobalColors.sliderTrack}
-                            thumbTintColor={GlobalColors.accent}
-                        />
+                        {isMobilePortrait && (
+                            <TouchableOpacity
+                                style={globalStyles.footerIconButton}
+                                onPress={() => setFooterExpanded(!footerExpanded)}
+                            >
+                                <MaterialCommunityIcons
+                                    name={footerExpanded ? "chevron-down" : "chevron-up"}
+                                    size={20}
+                                    color={GlobalColors.textMuted}
+                                />
+                            </TouchableOpacity>
+                        )}
                     </View>
                 </View>
 
@@ -1002,18 +1041,39 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: Spacing.xl,
     },
+    footerMobile: {
+        flexDirection: 'column',
+        gap: Spacing.sm,
+        paddingVertical: Spacing.sm,
+    },
     footerElement: {
         borderRightWidth: 1,
         borderRightColor: GlobalColors.separator,
         paddingRight: Spacing.xl,
         justifyContent: 'center',
-        minWidth: 250
+        minWidth: 250,
     },
-    footerElementLast: {
+    footerElementMobile: {
+        borderRightWidth: 0,
+        borderBottomWidth: 1,
+        borderBottomColor: GlobalColors.separator,
+        paddingRight: 0,
+        paddingBottom: Spacing.sm,
+        minWidth: undefined,
+        width: '100%',
+    },
+    footerElementMagnitude: {
         justifyContent: 'center',
         minWidth: 140,
-        //flex: 1,
         gap: Spacing.xs,
+    },
+    footerToggles: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    footerTogglesMobile: {
+        width: '100%',
     },
     footerRow: {
         flexDirection: 'row',
@@ -1022,6 +1082,5 @@ const styles = StyleSheet.create({
         gap: Spacing.sm,
     },
     footerSlider: {
-        //height: 24,
-    }
+    },
 });

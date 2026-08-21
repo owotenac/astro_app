@@ -28,9 +28,9 @@ export interface Settings {
 const defaultSettings: Settings = {
   filter: {
     magMin: 0.0,
-    magMax: 11.0,
-    altMin: 0.0,
-    altMax: 90.0,
+    magMax: 8.0,
+    altMin: 10.0,
+    altMax: 80.0,
     types: []
   },
   camera: {

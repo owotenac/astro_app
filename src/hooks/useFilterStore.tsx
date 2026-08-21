@@ -16,9 +16,9 @@ type FilterStore = {
 export const useFilterStore = create<FilterStore>((set) => ({
     currentFilter: {
         magMin: 0,
-        magMax: 15,
-        altMin: 0,
-        altMax: 90,
+        magMax: 8,
+        altMin: 10,
+        altMax: 80,
         types: [],
     },
     setFilter: (filter: CurrentFilter) => set({ currentFilter: filter }),

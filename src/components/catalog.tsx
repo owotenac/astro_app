@@ -7,11 +7,13 @@ import { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native'
 import ngc from '../../assets/data/ngc.json'
 import { GlobalColors, globalStyles, Spacing, textStyles } from '../global/theme'
+import { useResponsive } from '../hooks/useResponsive'
 import { CelestialObject } from '../model/celestialobject'
 
 const catalog: CelestialObject[] = ngc as CelestialObject[];
 
 export default function Catalog() {
+    const { isMobilePortrait } = useResponsive()
     const setSelectedObject = useMountStore(state => state.setSelectedObject);
     const currentFilter = useFilterStore(state => state.currentFilter);
     const targetDate = useObservationStore(state => state.targetDate);
@@ -28,9 +30,11 @@ export default function Catalog() {
 
     return (
         <View style={globalStyles.sidebarPanel}>
-            <View style={globalStyles.panelHeader}>
-                <Text style={textStyles.panelTitle}>Catalogue</Text>
-            </View>
+            {!isMobilePortrait && (
+                <View style={globalStyles.panelHeader}>
+                    <Text style={textStyles.panelTitle}>Catalogue</Text>
+                </View>
+            )}
             <View style={globalStyles.searchRow}>
                 <TextInput
                     style={globalStyles.searchBar}

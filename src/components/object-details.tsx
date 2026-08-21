@@ -1,5 +1,6 @@
 import { GlobalColors, globalStyles, PhotometryBands, Radius, Spacing, textStyles } from '@/global/theme';
 import { useObservationStore } from '@/hooks/useObservationStore';
+import { useResponsive } from '@/hooks/useResponsive';
 import { CelestialObject } from '@/model/celestialobject';
 import { CelestialType } from '@/model/celestialtype';
 import { computeAzAlt, formatToDMS } from '@/utils/compute';
@@ -44,6 +45,7 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
 
     const constKey = object.Const as keyof typeof const_mapping;
     const constellationName = const_mapping[constKey]?.fr || object.Const;
+    const { isMobilePortrait } = useResponsive();
     const [azAlt, setAzAlt] = useState({ azimuth: 0, altitude: 0 });
     const [targetAzAlt, setTargetAzAlt] = useState({ azimuth: 0, altitude: 0 });
     const targetDate = useObservationStore(state => state.targetDate);
@@ -73,15 +75,15 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
                     {PhotometryBands.map((band) => {
                         const value = object[band.field];
                         return (
-                        <View key={band.label} style={[globalStyles.photometryItem, styles.photometryItem]}>
-                            <View style={[styles.bandCircle, { backgroundColor: band.color }]}>
-                                <Text style={[textStyles.badgeSmall, styles.bandCircleText]}>{band.label}</Text>
+                            <View key={band.label} style={[globalStyles.photometryItem, styles.photometryItem]}>
+                                <View style={[styles.bandCircle, { backgroundColor: band.color }]}>
+                                    <Text style={[textStyles.badgeSmall, styles.bandCircleText]}>{band.label}</Text>
+                                </View>
+                                <Text style={textStyles.micro} numberOfLines={1}>{band.name}</Text>
+                                <Text style={textStyles.smallBold}>
+                                    {value !== null ? value.toFixed(2) : '--'}
+                                </Text>
                             </View>
-                            <Text style={textStyles.micro} numberOfLines={1}>{band.name}</Text>
-                            <Text style={textStyles.smallBold}>
-                                {value !== null ? value.toFixed(2) : '--'}
-                            </Text>
-                        </View>
                         );
                     })}
                 </View>
@@ -122,14 +124,16 @@ const ObjectDetailsComponent: React.FC<ObjectDetailsProps> = ({ object, onClose 
     }
     return (
         <View style={globalStyles.sidebarPanel}>
-            {/* En-tête avec bouton retour */}
-            <View style={[globalStyles.panelHeader, styles.header]}>
-                <TouchableOpacity onPress={onClose} style={styles.backButton}>
-                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.textPrimary} />
-                </TouchableOpacity>
-                <Text style={[textStyles.headingMedium, styles.headerTitle]} numberOfLines={1}>{title}</Text>
-            </View>
 
+            {/* En-tête avec bouton retour */}
+            {!isMobilePortrait && (
+                <View style={[globalStyles.panelHeader, styles.header]}>
+                    <TouchableOpacity onPress={onClose} style={styles.backButton}>
+                        <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.textPrimary} />
+                    </TouchableOpacity>
+                    <Text style={[textStyles.headingMedium, styles.headerTitle]} numberOfLines={1}>{title}</Text>
+                </View>
+            )}
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
                 <View style={globalStyles.cardCompact}>
                     <View style={[globalStyles.rowStart, styles.topRow]}>

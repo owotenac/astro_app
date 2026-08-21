@@ -1,4 +1,5 @@
 import { GlobalColors, globalStyles, textStyles } from '@/global/theme';
+import { useResponsive } from '@/hooks/useResponsive';
 import { computePlanetByName } from '@/utils/planets';
 import { WeatherData, fetchWeatherData } from '@/utils/weather';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -113,6 +114,7 @@ const convertTime = (date: Date | null | undefined): string => {
 };
 
 const Weather = ({ onClose }: Props) => {
+    const { isMobilePortrait } = useResponsive();
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [componentData, setComponentData] = useState<WeatherComponentData | null>();
     const [containerWidth, setContainerWidth] = useState<number>(0);
@@ -134,13 +136,16 @@ const Weather = ({ onClose }: Props) => {
     return (
         <View style={globalStyles.sidebarPanel}>
 
+
             {/* Header */}
-            <View style={globalStyles.panelHeader}>
-                <TouchableOpacity onPress={() => { onClose() }}>
-                    <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.textPrimary} />
-                </TouchableOpacity>
-                <Text style={textStyles.panelTitle}>Meteo</Text>
-            </View>
+            {!isMobilePortrait && (
+                <View style={globalStyles.panelHeader}>
+                    <TouchableOpacity onPress={() => { onClose() }}>
+                        <MaterialCommunityIcons name="arrow-left" size={24} color={GlobalColors.textPrimary} />
+                    </TouchableOpacity>
+                    <Text style={textStyles.panelTitle}>Meteo</Text>
+                </View>
+            )}
             <Text style={[textStyles.sectionLabel, globalStyles.sectionLabelMargin]}>Ephéméride</Text>
             <View style={globalStyles.card}>
                 <View style={globalStyles.rowBetween}>
